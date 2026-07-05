@@ -14,7 +14,7 @@ export interface BattleScenario {
   sectorId: string;
   sectorName: string;
   terrainTags: string[];
-  tacticalTerrainProfileId?: "high_ground_los_drill";
+  tacticalTerrainProfileId?: "high_ground_los_drill" | "reverse_slope_los_drill";
   tacticalTerrainProfileLabel?: string;
   tacticalTerrainProfileSummary?: string;
   durationSeconds: number;

@@ -16,7 +16,34 @@ const terrainTagsForProfile = (
   if (profile === "high_ground_los_drill") {
     return uniqueTerrainTags([...terrainTags, "hill", "open"]);
   }
+  if (profile === "reverse_slope_los_drill") {
+    return uniqueTerrainTags([...terrainTags, "reverseSlopeDrill", "open"]);
+  }
   return terrainTags;
+};
+
+const terrainProfileLabel = (
+  profile: CreateBattleScenarioOptions["tacticalTerrainProfile"],
+): string | undefined => {
+  if (profile === "high_ground_los_drill") {
+    return "高地射線検証";
+  }
+  if (profile === "reverse_slope_los_drill") {
+    return "逆斜面射線検証";
+  }
+  return undefined;
+};
+
+const terrainProfileSummary = (
+  profile: CreateBattleScenarioOptions["tacticalTerrainProfile"],
+): string | undefined => {
+  if (profile === "high_ground_los_drill") {
+    return "高地稜線を必ず含め、丘上部隊の有効射程と射線補正を確認する戦術検証プロファイル。";
+  }
+  if (profile === "reverse_slope_los_drill") {
+    return "丘の反対斜面に敵を出し、正面部隊から稜線裏の射線減衰を確認する戦術検証プロファイル。";
+  }
+  return undefined;
 };
 
 export const createBattleScenario = (
@@ -33,21 +60,18 @@ export const createBattleScenario = (
     70,
     sector.enemyPressure + campaign.theater.enemyMomentum + (operation.victoryEffects.waveBudgetDelta ?? 0),
   );
-  const terrainProfileLabel =
-    options.tacticalTerrainProfile === "high_ground_los_drill" ? "高地射線検証" : undefined;
+  const profileLabel = terrainProfileLabel(options.tacticalTerrainProfile);
 
   return {
     id: `battle-${operation.id}`,
-    title: terrainProfileLabel ? `${operation.title} - ${terrainProfileLabel}` : operation.title,
+    title: profileLabel ? `${operation.title} - ${profileLabel}` : operation.title,
     operation,
     sectorId: sector.id,
     sectorName: sector.name,
     terrainTags,
     tacticalTerrainProfileId: options.tacticalTerrainProfile,
-    tacticalTerrainProfileLabel: terrainProfileLabel,
-    tacticalTerrainProfileSummary: terrainProfileLabel
-      ? "高地稜線を必ず含め、丘上部隊の有効射程と射線補正を確認する戦術検証プロファイル。"
-      : undefined,
+    tacticalTerrainProfileLabel: profileLabel,
+    tacticalTerrainProfileSummary: terrainProfileSummary(options.tacticalTerrainProfile),
     durationSeconds: terrainTags.includes("bridge") ? 135 : 150,
     waveBudget,
     waveIntel: createBattleWaveIntel({

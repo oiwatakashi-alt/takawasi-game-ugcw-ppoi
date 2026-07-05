@@ -74,6 +74,15 @@ export const createTerrainZonesForBattle = (
     );
   }
 
+  if (terrainTags.includes("reverseSlopeDrill")) {
+    zones.push(
+      lineZone("terrain-reverse-slope-ridge", "hill", "逆斜面稜線", { x: 36, y: 14, width: 28, height: 28 }, {
+        rangeMultiplier: 1.08,
+        fireMultiplier: 1.03,
+      }),
+    );
+  }
+
   if (terrainTags.includes("hill")) {
     zones.push(
       lineZone("terrain-hill-ridge", "hill", "高地稜線", { x: 18, y: 10, width: 38, height: 26 }, {

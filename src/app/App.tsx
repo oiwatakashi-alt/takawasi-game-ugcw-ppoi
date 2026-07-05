@@ -58,13 +58,18 @@ import type { FortificationType } from "../game/fortifications/types";
 import { assignOfficerToUnit, promoteOfficer, restOfficer, returnOfficerToDuty } from "../game/officers/progression";
 import { clearSave, loadCampaign, saveCampaign } from "../game/save/localStorageProvider";
 
-const tacticalTerrainProfileFromUrl = (): "high_ground_los_drill" | undefined => {
+const tacticalTerrainProfileFromUrl = (): "high_ground_los_drill" | "reverse_slope_los_drill" | undefined => {
   if (typeof window === "undefined") {
     return undefined;
   }
-  return new URLSearchParams(window.location.search).get("takawasiTerrainProfile") === "high-ground"
-    ? "high_ground_los_drill"
-    : undefined;
+  const profile = new URLSearchParams(window.location.search).get("takawasiTerrainProfile");
+  if (profile === "high-ground") {
+    return "high_ground_los_drill";
+  }
+  if (profile === "reverse-slope") {
+    return "reverse_slope_los_drill";
+  }
+  return undefined;
 };
 
 export function App() {

@@ -101,12 +101,24 @@ const waveEntryPosition = (
   wave: number,
   laneOffset: number,
   targetY?: number,
-): BattlePosition => ({
-  x: state.scenario.tacticalTerrainProfileId === "high_ground_los_drill"
-    ? 58 + (wave % 2) * 4
-    : Math.max(94, state.mapBounds.width - 8),
-  y: Math.max(12, Math.min(88, (targetY ?? 18 + ((wave * 17) % 58)) + laneOffset)),
-});
+): BattlePosition => {
+  if (state.scenario.tacticalTerrainProfileId === "high_ground_los_drill") {
+    return {
+      x: 58 + (wave % 2) * 4,
+      y: Math.max(12, Math.min(88, (targetY ?? 18 + ((wave * 17) % 58)) + laneOffset)),
+    };
+  }
+  if (state.scenario.tacticalTerrainProfileId === "reverse_slope_los_drill") {
+    return {
+      x: 58 + (wave % 2) * 2,
+      y: Math.max(18, Math.min(38, 25 + laneOffset * 0.25)),
+    };
+  }
+  return {
+    x: Math.max(94, state.mapBounds.width - 8),
+    y: Math.max(12, Math.min(88, (targetY ?? 18 + ((wave * 17) % 58)) + laneOffset)),
+  };
+};
 
 const fallbackDestination = (wave: number, laneOffset: number): BattlePosition => ({
   x: 31,
