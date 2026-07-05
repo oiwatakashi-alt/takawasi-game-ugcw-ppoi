@@ -301,6 +301,9 @@ interface EnemyCommandGroupReport {
   responseEffectLabel: string;
   responseEffectDetail: string;
   responseEffectTone: "idle" | "effect" | "cost" | "risk";
+  hierarchyLabel: string;
+  hierarchyDetail: string;
+  hierarchyTone: "idle" | "active" | "risk";
   leadThreat: EnemyBattleUnit;
   pursuitTarget?: EnemyBattleUnit;
   pursuitReason: string;
@@ -981,6 +984,64 @@ const enemyCommandGroupResponseEffect = (
   };
 };
 
+const enemyCommandGroupHierarchyReadout = (
+  allEnemies: EnemyBattleUnit[],
+  units: EnemyBattleUnit[],
+  source: EnemyBattleUnit | undefined,
+): Pick<EnemyCommandGroupReport, "hierarchyLabel" | "hierarchyDetail" | "hierarchyTone"> => {
+  const commandNodes = units.filter((unit) => unit.assaultPlan.commandTier === "wave_command");
+  const assaultLeads = units.filter((unit) => unit.assaultPlan.commandTier === "assault_lead");
+  const supportNodes = units.filter((unit) => unit.assaultPlan.commandTier === "support_node");
+  const lineGroups = units.filter((unit) => unit.assaultPlan.commandTier === "line_group");
+  const liveEnemyIds = new Set(allEnemies.filter((unit) => unit.count > 0).map((unit) => unit.id));
+  const orphanedUnits = units.filter(
+    (unit) =>
+      unit.assaultPlan.commandTier !== "wave_command" &&
+      !!unit.assaultPlan.commandParentId &&
+      !liveEnemyIds.has(unit.assaultPlan.commandParentId),
+  );
+  const sourceChildren = source
+    ? units.filter(
+        (unit) =>
+          unit.id !== source.id &&
+          (unit.assaultPlan.commandParentId === source.id || unit.assaultPlan.commandSourceId === source.id),
+      )
+    : [];
+  const relayChildren = units.filter((unit) =>
+    supportNodes.some((support) => unit.assaultPlan.commandParentId === support.id),
+  );
+  const leadChildren = units.filter((unit) =>
+    assaultLeads.some((lead) => unit.assaultPlan.commandParentId === lead.id),
+  );
+  const disruptedCount = units.filter((unit) => unit.assaultPlan.commandState === "disrupted").length;
+  const averageCohesion =
+    units.length > 0 ? units.reduce((sum, unit) => sum + unit.assaultPlan.cohesion, 0) / units.length : 1;
+  const riskScore = Math.min(
+    100,
+    Math.round(
+      orphanedUnits.length * 22 +
+        disruptedCount * 14 +
+        Math.max(0, 0.72 - averageCohesion) * 80 +
+        (source && source.assaultPlan.commandState === "disrupted" ? 24 : 0) +
+        (!source && (assaultLeads.length > 0 || supportNodes.length > 0) ? 18 : 0),
+    ),
+  );
+
+  const hierarchyLabel = source
+    ? `継承 ${source.assaultPlan.commandLabel ?? mapEnemyDisplayName(source)} -> ${sourceChildren.length}群`
+    : commandNodes.length > 0
+      ? "継承 指揮核未確認"
+      : "継承 現地群指揮";
+  const hierarchyDetail = `先導${assaultLeads.length} / 支援${supportNodes.length} / 前衛${lineGroups.length} / 中継${relayChildren.length + leadChildren.length} / 孤立${orphanedUnits.length} / 崩壊リスク${riskScore}`;
+  const hierarchyTone = riskScore >= 46 || orphanedUnits.length > 0 ? "risk" : sourceChildren.length > 0 ? "active" : "idle";
+
+  return {
+    hierarchyLabel,
+    hierarchyDetail,
+    hierarchyTone,
+  };
+};
+
 const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[] => {
   const groups = new Map<string, EnemyBattleUnit[]>();
   for (const enemy of battle.enemyUnits.filter((unit) => unit.count > 0 && unit.isSpotted)) {
@@ -993,7 +1054,13 @@ const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[
       const source =
         units.find((unit) => unit.assaultPlan.commandRole === "command_node") ??
         units.find((unit) => unit.type === "undeadOfficer") ??
-        units.find((unit) => unit.id === units[0]?.assaultPlan.commandSourceId);
+        units.find((unit) => unit.id === units[0]?.assaultPlan.commandSourceId) ??
+        battle.enemyUnits.find(
+          (unit) =>
+            unit.count > 0 &&
+            unit.type === "undeadOfficer" &&
+            units.some((groupUnit) => groupUnit.assaultPlan.commandSourceId === unit.id),
+        );
       const leadThreat = [...units].sort((a, b) => enemyThreatScore(b) - enemyThreatScore(a))[0];
       const targetSegment = leadThreat ? enemyThreatSegment(battle, leadThreat) : undefined;
       const totalCount = units.reduce((sum, unit) => sum + unit.count, 0);
@@ -1049,6 +1116,7 @@ const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[
       );
       const responseStatus = enemyCommandGroupResponseStatus(battle, units, targetSegment);
       const responseEffect = enemyCommandGroupResponseEffect(battle, units, targetSegment, responseStatus);
+      const hierarchyReadout = enemyCommandGroupHierarchyReadout(battle.enemyUnits, units, source);
       return {
         id,
         label: source?.assaultPlan.commandLabel ?? leadThreat?.assaultPlan.commandLabel ?? `${leadThreat?.assaultPlan.targetName ?? "敵群"}指揮`,
@@ -1066,6 +1134,7 @@ const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[
         ...forecast,
         ...responseStatus,
         ...responseEffect,
+        ...hierarchyReadout,
         leadThreat,
         pursuitTarget,
         pursuitReason: enemyPursuitReason(pursuitTarget),
@@ -5493,6 +5562,9 @@ export function BattleCommandScreen({
                     {Math.round(group.totalPressure)}
                   </span>
                   <span>階梯 {group.commandTierSummary || "指揮外"}</span>
+                  <small className={`enemy-command-hierarchy ${group.hierarchyTone}`}>
+                    {group.hierarchyLabel} / {group.hierarchyDetail}
+                  </small>
                   <small className="enemy-command-recommendation">
                     推奨 {group.recommendationLabel} / {group.recommendationReason}
                   </small>

@@ -3714,6 +3714,24 @@ main {
   white-space: normal;
 }
 
+.enemy-command-group-main .enemy-command-hierarchy {
+  border-left: 3px solid rgba(70, 72, 88, 0.34);
+  padding-left: 6px;
+  white-space: normal;
+}
+
+.enemy-command-group-main .enemy-command-hierarchy.idle {
+  color: #625b50;
+}
+
+.enemy-command-group-main .enemy-command-hierarchy.active {
+  color: #315c37;
+}
+
+.enemy-command-group-main .enemy-command-hierarchy.risk {
+  color: #7a2f2c;
+}
+
 .enemy-command-group-main .enemy-command-forecast {
   border-left: 3px solid rgba(91, 71, 49, 0.34);
   padding-left: 6px;

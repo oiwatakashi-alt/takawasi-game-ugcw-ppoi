@@ -306,6 +306,39 @@ const createEnemy = (
   };
 };
 
+const linkEnemyCommandHierarchy = (enemies: EnemyBattleUnit[]): EnemyBattleUnit[] => {
+  const groups = new Map<string, EnemyBattleUnit[]>();
+  for (const enemy of enemies) {
+    const groupId = enemy.assaultPlan.commandGroupId ?? enemy.id;
+    groups.set(groupId, [...(groups.get(groupId) ?? []), enemy]);
+  }
+
+  return enemies.map((enemy) => {
+    const groupId = enemy.assaultPlan.commandGroupId ?? enemy.id;
+    const group = groups.get(groupId) ?? [];
+    const commandNode = group.find((unit) => unit.assaultPlan.commandTier === "wave_command");
+    const assaultLead = group.find((unit) => unit.assaultPlan.commandTier === "assault_lead");
+    const supportNode = group.find((unit) => unit.assaultPlan.commandTier === "support_node");
+
+    if (enemy.assaultPlan.commandTier === "wave_command") {
+      return enemy;
+    }
+
+    const parentId =
+      enemy.assaultPlan.commandTier === "line_group"
+        ? assaultLead?.id ?? supportNode?.id ?? commandNode?.id ?? enemy.assaultPlan.commandParentId
+        : commandNode?.id ?? enemy.assaultPlan.commandParentId;
+
+    return {
+      ...enemy,
+      assaultPlan: {
+        ...enemy.assaultPlan,
+        commandParentId: parentId,
+      },
+    };
+  });
+};
+
 export const createEnemyWave = (state: BattleState): EnemyBattleUnit[] => {
   const wave = state.wavesSpawned + 1;
   const waveIntel = state.scenario.waveIntel ?? {
@@ -349,5 +382,5 @@ export const createEnemyWave = (state: BattleState): EnemyBattleUnit[] => {
     enemies.push(createEnemy(state, wave, "undeadOfficer", Math.max(1, Math.round(officerPressureMultiplier)), "officer"));
   }
 
-  return enemies;
+  return linkEnemyCommandHierarchy(enemies);
 };

@@ -1493,6 +1493,18 @@ Implemented:
 - Battle Command shows `敵指揮網`, `指揮下`, the Japanese command intent, and labels such as `第2波指揮核` on the command alert and enemy-group cards.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> 3x command waves, `敵指揮網`, `19群 / 最大100% / 第2波指揮核`, enemy cards with `指揮下` and `陣地突破 / 第2波指揮核`, broken images 0, console errors 0, horizontal overflow false, and QA campaign reset. Mobile QA is intentionally outside the current target. QA report: `outputs/takawasi-enemy-command-hierarchy-qa-report.json`.
 
+## Implemented Enemy Command Inheritance Readout Slice - 2026-07-05
+
+Enemy command-network cards now show how the current assault group inherits orders, instead of only showing the command label and tier count.
+
+Implemented:
+
+- `waves.ts` links spawned enemies into a simple hierarchy: `波指揮核` can parent `突撃先導` and `支援節`, while `前衛群` prefers a nearby `突撃先導`, then a `支援節`, then the wave command node.
+- Battle Command command-network cards derive an inheritance readout from live `commandSourceId`, `commandParentId`, and command tiers, without adding save fields.
+- The readout shows `継承 第N波指揮核 -> X群`, `先導`, `支援`, `前衛`, `中継`, `孤立`, and `崩壊リスク`, with active/risk tones.
+- If a card's visible group does not include the officer token but its units are currently commanded by that officer, the UI still resolves the command source from the wider live enemy list.
+- Desktop 1440px QA verified reset -> Camp -> Deployment -> Battle -> 3x command waves -> stop. Five enemy command cards showed inheritance lines such as `継承 第2波指揮核 -> 2群 / 先導2 / 支援0 / 前衛0 / 中継0 / 孤立0 / 崩壊リスク0` and risk lines with `孤立` and `崩壊リスク`; console errors/warnings 0, broken images 0, horizontal overflow false, and no visible `NaN`. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-enemy-command-hierarchy-qa-report.json`.
+
 ## Implemented Battle Objective Node Control Slice - 2026-07-04
 
 Victory, supply, and visibility markers now participate in battle state instead of being fixed tactical-board decoration.
