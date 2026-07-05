@@ -313,14 +313,16 @@ export const tacticalLessonPreviewForFacilityDuties = (
     role !== "施設修理" &&
     role !== "補給拠点勤務" &&
     role !== "検査施設防衛" &&
-    role !== "検査施設修理"
+    role !== "検査施設修理" &&
+    role !== "検査施設担当" &&
+    role !== "検査施設基準"
   ) {
     return undefined;
   }
   const commendations = commendationsByUnit[unitId] ?? [];
   const isRepairRole = role === "施設修理" || role === "検査施設修理";
-  const isDefenseRole = role === "施設防衛" || role === "検査施設防衛";
-  const preferredDoctrineLabel = isRepairRole || role === "補給拠点勤務" ? "工兵修理線" : "戦線固守";
+  const isDefenseRole = role === "施設防衛" || role === "検査施設防衛" || role === "検査施設担当" || role === "検査施設基準";
+  const preferredDoctrineLabel = isRepairRole || role === "補給拠点勤務" || role === "検査施設基準" ? "工兵修理線" : "戦線固守";
   const reserveReadinessBonus = isDefenseRole ? 2 : 1;
   const controlRadiusBonus = isDefenseRole || isRepairRole ? 1 : 0;
   const fallbackMoraleModifier = isRepairRole ? 1 : 0;
@@ -330,6 +332,10 @@ export const tacticalLessonPreviewForFacilityDuties = (
         ? "施設襲撃対応"
         : role === "検査施設防衛"
           ? "検査施設防衛"
+          : role === "検査施設担当"
+            ? "検査施設担当"
+            : role === "検査施設基準"
+              ? "検査施設基準"
           : "施設防衛"
       : isRepairRole
         ? "損傷施設修理"

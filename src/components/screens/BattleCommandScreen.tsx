@@ -3977,7 +3977,7 @@ export function BattleCommandScreen({
         if (selectedEnemy.isSpotted) {
           nextBattle = setUnitFocusTarget(nextBattle, selectedUnit.unitId, selectedEnemy.id);
         }
-        return nextBattle;
+        return withMapInspectionResponseRole(nextBattle, [selectedUnit.unitId], "enemy_screen");
       },
     );
   };
@@ -3998,7 +3998,7 @@ export function BattleCommandScreen({
         let nextBattle = assignFrontlineSegment(state, selectedUnit.unitId, selectedFrontlineSegment.id);
         nextBattle = setStandingOrderAnchor(nextBattle, selectedUnit.unitId, selectedFrontlineSegment.anchor);
         nextBattle = setStandingOrderFallbackDestination(nextBattle, selectedUnit.unitId, selectedFrontlineSegment.fallbackPoint);
-        return nextBattle;
+        return withMapInspectionResponseRole(nextBattle, [selectedUnit.unitId], "frontline_transfer");
       },
     );
   };
@@ -4019,7 +4019,7 @@ export function BattleCommandScreen({
         if (moveAnchor && inspectedFacilityAnchor) {
           nextBattle = setStandingOrderAnchor(nextBattle, selectedUnit.unitId, inspectedFacilityAnchor);
         }
-        return nextBattle;
+        return withMapInspectionResponseRole(nextBattle, [selectedUnit.unitId], moveAnchor ? "facility_anchor" : "facility_transfer");
       },
     );
   };

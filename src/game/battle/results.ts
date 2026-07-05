@@ -65,6 +65,18 @@ const battleRoleForUnit = (unit: BattleState["playerUnits"][number]): string => 
   if (unit.mapInspectionResponseRole === "frontline_response") {
     return "検査戦線対応";
   }
+  if (unit.mapInspectionResponseRole === "enemy_screen") {
+    return "検査敵前縁布陣";
+  }
+  if (unit.mapInspectionResponseRole === "frontline_transfer") {
+    return "検査戦線転属";
+  }
+  if (unit.mapInspectionResponseRole === "facility_transfer") {
+    return "検査施設担当";
+  }
+  if (unit.mapInspectionResponseRole === "facility_anchor") {
+    return "検査施設基準";
+  }
   if (unit.deploymentMitigationRole === "weak_line_focus") {
     return "弱線是正";
   }
@@ -180,6 +192,15 @@ const roleXpBonusForUnit = (unit: BattleState["playerUnits"][number], outcome: B
   }
   if (role === "検査戦線対応") {
     return 2 + outcomeBonus + (readiness <= 55 || casualtyRatio > 0.015 ? 1 : 0);
+  }
+  if (role === "検査敵前縁布陣") {
+    return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "検査戦線転属") {
+    return 2 + outcomeBonus + (distance(unit.position, unit.standingOrder.anchor) <= Math.max(12, unit.standingOrder.controlRadius) ? 1 : 0);
+  }
+  if (role === "検査施設担当" || role === "検査施設基準") {
+    return 2 + outcomeBonus + (unit.standingOrder.facilityAssignment ? 1 : 0);
   }
   if (role === "戦闘交代") {
     return 1 + (unit.soldiers > 0 ? 1 : 0);
@@ -436,6 +457,30 @@ const commendationsForUnit = (
     commendations.push("検査戦線へ圧力対応");
     if ((unit.reserveReadiness ?? 0) <= 55) {
       commendations.push("即応予備を投入");
+    }
+  }
+  if (role === "検査敵前縁布陣") {
+    commendations.push("確認敵群へ前縁布陣");
+    if (unit.focusTargetId) {
+      commendations.push("敵群を基準目標化");
+    }
+  }
+  if (role === "検査戦線転属") {
+    commendations.push("確認戦線へ転属");
+    if (distance(unit.position, unit.standingOrder.anchor) <= Math.max(12, unit.standingOrder.controlRadius)) {
+      commendations.push("新基準線へ接続");
+    }
+  }
+  if (role === "検査施設担当") {
+    commendations.push("確認施設を担当");
+    if (unit.standingOrder.facilityAssignment) {
+      commendations.push("施設任務を受領");
+    }
+  }
+  if (role === "検査施設基準") {
+    commendations.push("確認施設へ基準移動");
+    if (unit.standingOrder.facilityAssignment) {
+      commendations.push("施設近接で任務維持");
     }
   }
   if (role === "戦闘交代") {
@@ -904,7 +949,11 @@ const officerXpForUnit = (
           role === "検査集中射撃" ||
           role === "検査施設防衛" ||
           role === "検査施設修理" ||
-          role === "検査戦線対応"
+          role === "検査戦線対応" ||
+          role === "検査敵前縁布陣" ||
+          role === "検査戦線転属" ||
+          role === "検査施設担当" ||
+          role === "検査施設基準"
           ? 3
           : 1;
   const outcomeBonus = outcome === "hold" ? 2 : outcome === "withdraw" ? 1 : 0;

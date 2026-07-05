@@ -194,7 +194,11 @@ export type MapInspectionResponseRole =
   | "enemy_focus"
   | "facility_defense"
   | "facility_repair"
-  | "frontline_response";
+  | "frontline_response"
+  | "enemy_screen"
+  | "frontline_transfer"
+  | "facility_transfer"
+  | "facility_anchor";
 
 export type BattleActionReason =
   | "awaiting_orders"
