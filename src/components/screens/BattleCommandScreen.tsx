@@ -732,6 +732,34 @@ const enemyResponseUnits = (battle: BattleState, unit: EnemyBattleUnit): BattleU
     .slice(0, 2);
 };
 
+const facilityInspectionResponseUnits = (battle: BattleState, structure: BattleStructure): BattleUnit[] => {
+  const assignedUnits = battle.playerUnits.filter(
+    (unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.standingOrder.facilityAssignment?.structureId === structure.id,
+  );
+  const nearestEngineer = battle.playerUnits
+    .filter((unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.type === "engineer")
+    .sort((a, b) => distance(a.position, structure.position) - distance(b.position, structure.position))[0];
+  const nearestDefenders = battle.playerUnits
+    .filter(
+      (unit) =>
+        unit.soldiers > 0 &&
+        unit.order !== "retreat" &&
+        unit.type !== "artillery" &&
+        unit.unitId !== nearestEngineer?.unitId &&
+        !assignedUnits.some((assigned) => assigned.unitId === unit.unitId),
+    )
+    .sort((a, b) => {
+      const reserveBiasA = a.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
+      const reserveBiasB = b.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
+      return distance(a.position, structure.position) + reserveBiasA - (distance(b.position, structure.position) + reserveBiasB);
+    })
+    .slice(0, Math.max(1, 3 - assignedUnits.length - (nearestEngineer ? 1 : 0)));
+  const responseUnits = nearestEngineer ? [...assignedUnits, nearestEngineer, ...nearestDefenders] : [...assignedUnits, ...nearestDefenders];
+  return responseUnits
+    .filter((unit, index) => responseUnits.findIndex((candidate) => candidate.unitId === unit.unitId) === index)
+    .slice(0, 4);
+};
+
 const enemyResponseLabel = (unit: EnemyBattleUnit): string =>
   `${standingPostureLabels[enemyResponsePosture(unit)]} / ${targetPriorityLabels[enemyResponsePriority(unit)]}`;
 
@@ -3036,6 +3064,84 @@ export function BattleCommandScreen({
         }
       : undefined,
   ].filter((item): item is { label: string; value: string; detail: string } => Boolean(item));
+  const inspectedOrAssignedStructure = inspectedStructure ?? selectedStructure;
+  const inspectedFacilityResponseUnits = inspectedOrAssignedStructure
+    ? facilityInspectionResponseUnits(battle, inspectedOrAssignedStructure)
+    : [];
+  const selectedMapActionForecasts = [
+    selectedEnemy
+      ? {
+          tone:
+            selectedEnemy.assaultPlan.phase === "breakthrough" || selectedEnemy.assaultPlan.phase === "flanking"
+              ? "danger"
+              : selectedEnemy.assaultPlan.commandState === "commanded" || selectedEnemy.type === "brute"
+                ? "warning"
+                : "ready",
+          title: "敵群対応予測",
+          summary: `${selectedEnemyResponseUnits.length}旅団 / ${selectedEnemySegment?.name ?? "近接戦線"} / ${enemyResponseLabel(selectedEnemy)}`,
+          detail: `${mapEnemyDisplayName(selectedEnemy)} ${Math.round(selectedEnemy.count)}体 / ${enemyAssaultPhaseLabels[selectedEnemy.assaultPlan.phase]} / 優先 ${targetPriorityLabels[enemyResponsePriority(selectedEnemy)]}`,
+        }
+      : undefined,
+    selectedEnemy && selectedEnemyResponseUnits.length > 0
+      ? {
+          tone: selectedEnemyResponseUnits[0].ammo < 36 ? "warning" : "ready",
+          title: "戦線斉射予測",
+          summary: `${selectedEnemyResponseUnits[0].name}基準 / 弾薬${Math.round(selectedEnemyResponseUnits[0].ammo)}`,
+          detail: `${selectedEnemySegment?.name ?? "近接戦線"}の射撃可能旅団で短時間火力集中 / 再装填と弾薬を消費`,
+        }
+      : undefined,
+    selectedEnemy && selectedUnit
+      ? {
+          tone: selectedEnemy.isSpotted ? "ready" : "warning",
+          title: "選択旅団集中予測",
+          summary: `${selectedUnit.name} / ${selectedEnemy.isSpotted ? "指名可能" : "未発見"}`,
+          detail: `${mapEnemyDisplayName(selectedEnemy)}へ単独集中 / 現在弾薬${Math.round(selectedUnit.ammo)} / 伝令遅延あり`,
+        }
+      : undefined,
+    inspectedOrAssignedStructure
+      ? {
+          tone:
+            inspectedOrAssignedStructure.status === "overrun" || inspectedOrAssignedStructure.facilityState === "contested"
+              ? "danger"
+              : inspectedOrAssignedStructure.status === "damaged" || inspectedOrAssignedStructure.tacticalPressure > 0
+                ? "warning"
+                : "ready",
+          title: "施設即応予測",
+          summary: `${inspectedFacilityResponseUnits.length}部隊 / ${fortificationTypeLabels[inspectedOrAssignedStructure.type]} / ${inspectedOrAssignedStructure.facilityStateLabel}`,
+          detail: `脅威${Math.round(inspectedOrAssignedStructure.tacticalPressure)} / 修理率${inspectedOrAssignedStructure.repairRate.toFixed(1)} / 候補 ${inspectedFacilityResponseUnits.map((unit) => mapUnitDisplayName(unit)).join("、") || "なし"}`,
+        }
+      : undefined,
+    inspectedOrAssignedStructure
+      ? {
+          tone:
+            inspectedOrAssignedStructure.status === "damaged" ||
+            inspectedOrAssignedStructure.status === "overrun" ||
+            inspectedOrAssignedStructure.facilityState === "contested"
+              ? "warning"
+              : "ready",
+          title: "修理優先予測",
+          summary: `${inspectedFacilityResponseUnits.some((unit) => unit.type === "engineer") ? "工兵あり" : "工兵なし"} / 耐久${Math.round(inspectedOrAssignedStructure.durability)}`,
+          detail: `損傷または接敵なら工兵は築城/修理へ移行 / 周辺部隊は防衛または補給を担当`,
+        }
+      : undefined,
+    selectedFrontlinePressure
+      ? {
+          tone:
+            selectedFrontlinePressure.level === "danger"
+              ? "danger"
+              : selectedFrontlinePressure.level === "warning"
+                ? "warning"
+                : "ready",
+          title: "戦線対応予測",
+          summary: `${selectedFrontlinePressure.recommendationLabel} / 守備${selectedFrontlinePressure.defenders.length} / 予備${selectedFrontlinePressure.reserves.length}`,
+          detail: `敵圧${Math.round(selectedFrontlinePressure.pressure)} / ${frontlinePressureLevelLabels[selectedFrontlinePressure.level]} / 主脅威 ${
+            selectedFrontlinePressure.leadEnemy ? mapEnemyDisplayName(selectedFrontlinePressure.leadEnemy) : "なし"
+          }`,
+        }
+      : undefined,
+  ].filter(
+    (item): item is { tone: "ready" | "warning" | "danger"; title: string; summary: string; detail: string } => Boolean(item),
+  );
   const selectedTacticalSuggestions = selectedUnit
     ? alerts
         .map((alert) => {
@@ -4563,34 +4669,6 @@ export function BattleCommandScreen({
     return [];
   };
 
-  const facilityInspectionResponseUnits = (structure: BattleStructure): BattleUnit[] => {
-    const assignedUnits = battle.playerUnits.filter(
-      (unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.standingOrder.facilityAssignment?.structureId === structure.id,
-    );
-    const nearestEngineer = battle.playerUnits
-      .filter((unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.type === "engineer")
-      .sort((a, b) => distance(a.position, structure.position) - distance(b.position, structure.position))[0];
-    const nearestDefenders = battle.playerUnits
-      .filter(
-        (unit) =>
-          unit.soldiers > 0 &&
-          unit.order !== "retreat" &&
-          unit.type !== "artillery" &&
-          unit.unitId !== nearestEngineer?.unitId &&
-          !assignedUnits.some((assigned) => assigned.unitId === unit.unitId),
-      )
-      .sort((a, b) => {
-        const reserveBiasA = a.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
-        const reserveBiasB = b.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
-        return distance(a.position, structure.position) + reserveBiasA - (distance(b.position, structure.position) + reserveBiasB);
-      })
-      .slice(0, Math.max(1, 3 - assignedUnits.length - (nearestEngineer ? 1 : 0)));
-    const responseUnits = nearestEngineer ? [...assignedUnits, nearestEngineer, ...nearestDefenders] : [...assignedUnits, ...nearestDefenders];
-    return responseUnits
-      .filter((unit, index) => responseUnits.findIndex((candidate) => candidate.unitId === unit.unitId) === index)
-      .slice(0, 4);
-  };
-
   const alertGroupActionLabel = (alert: BattleAlert): string | undefined => {
     if (alert.segmentId && (alert.id === "enemy-flanking" || alert.id === "enemy-breakthrough" || alert.id === "enemy-overextended")) {
       const report = pressureReports.find((candidate) => candidate.segment.id === alert.segmentId);
@@ -4784,7 +4862,7 @@ export function BattleCommandScreen({
     if (!structure || finished) {
       return;
     }
-    const responseUnits = facilityInspectionResponseUnits(structure);
+    const responseUnits = facilityInspectionResponseUnits(battle, structure);
     if (responseUnits[0]) {
       setSelectedUnitId(responseUnits[0].unitId);
     }
@@ -5859,6 +5937,17 @@ export function BattleCommandScreen({
                   {item.value} / {item.detail}
                 </span>
               ))}
+              {selectedMapActionForecasts.length > 0 && (
+                <div className="map-selection-forecasts" aria-label="選択対象への指揮予測">
+                  {selectedMapActionForecasts.map((forecast) => (
+                    <article key={`${forecast.title}-${forecast.summary}`} className={`map-selection-forecast ${forecast.tone}`}>
+                      <strong>{forecast.title}</strong>
+                      <span>{forecast.summary}</span>
+                      <small>{forecast.detail}</small>
+                    </article>
+                  ))}
+                </div>
+              )}
               {(selectedEnemy || inspectedStructure || selectedStructure || selectedFrontlinePressure) && (
                 <div className="map-selection-actions" aria-label="選択対象への即応指揮">
                   {selectedEnemy && (

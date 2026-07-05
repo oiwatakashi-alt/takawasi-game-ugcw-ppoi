@@ -1,0 +1,69 @@
+{
+  "id": "takawasi-map-selection-forecast-qa",
+  "date": "2026-07-05",
+  "target": "Battle Command map selection inspector forecast cards",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "status": "pass",
+  "commands": {
+    "build": "npm run build",
+    "diffCheck": "git diff --check"
+  },
+  "flow": [
+    "Theater Command",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "Enable selection mode",
+    "Inspect structure",
+    "Run at 3x until enemies spawn",
+    "Inspect spotted enemy",
+    "Collect forecast and health evidence"
+  ],
+  "implementationVerified": {
+    "initialForecasts": [
+      "施設即応予測4部隊 / 塹壕線 / 安定",
+      "修理優先予測工兵あり / 耐久86",
+      "戦線対応予測維持 / 守備2 / 予備1"
+    ],
+    "facilityInspectionForecasts": [
+      "施設即応予測4部隊 / 塹壕線 / 安定 / 脅威0 / 修理率0.0",
+      "修理優先予測工兵あり / 耐久86",
+      "戦線対応予測維持 / 守備2 / 予備1"
+    ],
+    "enemyInspectionForecasts": [
+      "敵群対応予測2旅団 / 中央塹壕線 / 固守 / 最接近",
+      "戦線斉射予測第4戦列歩兵大隊基準 / 弾薬86",
+      "選択旅団集中予測第1戦列歩兵大隊 / 指名可能",
+      "施設即応予測4部隊 / 塹壕線 / 危険 / 脅威9",
+      "修理優先予測工兵あり / 耐久80",
+      "戦線対応予測予備投入 / 守備2 / 予備1 / 敵圧1931"
+    ],
+    "forecastTones": [
+      "ready",
+      "warning",
+      "danger"
+    ],
+    "collapseState": {
+      "forecastCount": 6,
+      "enemyForecastVisible": true,
+      "facilityForecastVisible": true,
+      "frontlineForecastVisible": true,
+      "actionButtonsDisabledAfterCollapse": true
+    }
+  },
+  "browserHealth": {
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "The battle reached line-collapse while collecting final evidence, so response buttons became disabled. Forecast cards remained visible and correctly showed enemy, facility, and frontline prediction rows.",
+    "The previous response-action QA remains the direct execution evidence for these buttons.",
+    "Mobile/cellphone QA remains outside the current active target."
+  ]
+}
