@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-map-selection-mode",
+  "date": "2026-07-05",
+  "scope": "Battle Command tactical map selection mode",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "npm run build",
+      "status": "pass",
+      "notes": "TypeScript project build and Vite production build completed successfully."
+    },
+    {
+      "name": "git diff --check",
+      "status": "pass",
+      "notes": "No whitespace errors reported."
+    },
+    {
+      "name": "desktop browser QA",
+      "status": "pass",
+      "notes": "In-app browser verified Theater -> Army Camp -> Deployment -> Battle Command at http://127.0.0.1:5173/."
+    }
+  ],
+  "qaFlow": [
+    "Opened the local app and moved through Theater -> Army Camp -> Deployment -> Battle Command.",
+    "Confirmed the selected-unit command panel includes `選択モード` and `.map-selection-inspector`.",
+    "Pressed `選択モード`; the battle map field became `command-select`, five frontline segments and one facility were visible, and the command status read `選択確認`.",
+    "Clicked the visible structure. The selection inspector changed from `担当施設` to `確認施設` without issuing a facility assignment.",
+    "Ran battle at 3x until enemies spawned, clicked an enemy group, and confirmed the enemy intent panel opened while focused-target count remained 0 and inspected enemy count became 1.",
+    "Clicked another player unit and confirmed exactly one selected player unit, selected-unit panel update, selected frontline update, and map inspector update.",
+    "Console errors/warnings: 0.",
+    "Broken images: 0.",
+    "Document horizontal overflow: false.",
+    "Visible `NaN`: false."
+  ],
+  "implementedBehavior": [
+    "`MapCommandMode` now includes `select` as a visible selection/inspection mode separate from command issuing.",
+    "Selection mode automatically shows frontline and facility layers to make clickable tactical entities discoverable.",
+    "The command compass includes a `選択` tile and the selected-unit button row includes `選択モード`.",
+    "`map-selection-inspector` summarizes the selected brigade, inspected enemy, selected frontline, and inspected/assigned facility.",
+    "Clicking a structure in selection mode inspects it without assigning it to the selected unit.",
+    "Clicking an enemy in selection mode inspects it without setting the selected unit's focus target.",
+    "Clicking a player unit in selection mode selects it, clears stale enemy/facility inspection state, and follows its assigned frontline."
+  ],
+  "outOfScope": [
+    "No BattleState or save schema fields were added.",
+    "No mobile/cellphone QA was run because it remains outside the current active target.",
+    "This pass does not add box selection or multi-select command groups."
+  ]
+}

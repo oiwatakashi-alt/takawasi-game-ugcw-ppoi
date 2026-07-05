@@ -116,7 +116,7 @@ interface BattleCommandScreenProps {
   onSaveStandingOrderTemplate?: (unit: BattleUnit, description?: string, frontlineSketchPoints?: BattlePosition[]) => void;
 }
 
-type MapCommandMode = "none" | "anchor" | "fallback" | "facility" | "focusTarget" | "segment";
+type MapCommandMode = "none" | "select" | "anchor" | "fallback" | "facility" | "focusTarget" | "segment";
 type DragOrderHandleKind = "anchor" | "fallback";
 type DragFrontlineHandleKind = "frontline-anchor" | "frontline-fallback";
 type TacticalMapLayerId =
@@ -153,6 +153,7 @@ interface BattleViewportRange {
 
 const mapCommandModeLabels: Record<MapCommandMode, string> = {
   none: "通常選択",
+  select: "選択確認",
   anchor: "基準位置指定",
   fallback: "後退地点指定",
   facility: "施設担当指定",
@@ -2556,6 +2557,7 @@ export function BattleCommandScreen({
   const [dragFrontlineHandle, setDragFrontlineHandle] = useState<DragFrontlineHandleState | null>(null);
   const [frontlineSketchDraft, setFrontlineSketchDraft] = useState<FrontlineSketchDraft | null>(null);
   const [selectedEnemyId, setSelectedEnemyId] = useState("");
+  const [inspectedStructureId, setInspectedStructureId] = useState("");
   const [selectedFrontlineSegmentId, setSelectedFrontlineSegmentId] = useState(() => battle.frontlineSegments[0]?.id ?? "");
   const [rotationTiredUnitIdBySegment, setRotationTiredUnitIdBySegment] = useState<Record<string, string>>({});
   const [rotationReserveUnitIdBySegment, setRotationReserveUnitIdBySegment] = useState<Record<string, string>>({});
@@ -2642,6 +2644,9 @@ export function BattleCommandScreen({
     : undefined;
   const selectedStructure = selectedUnit?.standingOrder.facilityAssignment
     ? battle.structures.find((structure) => structure.id === selectedUnit.standingOrder.facilityAssignment?.structureId)
+    : undefined;
+  const inspectedStructure = inspectedStructureId
+    ? battle.structures.find((structure) => structure.id === inspectedStructureId)
     : undefined;
   const selectedFocusTarget = selectedUnit?.focusTargetId
     ? battle.enemyUnits.find((enemy) => enemy.id === selectedUnit.focusTargetId)
@@ -2937,17 +2942,21 @@ export function BattleCommandScreen({
       ? `${battle.chokePoints.map((choke) => `${choke.name} 遅滞${choke.delayPercent}%`).join(" / ")}`
       : "なし";
   const frontlineGeometryLabel = frontlineGeometryDisplayLabel(battle.frontlineGeometry);
+  const isMapCommandMode =
+    commandMode !== "none" && commandMode !== "select";
   const selectedCommandInstruction =
-    selectedUnit && commandMode !== "none"
+    selectedUnit && isMapCommandMode
       ? commandMode === "anchor"
         ? `${selectedUnit.name}の基準位置を戦術マップでクリック`
         : commandMode === "fallback"
           ? `${selectedUnit.name}の後退地点を戦術マップでクリック`
           : commandMode === "facility"
             ? `${selectedUnit.name}の担当施設をクリック`
-            : commandMode === "focusTarget"
-              ? `${selectedUnit.name}の集中射撃目標をクリック`
-              : `${selectedUnit.name}の担当戦線区画をクリック`
+          : commandMode === "focusTarget"
+            ? `${selectedUnit.name}の集中射撃目標をクリック`
+            : `${selectedUnit.name}の担当戦線区画をクリック`
+      : selectedUnit && commandMode === "select"
+        ? "選択モード: 部隊、敵、施設、戦線をクリックして詳細確認"
       : selectedUnit
         ? "部隊、敵、施設、戦線を選択して状況を確認"
         : "旅団を選択";
@@ -2987,6 +2996,46 @@ export function BattleCommandScreen({
         },
       ]
     : [];
+  const selectedMapInspectionItems = [
+    selectedUnit
+      ? {
+          label: "選択旅団",
+          value: mapUnitDisplayName(selectedUnit),
+          detail: `${unitTypeLabels[selectedUnit.type]} / ${mapCoordinateLabel(selectedUnit.position)}`,
+        }
+      : undefined,
+    selectedEnemy
+      ? {
+          label: "確認敵群",
+          value: selectedEnemy.isSpotted ? mapEnemyDisplayName(selectedEnemy) : "未確認敵影",
+          detail: `${mapCoordinateLabel(selectedEnemy.position)} / ${
+            selectedEnemy.isSpotted
+              ? enemyAssaultPhaseLabels[selectedEnemy.assaultPlan.phase]
+              : `隠蔽${Math.round(selectedEnemy.concealment || enemyConcealmentAt(selectedEnemy, battle.terrainZones))}`
+          }`,
+        }
+      : undefined,
+    selectedFrontlineSegment
+      ? {
+          label: "選択戦線",
+          value: selectedFrontlineSegment.name,
+          detail: `${mapCoordinateLabel(selectedFrontlineSegment.anchor)} / 半径${Math.round(selectedFrontlineSegment.controlRadius)}`,
+        }
+      : undefined,
+    inspectedStructure
+      ? {
+          label: "確認施設",
+          value: fortificationTypeLabels[inspectedStructure.type],
+          detail: `${fortificationStatusLabels[inspectedStructure.status]} / ${inspectedStructure.facilityStateLabel}`,
+        }
+      : selectedStructure
+        ? {
+            label: "担当施設",
+            value: fortificationTypeLabels[selectedStructure.type],
+            detail: `${fortificationStatusLabels[selectedStructure.status]} / ${selectedStructure.facilityStateLabel}`,
+        }
+      : undefined,
+  ].filter((item): item is { label: string; value: string; detail: string } => Boolean(item));
   const selectedTacticalSuggestions = selectedUnit
     ? alerts
         .map((alert) => {
@@ -3030,14 +3079,14 @@ export function BattleCommandScreen({
     : [];
   const effectiveMapLayers: Record<TacticalMapLayerId, boolean> = {
     ...tacticalMapLayers,
-    frontlines: tacticalMapLayers.frontlines || commandMode === "segment" || !!dragFrontlineHandle,
+    frontlines: tacticalMapLayers.frontlines || commandMode === "segment" || commandMode === "select" || !!dragFrontlineHandle,
     orders:
       tacticalMapLayers.orders ||
       commandMode === "anchor" ||
       commandMode === "fallback" ||
       !!dragOrderHandle,
     targetAudit: tacticalMapLayers.targetAudit || commandMode === "focusTarget",
-    facilities: tacticalMapLayers.facilities || commandMode === "facility",
+    facilities: tacticalMapLayers.facilities || commandMode === "facility" || commandMode === "select",
   };
   const visibleMapLayerCount = tacticalMapLayerOrder.filter((layerId) => tacticalMapLayers[layerId]).length;
 
@@ -3616,6 +3665,7 @@ export function BattleCommandScreen({
     if (
       !selectedUnit ||
       commandMode === "none" ||
+      commandMode === "select" ||
       commandMode === "facility" ||
       commandMode === "focusTarget"
     ) {
@@ -3664,6 +3714,13 @@ export function BattleCommandScreen({
   };
 
   const assignSelectedFacility = (event: MouseEvent<HTMLElement>, structure: BattleStructure) => {
+    if (commandMode === "select") {
+      event.stopPropagation();
+      setInspectedStructureId(structure.id);
+      setSelectedEnemyId("");
+      scrollToPosition(structure.position);
+      return;
+    }
     if (!selectedUnit || commandMode !== "facility") {
       return;
     }
@@ -3682,6 +3739,9 @@ export function BattleCommandScreen({
   const assignSelectedFocusTarget = (event: MouseEvent<HTMLElement>, enemy: EnemyBattleUnit) => {
     event.stopPropagation();
     setSelectedEnemyId(enemy.id);
+    if (commandMode === "select") {
+      setInspectedStructureId("");
+    }
     if (commandMode !== "focusTarget") {
       scrollToPosition(enemy.position);
       return;
@@ -5721,6 +5781,23 @@ export function BattleCommandScreen({
                   </button>
                 );
               })}
+              <button
+                className={commandMode === "select" ? "active selection" : "selection"}
+                type="button"
+                onClick={() => toggleCommandMode("select")}
+              >
+                <strong>選択</strong>
+                <span>調査</span>
+                <small>部隊/敵/施設/戦線</small>
+              </button>
+            </div>
+            <div className="map-selection-inspector" aria-label="戦術マップ選択状況">
+              {selectedMapInspectionItems.map((item) => (
+                <span key={`${item.label}-${item.value}`}>
+                  <strong>{item.label}</strong>
+                  {item.value} / {item.detail}
+                </span>
+              ))}
             </div>
           </div>
           {selectedUnitFrontlinePressure && (
@@ -5792,6 +5869,13 @@ export function BattleCommandScreen({
             </div>
           </div>
           <div className="button-row compact">
+            <button
+              className={commandMode === "select" ? "active" : ""}
+              type="button"
+              onClick={() => toggleCommandMode("select")}
+            >
+              選択モード
+            </button>
             <button
               className={commandMode === "anchor" ? "active" : ""}
               type="button"
@@ -6204,7 +6288,7 @@ export function BattleCommandScreen({
         </div>
       )}
 
-      {commandMode !== "none" && selectedUnit && (
+      {isMapCommandMode && selectedUnit && (
         <div className="map-command-hint">
           {commandMode === "anchor" && `${selectedUnit.name}の基準位置をマップ上でクリック`}
           {commandMode === "fallback" && `${selectedUnit.name}の後退地点をマップ上でクリック`}
@@ -6646,6 +6730,13 @@ export function BattleCommandScreen({
               }
               event.stopPropagation();
               setSelectedUnitId(unit.unitId);
+              if (commandMode === "select") {
+                setSelectedEnemyId("");
+                setInspectedStructureId("");
+                if (unit.standingOrder.frontlineSegmentId) {
+                  setSelectedFrontlineSegmentId(unit.standingOrder.frontlineSegmentId);
+                }
+              }
               scrollToPosition(unit.position);
             }}
           >

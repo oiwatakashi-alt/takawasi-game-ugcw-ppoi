@@ -5076,6 +5076,16 @@ main {
   box-shadow: inset 0 0 0 1px rgba(47, 107, 69, 0.18);
 }
 
+.command-compass-grid button.selection {
+  border-color: rgba(71, 96, 118, 0.38);
+  background: rgba(224, 232, 229, 0.86);
+}
+
+.command-compass-grid button.selection.active {
+  border-color: rgba(71, 96, 118, 0.78);
+  background: rgba(207, 225, 224, 0.92);
+}
+
 .command-compass-grid strong,
 .command-compass-grid span,
 .command-compass-grid small {
@@ -5100,6 +5110,31 @@ main {
   color: #6b5f4d;
   font-size: 11px;
   font-weight: 800;
+}
+
+.map-selection-inspector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 5px;
+}
+
+.map-selection-inspector span {
+  min-width: 0;
+  border: 1px solid rgba(71, 96, 118, 0.24);
+  border-radius: 6px;
+  background: rgba(240, 246, 240, 0.76);
+  color: #34433d;
+  font-size: 11px;
+  font-weight: 850;
+  overflow: hidden;
+  padding: 5px 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-selection-inspector strong {
+  margin-right: 5px;
+  color: #2f4937;
 }
 
 .selected-frontline-diagnosis {
@@ -5519,6 +5554,22 @@ main {
 
 .battle-map-field.command-facility .map-unit.player {
   z-index: 5;
+}
+
+.battle-map-field.command-select .map-unit,
+.battle-map-field.command-select .map-structure,
+.battle-map-field.command-select .frontline-segment {
+  cursor: pointer;
+}
+
+.battle-map-field.command-select .map-unit.player,
+.battle-map-field.command-select .map-structure {
+  box-shadow: 0 0 0 2px rgba(71, 96, 118, 0.22), 0 6px 12px rgba(29, 23, 17, 0.18);
+}
+
+.battle-map-field.command-select .frontline-segment {
+  background: rgba(248, 239, 207, 0.22);
+  border-color: rgba(71, 96, 118, 0.44);
 }
 
 .battle-map-field.command-segment .frontline-segment {
