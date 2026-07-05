@@ -2842,6 +2842,47 @@ export function BattleCommandScreen({
         },
       ]
     : [];
+  const selectedTacticalSuggestions = selectedUnit
+    ? alerts
+        .map((alert) => {
+          const alertPosition =
+            alert.position ??
+            battle.playerUnits.find((unit) => unit.unitId === alert.unitId)?.position ??
+            battle.structures.find((structure) => structure.id === alert.structureId)?.position ??
+            battle.objectiveNodes.find((node) => node.id === alert.objectiveNodeId)?.position ??
+            selectedUnit.position;
+          const isDirectUnit = alert.unitId === selectedUnit.unitId;
+          const isSameSegment = !!alert.segmentId && alert.segmentId === selectedUnit.standingOrder.frontlineSegmentId;
+          const isAssignedFacility =
+            !!alert.structureId && alert.structureId === selectedUnit.standingOrder.facilityAssignment?.structureId;
+          const isFocusTarget =
+            !!selectedUnit.focusTargetId &&
+            battle.enemyUnits.some(
+              (enemy) => enemy.id === selectedUnit.focusTargetId && alert.position && distance(enemy.position, alert.position) <= 16,
+            );
+          const proximity = distance(selectedUnit.position, alertPosition);
+          const relevance =
+            (isDirectUnit ? 90 : 0) +
+            (isSameSegment ? 34 : 0) +
+            (isAssignedFacility ? 42 : 0) +
+            (isFocusTarget ? 24 : 0) +
+            Math.max(0, 30 - proximity * 0.4) +
+            (alert.severity === "danger" ? 24 : alert.severity === "warning" ? 12 : 0);
+          const reason = [
+            isDirectUnit ? "対象部隊" : undefined,
+            isSameSegment ? "同じ戦線" : undefined,
+            isAssignedFacility ? "担当施設" : undefined,
+            isFocusTarget ? "集中目標付近" : undefined,
+            `距離${Math.round(proximity)}`,
+          ]
+            .filter(Boolean)
+            .join(" / ");
+          return { alert, relevance, reason };
+        })
+        .filter((entry) => entry.alert.recommendation && entry.relevance >= 18)
+        .sort((a, b) => b.relevance - a.relevance)
+        .slice(0, 3)
+    : [];
   const effectiveMapLayers: Record<TacticalMapLayerId, boolean> = {
     ...tacticalMapLayers,
     frontlines: tacticalMapLayers.frontlines || commandMode === "segment" || !!dragFrontlineHandle,
@@ -4228,8 +4269,7 @@ export function BattleCommandScreen({
     return undefined;
   };
 
-  const applyAlertRecommendation = (event: MouseEvent<HTMLButtonElement>, alert: BattleAlert) => {
-    event.stopPropagation();
+  const applyAlertRecommendationCommand = (alert: BattleAlert) => {
     const unit = unitForAlert(alert);
     if (!unit) {
       return;
@@ -4312,6 +4352,11 @@ export function BattleCommandScreen({
       `${alert.title} / ${alert.detail}`,
       applyRecommendation,
     );
+  };
+
+  const applyAlertRecommendation = (event: MouseEvent<HTMLButtonElement>, alert: BattleAlert) => {
+    event.stopPropagation();
+    applyAlertRecommendationCommand(alert);
   };
 
   const applyAlertGroupRecommendation = (event: MouseEvent<HTMLButtonElement>, alert: BattleAlert) => {
@@ -5268,6 +5313,37 @@ export function BattleCommandScreen({
                   </button>
                 );
               })}
+            </div>
+          </div>
+          <div className="selected-tactical-suggestions" aria-label="選択部隊の戦術提案">
+            <div className="tactical-suggestion-heading">
+              <strong>戦術提案</strong>
+              <span>{selectedTacticalSuggestions.length > 0 ? `関連警報 ${selectedTacticalSuggestions.length}件` : "関連警報なし"}</span>
+              <span>{commandQueueMode ? "推奨は予約指揮へ積む" : "推奨は即時発令"}</span>
+            </div>
+            <div className="tactical-suggestion-list">
+              {selectedTacticalSuggestions.length === 0 && (
+                <p>この旅団に近い警報はない。現在の戦線、施設、集中目標を維持。</p>
+              )}
+              {selectedTacticalSuggestions.map(({ alert, relevance, reason }) => (
+                <article key={`selected-suggestion-${alert.id}`} className={`tactical-suggestion-card ${alert.severity}`}>
+                  <button className="tactical-suggestion-main" type="button" onClick={() => handleAlertClick(alert)}>
+                    <strong>{alert.title}</strong>
+                    <span>{alert.detail}</span>
+                    <small>
+                      関連{Math.round(relevance)} / {reason}
+                    </small>
+                  </button>
+                  <button
+                    className="tactical-suggestion-action"
+                    type="button"
+                    disabled={finished}
+                    onClick={() => applyAlertRecommendationCommand(alert)}
+                  >
+                    {alert.recommendation}
+                  </button>
+                </article>
+              ))}
             </div>
           </div>
           <div className="button-row compact">

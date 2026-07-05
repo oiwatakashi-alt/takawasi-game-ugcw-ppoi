@@ -4768,6 +4768,130 @@ main {
   font-weight: 800;
 }
 
+.selected-tactical-suggestions {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+  border: 1px solid rgba(67, 57, 44, 0.24);
+  border-left: 5px solid #8e2f2b;
+  border-radius: 8px;
+  background: rgba(248, 239, 207, 0.74);
+  padding: 8px;
+}
+
+.tactical-suggestion-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.tactical-suggestion-heading strong {
+  margin-right: 2px;
+}
+
+.tactical-suggestion-heading span {
+  border: 1px solid rgba(67, 57, 44, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 252, 240, 0.72);
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 7px;
+}
+
+.tactical-suggestion-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.tactical-suggestion-list p {
+  grid-column: 1 / -1;
+  border: 1px dashed rgba(67, 57, 44, 0.24);
+  border-radius: 6px;
+  color: #5d5649;
+  font-size: 12px;
+  font-weight: 800;
+  margin: 0;
+  padding: 7px 8px;
+}
+
+.tactical-suggestion-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: stretch;
+  border: 1px solid rgba(67, 57, 44, 0.26);
+  border-radius: 7px;
+  background: rgba(236, 226, 198, 0.84);
+  padding: 6px;
+}
+
+.tactical-suggestion-card.warning {
+  border-color: rgba(168, 111, 41, 0.46);
+  background: rgba(248, 231, 185, 0.9);
+}
+
+.tactical-suggestion-card.danger {
+  border-color: rgba(142, 47, 43, 0.5);
+  background: rgba(244, 218, 202, 0.9);
+}
+
+.tactical-suggestion-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #2a241c;
+  padding: 0;
+  text-align: left;
+}
+
+.tactical-suggestion-main strong,
+.tactical-suggestion-main span,
+.tactical-suggestion-main small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tactical-suggestion-main strong {
+  color: #5a2b24;
+  font-size: 12px;
+}
+
+.tactical-suggestion-main span {
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.tactical-suggestion-main small {
+  color: #6b5f4d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tactical-suggestion-action {
+  align-self: stretch;
+  border: 1px solid rgba(142, 47, 43, 0.38);
+  border-radius: 6px;
+  background: rgba(82, 47, 38, 0.92);
+  color: #f8efcf;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.tactical-suggestion-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .selected-command-summary {
   display: flex;
   flex-wrap: wrap;

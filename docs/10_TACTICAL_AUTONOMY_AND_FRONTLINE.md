@@ -1630,8 +1630,9 @@ Selected command compass follow-up implemented:
 
 - `BattleCommandScreen` now shows a `指揮コンパス` inside the selected-brigade command panel. It consolidates the current map-click mode, next action instruction, immediate/queued issue state, anchor, fallback, frontline segment, facility assignment, and focus target.
 - The compass buttons reuse existing map command modes for `基準`, `後退`, `戦線`, `施設`, and `集中`, so the player can enter the same anchor/fallback/frontline/facility/focus-target assignment flows without hunting through the lower command rows.
+- The selected-brigade panel now also shows `戦術提案`. It ranks alert recommendations relevant to the selected brigade by direct unit, same frontline, assigned facility, focus-target proximity, severity, and distance, then calls the same alert recommendation path used by alert cards. In queue mode, those recommendations are queued through `issueOrQueueBattleCommand`; otherwise they issue immediately.
 - This is intentionally UI-only over existing StandingOrder/order functions. It does not add new save or BattleState fields; it makes the wide-map semi-autonomous control model more legible for desktop tactical play.
-- `npm run build` and `git diff --check` passed. Browser QA remains blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-selected-command-compass-qa-report.json` records build-only verification and manual QA steps. Mobile/cellphone QA is outside the current target.
+- `npm run build` and `git diff --check` passed. Browser QA remains blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-selected-command-compass-qa-report.json` and `outputs/takawasi-selected-tactical-suggestions-qa-report.json` record build-only verification and manual QA steps. Mobile/cellphone QA is outside the current target.
 
 Deployment warning follow-up implemented:
 

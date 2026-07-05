@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-selected-tactical-suggestions-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-brigade tactical suggestion strip for alert recommendations and queued issue",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding selected-brigade tactical suggestions."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "BattleCommandScreen ranks alert recommendations relevant to the selected brigade by direct unit, same frontline, assigned facility, focus-target proximity, severity, and distance. Suggestion actions call the existing alert recommendation command path, so recommendations issue immediately or queue through the existing reservation system without new BattleState or save fields."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and select a player brigade.",
+    "Advance battle until alerts exist, or select a brigade near an existing line/facility/objective alert.",
+    "Verify 戦術提案 appears below 指揮コンパス and shows related alert count plus immediate/queued issue state.",
+    "Click a suggestion body and verify it selects/scrolls to the related alert target.",
+    "Click a suggestion action with queue mode off and verify the same recommendation behavior as the battle alert card.",
+    "Enable 予約指揮, click a suggestion action, and verify a matching 警報 ... command is added to the queue rather than immediately applied.",
+    "Verify suggestion relevance favors direct unit alerts, same frontline, assigned facility, focus target proximity, and nearby danger alerts.",
+    "Confirm console error count is 0 and the suggestion cards do not overlap the command compass or lower command rows at desktop 1440px."
+  ]
+}
