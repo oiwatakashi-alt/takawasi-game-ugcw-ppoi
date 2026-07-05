@@ -1,0 +1,42 @@
+{
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": "Command transmission officer and chief-of-staff carryover",
+  "mobileQa": "skipped; mobile/cellphone is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "status": "passed",
+    "flow": [
+      "Reset campaign",
+      "Camp",
+      "Deployment",
+      "Battle",
+      "Enable queued command mode with 停止して予約",
+      "Queue 弾性防御, 北へ15度, 敵指揮, 弾薬節約, 阻止射撃",
+      "Verify queue summary 一括混線 +1秒",
+      "Issue queue with 一括発令",
+      "Run 1x tick until command arrival",
+      "Withdraw",
+      "Open After Action",
+      "Apply result to camp",
+      "Check Officers tab and Army Camp recommendations",
+      "Reset campaign after QA"
+    ],
+    "observations": [
+      "After Action showed 伝令評価 発令5件 / 遅延5件 / 混線5件 / 最長4秒",
+      "Officers tab showed brigade commander history: 伝令混線 第1戦列歩兵大隊, 発令5件, 混線5件, 未着4件, 経験+1, 疲労+5",
+      "Officers tab showed chief-of-staff history: 参謀長 警告, 伝令混線, 全軍発令5件, 混線5件, 未着4件, 疲労+6",
+      "Army Camp staff recommendations showed 前戦評価 after result application",
+      "Campaign reset removed 伝令混線/伝令評価 state"
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0
+  }
+}

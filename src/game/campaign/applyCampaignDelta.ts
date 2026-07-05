@@ -1,5 +1,6 @@
 import type { BattleResult } from "../battle/types";
 import { commandDutyLoadByOfficer } from "../army/commandDuty";
+import { normalizeStaffAssignments } from "../army/headquarters";
 import { addResources } from "../logistics/spend";
 import { recoverOfficers } from "../officers/progression";
 import { strategicDoctrineFromDoctrine } from "../doctrine/applyDoctrine";
@@ -163,18 +164,53 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
   };
 
   const commandDutyLoads = commandDutyLoadByOfficer(campaign.army);
+  const chiefOfStaffOfficerId = normalizeStaffAssignments(campaign.army.formations[0]?.staffAssignments).find(
+    (assignment) => assignment.slotId === "chiefOfStaff",
+  )?.officerId;
+  const commandTransmissionCongestedCount = result.commandTransmissionOutcomes.filter(
+    (outcome) => outcome.congestionDelaySeconds > 0,
+  ).length;
+  const commandTransmissionUnarrivedCount = result.commandTransmissionOutcomes.filter((outcome) => !outcome.arrived).length;
+  const commandTransmissionMaxDelay = result.commandTransmissionOutcomes.reduce(
+    (max, outcome) => Math.max(max, outcome.delaySeconds),
+    0,
+  );
   const officers = recoverOfficers(campaign.officers).map((officer) => {
     const brigadeXp = result.officerXpById[officer.id] ?? 0;
     const divisionXp = result.divisionCommanderXpById[officer.id] ?? 0;
     const staffAccountabilityEntries = result.staffAccountabilityEvents.filter((event) => event.officerId === officer.id);
     const staffAccountabilityXp = staffAccountabilityEntries.reduce((sum, event) => sum + event.xpDelta, 0);
-    const xp = brigadeXp + divisionXp + staffAccountabilityXp;
     const wasBrigadeWounded = result.woundedOfficerIds.includes(officer.id);
     const wasDivisionWounded = result.divisionCommanderWoundedOfficerIds.includes(officer.id);
     const wasWounded = wasBrigadeWounded || wasDivisionWounded;
     const learnedFromMisinformation = result.intelligenceLessonOfficerIds.includes(officer.id);
     const unitName = result.officerUnitNamesById[officer.id] ?? "所属部隊";
     const commandedUnit = campaign.army.units.find((unit) => unit.officerId === officer.id);
+    const commandTransmissionEntries = commandedUnit
+      ? result.commandTransmissionOutcomes.filter((outcome) => outcome.unitId === commandedUnit.id)
+      : [];
+    const unitCommandTransmissionCongestedCount = commandTransmissionEntries.filter(
+      (outcome) => outcome.congestionDelaySeconds > 0,
+    ).length;
+    const unitCommandTransmissionUnarrivedCount = commandTransmissionEntries.filter((outcome) => !outcome.arrived).length;
+    const unitCommandTransmissionMaxDelay = commandTransmissionEntries.reduce(
+      (max, outcome) => Math.max(max, outcome.delaySeconds),
+      0,
+    );
+    const commandTransmissionFatigue =
+      commandTransmissionEntries.length > 0
+        ? Math.min(
+            5,
+            Math.ceil(unitCommandTransmissionCongestedCount / 2) + Math.min(2, unitCommandTransmissionUnarrivedCount),
+          )
+        : 0;
+    const commandTransmissionXp = unitCommandTransmissionCongestedCount > 0 || unitCommandTransmissionUnarrivedCount > 0 ? 1 : 0;
+    const staffCommandTransmissionFatigue =
+      officer.id === chiefOfStaffOfficerId && result.commandTransmissionOutcomes.length > 0
+        ? Math.min(6, Math.ceil(commandTransmissionCongestedCount / 2) + Math.min(3, commandTransmissionUnarrivedCount))
+        : 0;
+    const staffCommandTransmissionXp = staffCommandTransmissionFatigue > 0 ? 1 : 0;
+    const xp = brigadeXp + divisionXp + staffAccountabilityXp + commandTransmissionXp + staffCommandTransmissionXp;
     const rearGuardEntry = commandedUnit
       ? result.withdrawalRearGuard.find((entry) => entry.unitId === commandedUnit.id)
       : undefined;
@@ -187,14 +223,28 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
     const outcomeFatigue = xp > 0 ? (result.outcome === "collapse" ? 6 : result.outcome === "withdraw" ? 3 : 1) : 0;
     const staffAccountabilityFatigue = staffAccountabilityEntries.reduce((sum, event) => sum + event.fatigueDelta, 0);
     const fatigueGain =
-      dutyFatigue + staffAccountabilityFatigue + (xp > 0 ? Math.ceil(xp * 0.7) + commandPressure + outcomeFatigue : 0);
+      dutyFatigue +
+      staffAccountabilityFatigue +
+      commandTransmissionFatigue +
+      staffCommandTransmissionFatigue +
+      (xp > 0 ? Math.ceil(xp * 0.7) + commandPressure + outcomeFatigue : 0);
     const commandFatigue = clamp((officer.commandFatigue ?? 0) + fatigueGain, 0, 100);
     const history = [
       ...staffAccountabilityEntries.map(
         (event) =>
           `${result.title}: ${event.slotLabel} ${event.resultLabel}、${event.triggerLabel}、${event.lessonTag}、経験+${event.xpDelta}、疲労+${event.fatigueDelta}`,
       ),
+      ...(staffCommandTransmissionFatigue > 0
+        ? [
+            `${result.title}: 参謀長 警告、伝令混線、全軍発令${result.commandTransmissionOutcomes.length}件、混線${commandTransmissionCongestedCount}件、未着${commandTransmissionUnarrivedCount}件、最長${commandTransmissionMaxDelay}秒、経験+${staffCommandTransmissionXp}、疲労+${staffCommandTransmissionFatigue}`,
+          ]
+        : []),
       ...(learnedFromMisinformation ? [`${result.title}: 敵情誤認対応、偵察教訓を記録`] : []),
+      ...(commandTransmissionFatigue > 0
+        ? [
+            `${result.title}: 伝令混線 ${unitName}、発令${commandTransmissionEntries.length}件、混線${unitCommandTransmissionCongestedCount}件、未着${unitCommandTransmissionUnarrivedCount}件、最長${unitCommandTransmissionMaxDelay}秒、経験+${commandTransmissionXp}、疲労+${commandTransmissionFatigue}`,
+          ]
+        : []),
       ...(fatigueGain >= 4 ? [`${result.title}: 指揮疲労+${fatigueGain}（累積${commandFatigue}）`] : []),
       ...(divisionXp > 0 && divisionName
         ? [`${result.title}: ${divisionName}師団指揮、経験+${divisionXp}、危険度${divisionRisk}${wasDivisionWounded ? "、指揮所負傷" : ""}`]

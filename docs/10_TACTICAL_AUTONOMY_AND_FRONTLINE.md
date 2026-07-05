@@ -1601,6 +1601,12 @@ After Action carryover follow-up implemented:
 - `AfterActionScreen` now shows `伝令評価` totals and per-unit command rows. `applyBattleResult` writes the same command outcomes into campaign last message and brigade history as `伝令評価 ...`, and `tacticalLessons.ts` counts those histories as small next-battle readiness/control/fallback lessons.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five commands -> `一括混線 +1秒` -> `一括発令` -> 1x arrival -> `撤退実行` -> `戦果報告へ` -> apply result. After Action showed `発令5件 / 遅延5件 / 混線5件 / 最長4秒`; Army Camp retained `伝令評価` in last message, unit history, and `戦術教訓 伝令評価1件`. Console errors 0. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-after-action-qa-report.json`.
 
+Officer/staff carryover follow-up implemented:
+
+- `applyBattleResult` now aggregates each brigade's command-transmission outcomes for its commanding officer. Congested or unarrived commands add small XP, command fatigue, and officer history such as `伝令混線 第1戦列歩兵大隊、発令5件、混線5件、未着4件、最長4秒`.
+- The assigned `参謀長` also receives an army-level warning when the command queue produces transmission congestion, recording `参謀長 警告、伝令混線、全軍発令...`. This deliberately reuses the existing staff-accountability history shape so Army Camp `参謀部推奨` can surface the problem through `前戦評価` without adding a parallel recommendation system.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> `停止して予約` -> queue `弾性防御`, `北へ15度`, `敵指揮`, `弾薬節約`, `阻止射撃` -> `一括混線 +1秒` -> `一括発令` -> 1x tick -> `撤退実行` -> After Action -> apply result -> Officers tab. After Action showed `伝令評価 発令5件 / 遅延5件 / 混線5件 / 最長4秒`; Officers showed `伝令混線 第1戦列歩兵大隊...経験+1、疲労+5` and `参謀長 警告、伝令混線...疲労+6`; Army Camp staff recommendations showed `前戦評価`; console errors 0, broken images 0, and the QA campaign was reset afterward. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-command-transmission-officer-staff-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.
