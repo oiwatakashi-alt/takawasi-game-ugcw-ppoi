@@ -3072,6 +3072,31 @@ export function BattleCommandScreen({
     );
   };
 
+  const selectFrontlineDefender = (unit: BattleUnit) => {
+    setSelectedUnitId(unit.unitId);
+    scrollToPosition(unit.position);
+  };
+
+  const issueFrontlineDefenderRest = (unit: BattleUnit) => {
+    selectFrontlineDefender(unit);
+    issueOrQueueCommand(
+      unit,
+      "守備休息補給",
+      `士気${Math.round(unit.morale)} / 弾薬${Math.round(unit.ammo)} / ${segmentName(battle, unit.standingOrder.frontlineSegmentId)}`,
+      (state) => setUnitOrder(state, unit.unitId, "rest"),
+    );
+  };
+
+  const issueFrontlineDefenderFallbackGuard = (unit: BattleUnit) => {
+    selectFrontlineDefender(unit);
+    issueOrQueueCommand(
+      unit,
+      "守備後退",
+      `後退守備 / 士気${Math.round(unit.morale)} / 兵力${unit.soldiers}`,
+      (state) => applyStandingOrderPreset(state, unit.unitId, "fallback_guard"),
+    );
+  };
+
   const applyQueuedCommandBatch = (batchSize: number, issueLabel: string) => {
     const issuedCommands = queuedCommands.slice(0, batchSize);
     const remainingCommands = queuedCommands.slice(batchSize);
@@ -5162,16 +5187,17 @@ export function BattleCommandScreen({
                       距離{distanceToAnchor} / {warnings || "余力維持"}
                     </small>
                   </button>
-                  <button
-                    className="frontline-defender-select"
-                    type="button"
-                    onClick={() => {
-                      setSelectedUnitId(unit.unitId);
-                      scrollToPosition(unit.position);
-                    }}
-                  >
-                    選択
-                  </button>
+                  <div className="frontline-defender-actions">
+                    <button type="button" onClick={() => selectFrontlineDefender(unit)}>
+                      選択
+                    </button>
+                    <button type="button" disabled={finished} onClick={() => issueFrontlineDefenderRest(unit)}>
+                      休息補給
+                    </button>
+                    <button type="button" disabled={finished} onClick={() => issueFrontlineDefenderFallbackGuard(unit)}>
+                      後退守備
+                    </button>
+                  </div>
                 </article>
               ))}
               {selectedFrontlineDefenderDiagnostics.length === 0 && (

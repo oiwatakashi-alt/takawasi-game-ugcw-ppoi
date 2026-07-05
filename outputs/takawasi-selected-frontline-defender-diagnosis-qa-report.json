@@ -1,14 +1,14 @@
 {
   "id": "takawasi-selected-frontline-defender-diagnosis-qa",
   "date": "2026-07-05",
-  "scope": "Battle Command selected-frontline defender diagnosis cards",
+  "scope": "Battle Command selected-frontline defender diagnosis cards with direct rest/fallback commands",
   "result": "partial-pass",
   "verified": [
     {
       "check": "production build",
       "status": "pass",
       "command": "npm run build",
-      "notes": "TypeScript and Vite production build passed after adding selected-frontline defender diagnosis cards."
+      "notes": "TypeScript and Vite production build passed after adding selected-frontline defender diagnosis direct command buttons."
     },
     {
       "check": "whitespace/static diff check",
@@ -19,7 +19,7 @@
     {
       "check": "implementation review",
       "status": "pass",
-      "notes": "The selected-frontline panel derives defender diagnosis from existing selectedFrontlineDefenders and frontlineRotationStressScore, shows stress, morale, ammo, strength ratio, posture, target priority, anchor distance, and warnings, and selects/scrolls to the clicked brigade without adding BattleState or save fields."
+      "notes": "The selected-frontline panel derives defender diagnosis from existing selectedFrontlineDefenders and frontlineRotationStressScore, shows stress, morale, ammo, strength ratio, posture, target priority, anchor distance, and warnings, selects/scrolls to the clicked brigade, and routes 休息補給/後退守備 through existing issueOrQueueCommand paths without adding BattleState or save fields."
     }
   ],
   "notVerified": [
@@ -40,6 +40,9 @@
     "Verify defender cards are sorted with the most stressed brigade first.",
     "Verify each card shows stress, morale, ammo, strength ratio, posture, target priority, anchor distance, and warning or 余力維持.",
     "Click a defender card and verify that brigade becomes the selected unit and the viewport scrolls to its position.",
+    "Click 休息補給 with queue mode off and verify the defender receives the existing rest/resupply order.",
+    "Click 後退守備 with queue mode off and verify the defender receives the existing fallback-guard standing order.",
+    "Enable 予約指揮, click 休息補給 or 後退守備, and verify the selected defender command is queued with transmission preview.",
     "Confirm the selected-brigade panel updates to the same unit, including 指揮コンパス and 担当戦線診断.",
     "Confirm console error count is 0 and the defender cards do not overlap frontline command controls at desktop 1440px."
   ]

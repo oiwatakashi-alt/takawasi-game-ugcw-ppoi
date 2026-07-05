@@ -4434,8 +4434,13 @@ main {
   font-weight: 800;
 }
 
-.frontline-defender-select {
+.frontline-defender-actions {
+  display: grid;
+  gap: 4px;
   align-self: stretch;
+}
+
+.frontline-defender-actions button {
   border: 1px solid rgba(47, 83, 58, 0.36);
   border-radius: 6px;
   background: rgba(47, 83, 58, 0.9);
@@ -4444,6 +4449,16 @@ main {
   font-weight: 900;
   padding: 6px 8px;
   white-space: nowrap;
+}
+
+.frontline-defender-actions button:first-child {
+  background: rgba(255, 252, 240, 0.86);
+  color: #2f4937;
+}
+
+.frontline-defender-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .frontline-defender-empty {
