@@ -4198,6 +4198,121 @@ main {
   font-weight: 800;
 }
 
+.frontline-suggestion-board {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 8px;
+  border: 1px solid rgba(83, 62, 35, 0.22);
+  border-left: 5px solid #5d7a46;
+  border-radius: 7px;
+  background: rgba(255, 252, 240, 0.7);
+  padding: 8px;
+}
+
+.frontline-suggestion-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.frontline-suggestion-heading strong {
+  margin-right: 2px;
+}
+
+.frontline-suggestion-heading span {
+  border-radius: 6px;
+}
+
+.frontline-suggestion-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.frontline-suggestion-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: stretch;
+  border: 1px solid rgba(83, 62, 35, 0.22);
+  border-radius: 7px;
+  background: rgba(236, 226, 198, 0.82);
+  padding: 6px;
+}
+
+.frontline-suggestion-card.watch,
+.frontline-suggestion-card.warning {
+  border-color: rgba(168, 111, 41, 0.42);
+  background: rgba(248, 231, 185, 0.86);
+}
+
+.frontline-suggestion-card.danger {
+  border-color: rgba(142, 47, 43, 0.48);
+  background: rgba(244, 218, 202, 0.9);
+}
+
+.frontline-suggestion-card.info {
+  border-color: rgba(67, 57, 44, 0.22);
+}
+
+.frontline-suggestion-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #2a241c;
+  padding: 0;
+  text-align: left;
+}
+
+.frontline-suggestion-main strong,
+.frontline-suggestion-main span,
+.frontline-suggestion-main small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.frontline-suggestion-main strong {
+  color: #2f4937;
+  font-size: 12px;
+}
+
+.frontline-suggestion-main span {
+  border: 0;
+  background: transparent;
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0;
+}
+
+.frontline-suggestion-main small {
+  color: #6b5f4d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.frontline-suggestion-action {
+  align-self: stretch;
+  border: 1px solid rgba(47, 83, 58, 0.38);
+  border-radius: 6px;
+  background: rgba(47, 83, 58, 0.92);
+  color: #f8efcf;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.frontline-suggestion-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .frontline-terrain-readout {
   display: flex;
   flex-wrap: wrap;

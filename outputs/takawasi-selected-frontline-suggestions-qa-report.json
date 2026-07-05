@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-selected-frontline-suggestions-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-frontline suggestion board for pressure response, fighting rotation, and queued staff advisory application",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding selected-frontline suggestions."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "BattleCommandScreen now shows 戦線提案 for the selected frontline, comparing pressure response, fighting rotation, and staff advisory action. Pressure response and rotation keep using existing issueOrQueueBattleCommand routes, and staff advisory application now uses the same queue-capable route while preserving staffAdvisoryResponses carryover. No new BattleState or save fields were added."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and select a frontline from the pressure strip or map.",
+    "Verify the selected frontline panel shows 戦線提案 with pressure response, fighting rotation, and staff advisory cards.",
+    "Under queue mode off, click pressure response and verify the existing frontline pressure behavior applies immediately.",
+    "Enable 予約指揮, click pressure response, and verify a frontline command is queued.",
+    "If fighting rotation is available, click the rotation suggestion and verify it queues or applies the same 戦闘交代 command as the existing rotation panel.",
+    "If a staff advisory exists for the selected frontline, click the staff suggestion in queue mode and verify a 参謀 ... command appears in the queue.",
+    "After issuing the queued staff advisory, verify the same staff advisory response is recorded for After Action carryover.",
+    "Confirm console error count is 0 and the 戦線提案 board does not overlap frontline controls at desktop 1440px."
+  ]
+}

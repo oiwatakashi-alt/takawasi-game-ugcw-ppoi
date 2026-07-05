@@ -2708,6 +2708,58 @@ export function BattleCommandScreen({
         pressureReports,
       )
     : undefined;
+  const selectedFrontlineStaffAdvisory = selectedFrontlineSegment
+    ? staffAdvisories.find((advisory) => advisory.segment.id === selectedFrontlineSegment.id)
+    : undefined;
+  const selectedFrontlineSuggestionCards =
+    selectedFrontlineSegment && selectedFrontlinePressure
+      ? [
+          {
+            id: "pressure",
+            tone: selectedFrontlinePressure.level,
+            title: selectedFrontlinePressure.recommendationLabel,
+            detail: `敵圧${Math.round(selectedFrontlinePressure.pressure)} / 守備${selectedFrontlinePressure.defenders.length} / 予備${selectedFrontlinePressure.reserves.length}`,
+            reason: selectedFrontlinePressure.leadEnemy
+              ? `${mapEnemyDisplayName(selectedFrontlinePressure.leadEnemy)} / ${enemyAssaultPhaseLabels[selectedFrontlinePressure.leadEnemy.assaultPlan.phase]}`
+              : "主脅威なし",
+            disabled:
+              finished ||
+              selectedFrontlinePressure.level === "quiet" ||
+              (selectedFrontlinePressure.defenders.length === 0 && selectedFrontlinePressure.reserves.length === 0),
+            actionLabel: commandQueueMode ? "圧力対応を予約" : "圧力対応",
+            onApply: () => applyFrontlinePressureResponse(selectedFrontlinePressure),
+          },
+          {
+            id: "rotation",
+            tone: selectedFrontlineRotationPreview ? selectedFrontlinePressure.level : "quiet",
+            title: selectedFrontlineRotationPreview?.label ?? "戦闘交代なし",
+            detail: selectedFrontlineRotationPreview?.detail ?? "交代可能な守備/予備不足",
+            reason: `候補 守備${selectedFrontlineRotationOptions.tiredUnits.length} / 予備${selectedFrontlineRotationOptions.reserveUnits.length}`,
+            disabled: finished || !selectedFrontlineRotationPreview,
+            actionLabel: commandQueueMode ? "交代を予約" : "交代実行",
+            onApply: () =>
+              applyFrontlineRotationResponse(
+                selectedFrontlinePressure,
+                selectedRotationTiredUnitId,
+                selectedRotationReserveUnitId,
+              ),
+          },
+          {
+            id: "staff",
+            tone: selectedFrontlineStaffAdvisory?.severity ?? "quiet",
+            title: selectedFrontlineStaffAdvisory
+              ? `参謀 ${selectedFrontlineStaffAdvisory.preset.label}`
+              : "参謀警告なし",
+            detail: selectedFrontlineStaffAdvisory
+              ? selectedFrontlineStaffAdvisory.detail
+              : `${selectedFrontlineSegment.name}に緊急参謀警告なし`,
+            reason: selectedFrontlineStaffAdvisory?.assessment.reason ?? "現方針維持",
+            disabled: finished || !selectedFrontlineStaffAdvisory || selectedFrontlineStaffAdvisory.report.defenders.length === 0,
+            actionLabel: commandQueueMode ? "参謀案を予約" : "参謀案適用",
+            onApply: () => selectedFrontlineStaffAdvisory && applyStaffAdvisory(selectedFrontlineStaffAdvisory),
+          },
+        ]
+      : [];
   const reserveUnits = useMemo(() => reserveCommandUnits(battle), [battle]);
   const readyReserveUnits = reserveUnits.filter((unit) => (unit.reserveReadiness ?? 0) >= 52);
   const reserveAverageReadiness =
@@ -3778,50 +3830,56 @@ export function BattleCommandScreen({
     if (finished) {
       return;
     }
-    const nextBattle = applyFrontlineDoctrinePreset(battle, advisory.segment.id, advisory.preset.id);
-    const firstDefender = nextBattle.playerUnits.find(
-      (unit) => unit.standingOrder.frontlineSegmentId === advisory.segment.id && unit.soldiers > 0,
-    );
-    if (firstDefender) {
-      setSelectedUnitId(firstDefender.unitId);
-    }
     setSelectedFrontlineSegmentId(advisory.segment.id);
     setSelectedEnemyId(advisory.report.leadEnemy?.id ?? "");
     setCommandMode("none");
     scrollToPosition(advisory.report.leadEnemy?.position ?? advisory.segment.anchor);
-    const unitIds = nextBattle.playerUnits
-      .filter((unit) => unit.standingOrder.frontlineSegmentId === advisory.segment.id && unit.soldiers > 0)
-      .map((unit) => unit.unitId);
-    const leadThreatLabel = advisory.report.leadEnemy
-      ? `${mapEnemyDisplayName(advisory.report.leadEnemy)} ${enemyAssaultPhaseLabels[advisory.report.leadEnemy.assaultPlan.phase]}`
-      : undefined;
-    onChange({
-      ...nextBattle,
-      staffAdvisoryResponses: [
-        {
-          id: `staff-advisory-${battle.elapsedSeconds}-${advisory.segment.id}-${advisory.preset.id}`,
-          issuedAt: battle.elapsedSeconds,
-          segmentId: advisory.segment.id,
-          segmentName: advisory.segment.name,
-          presetId: advisory.preset.id,
-          presetLabel: advisory.preset.label,
-          reason: advisory.assessment.reason,
-          unitIds,
-          pressureAtIssue: Math.round(advisory.report.pressure),
-          leadThreatLabel,
-          forecast: {
-            casualtyRisk: advisory.assessment.casualtyRisk,
-            ammoBurn: advisory.assessment.ammoBurn,
-            lineRisk: advisory.assessment.lineRisk,
-          },
-        },
-        ...(nextBattle.staffAdvisoryResponses ?? []),
-      ].slice(0, 12),
-      log: [
-        `参謀警告対応: ${advisory.segment.name}へ${advisory.preset.label}。${advisory.assessment.reason}`,
-        ...nextBattle.log,
-      ].slice(0, 12),
-    });
+    const firstDefender = advisory.report.defenders[0];
+    if (firstDefender) {
+      setSelectedUnitId(firstDefender.unitId);
+    }
+    issueOrQueueBattleCommand(
+      `staff-advisory:${advisory.segment.id}:${advisory.preset.id}`,
+      advisory.segment.name,
+      `参謀 ${advisory.preset.label}`,
+      `${advisory.detail} / ${advisory.assessment.reason}`,
+      (state) => {
+        const nextBattle = applyFrontlineDoctrinePreset(state, advisory.segment.id, advisory.preset.id);
+        const unitIds = nextBattle.playerUnits
+          .filter((unit) => unit.standingOrder.frontlineSegmentId === advisory.segment.id && unit.soldiers > 0)
+          .map((unit) => unit.unitId);
+        const leadThreatLabel = advisory.report.leadEnemy
+          ? `${mapEnemyDisplayName(advisory.report.leadEnemy)} ${enemyAssaultPhaseLabels[advisory.report.leadEnemy.assaultPlan.phase]}`
+          : undefined;
+        return {
+          ...nextBattle,
+          staffAdvisoryResponses: [
+            {
+              id: `staff-advisory-${state.elapsedSeconds}-${advisory.segment.id}-${advisory.preset.id}`,
+              issuedAt: state.elapsedSeconds,
+              segmentId: advisory.segment.id,
+              segmentName: advisory.segment.name,
+              presetId: advisory.preset.id,
+              presetLabel: advisory.preset.label,
+              reason: advisory.assessment.reason,
+              unitIds,
+              pressureAtIssue: Math.round(advisory.report.pressure),
+              leadThreatLabel,
+              forecast: {
+                casualtyRisk: advisory.assessment.casualtyRisk,
+                ammoBurn: advisory.assessment.ammoBurn,
+                lineRisk: advisory.assessment.lineRisk,
+              },
+            },
+            ...(nextBattle.staffAdvisoryResponses ?? []),
+          ].slice(0, 12),
+          log: [
+            `参謀警告対応: ${advisory.segment.name}へ${advisory.preset.label}。${advisory.assessment.reason}`,
+            ...nextBattle.log,
+          ].slice(0, 12),
+        };
+      },
+    );
   };
 
   const selectReserveUnit = (unit: BattleUnit) => {
@@ -4974,6 +5032,38 @@ export function BattleCommandScreen({
               <span>地形推奨 {selectedFrontlineTerrainAssessment.suggestedDoctrine}</span>
             )}
           </div>
+          {selectedFrontlineSuggestionCards.length > 0 && (
+            <div className="frontline-suggestion-board" aria-label="選択戦線の戦術提案">
+              <div className="frontline-suggestion-heading">
+                <strong>戦線提案</strong>
+                <span>{commandQueueMode ? "推奨は予約指揮へ積む" : "推奨は即時発令"}</span>
+                <span>圧力 / 交代 / 参謀案</span>
+              </div>
+              <div className="frontline-suggestion-list">
+                {selectedFrontlineSuggestionCards.map((suggestion) => (
+                  <article key={suggestion.id} className={`frontline-suggestion-card ${suggestion.tone}`}>
+                    <button
+                      className="frontline-suggestion-main"
+                      type="button"
+                      onClick={() => selectedFrontlinePressure && inspectFrontlinePressure(selectedFrontlinePressure)}
+                    >
+                      <strong>{suggestion.title}</strong>
+                      <span>{suggestion.detail}</span>
+                      <small>{suggestion.reason}</small>
+                    </button>
+                    <button
+                      className="frontline-suggestion-action"
+                      type="button"
+                      disabled={suggestion.disabled}
+                      onClick={suggestion.onApply}
+                    >
+                      {suggestion.actionLabel}
+                    </button>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="frontline-command-actions">
             <button
               type="button"
