@@ -1,0 +1,70 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reload",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "CDP mouse drag on .deployment-depth-handle.forward",
+    "選抜部隊で戦闘開始"
+  ],
+  "deploymentDrag": {
+    "beforeSummary": [
+      "展開 戦区標準",
+      "戦線 森林左翼線",
+      "許可帯 X6-62 / Y11-36"
+    ],
+    "afterSummary": [
+      "展開 戦区標準+手動1",
+      "戦線 森林左翼線",
+      "許可帯 X6-70 / Y11-36"
+    ],
+    "handleCount": 4,
+    "handles": [
+      "出撃帯の後端をドラッグ",
+      "出撃帯の前端をドラッグ",
+      "出撃帯の北端をドラッグ",
+      "出撃帯の南端をドラッグ"
+    ],
+    "draggingClassAfterRelease": [],
+    "manualAdjustmentVisible": true
+  },
+  "battle": {
+    "textFlags": [
+      "参加 7旅団",
+      "展開 戦区標準+手動1",
+      "撤退実行",
+      "森林左翼線"
+    ],
+    "deployedNames": [
+      "第1戦列歩兵大隊",
+      "第4戦列歩兵大隊",
+      "東方辺境猟兵隊",
+      "第3野戦砲兵中隊",
+      "第6塹壕歩兵大隊",
+      "第2工兵中隊",
+      "衛戍予備歩兵大隊"
+    ],
+    "mapUnits": 7,
+    "unitCards": 7
+  },
+  "checks": {
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": [],
+    "horizontalOverflow": false,
+    "hasNaN": false
+  },
+  "scope": {
+    "mobileQa": "skipped; mobile/cellphone QA is not a current target"
+  }
+}

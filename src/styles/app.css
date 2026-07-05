@@ -2348,6 +2348,60 @@ main {
   z-index: 5;
 }
 
+.deployment-frontline-preview .deployment-depth-handle {
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  overflow: visible;
+  border: 1px solid rgba(164, 207, 128, 0.88);
+  border-radius: 50%;
+  background: rgba(31, 55, 24, 0.92);
+  box-shadow:
+    0 0 0 2px rgba(16, 26, 14, 0.7),
+    0 0 12px rgba(164, 207, 128, 0.22);
+  color: #ecf8d9;
+  padding: 0;
+  text-align: center;
+  touch-action: none;
+}
+
+.deployment-frontline-preview .deployment-depth-handle.rear,
+.deployment-frontline-preview .deployment-depth-handle.forward {
+  cursor: ew-resize;
+  transform: translate(-50%, -50%);
+}
+
+.deployment-frontline-preview .deployment-depth-handle.north,
+.deployment-frontline-preview .deployment-depth-handle.south {
+  cursor: ns-resize;
+  transform: translate(-50%, -50%);
+}
+
+.deployment-frontline-preview .deployment-depth-handle.dragging,
+.deployment-frontline-preview .deployment-depth-handle:hover {
+  border-color: #e7bf63;
+  background: rgba(74, 98, 43, 0.96);
+  box-shadow:
+    0 0 0 2px rgba(231, 191, 99, 0.35),
+    0 0 18px rgba(231, 191, 99, 0.22);
+}
+
+.deployment-frontline-preview .deployment-depth-handle span {
+  color: #f4ffd9;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.deployment-frontline-preview.dragging-depth {
+  cursor: grabbing;
+  user-select: none;
+}
+
 .planner-sketch-editor {
   display: grid;
   gap: 8px;

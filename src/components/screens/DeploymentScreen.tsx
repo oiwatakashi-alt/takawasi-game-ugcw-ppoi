@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { assetRegistry } from "../../assets/manifest";
 import { divisionCommandProfile, divisionForUnit } from "../../game/army/divisions";
 import { commandDutyLoadByOfficer, commandDutyProfileForOfficer } from "../../game/army/commandDuty";
@@ -260,6 +260,31 @@ const previewDeploymentLimitStyle = (segment: ReturnType<typeof createFrontlineS
   };
 };
 
+const previewDeploymentDepthHandleStyle = (
+  segment: ReturnType<typeof createFrontlineSegmentsForSector>[number],
+  edge: DeploymentDepthDragEdge,
+): CSSProperties => {
+  const zone = segment.deploymentLimit?.zone ?? segment.zone;
+  const positions: Record<DeploymentDepthDragEdge, BattlePosition> = {
+    rear: { x: zone.x, y: zone.y + zone.height / 2 },
+    forward: { x: zone.x + zone.width, y: zone.y + zone.height / 2 },
+    north: { x: zone.x + zone.width / 2, y: zone.y },
+    south: { x: zone.x + zone.width / 2, y: zone.y + zone.height },
+  };
+  const position = positions[edge];
+  return {
+    left: `${(position.x / defaultBattleMapBounds.width) * 100}%`,
+    top: `${(position.y / defaultBattleMapBounds.height) * 100}%`,
+  };
+};
+
+type DeploymentDepthDragEdge = "rear" | "forward" | "north" | "south";
+
+type DeploymentDepthDragState = {
+  segmentId: string;
+  edge: DeploymentDepthDragEdge;
+};
+
 export function DeploymentScreen({
   campaign,
   onBackToCamp,
@@ -369,6 +394,28 @@ export function DeploymentScreen({
   const [deploymentSketchDraftPoints, setDeploymentSketchDraftPoints] = useState<BattlePosition[]>([]);
   const [deploymentSketchDragActive, setDeploymentSketchDragActive] = useState(false);
   const deploymentSketchWasDraggedRef = useRef(false);
+  const deploymentPreviewRef = useRef<HTMLDivElement | null>(null);
+  const [deploymentDepthDrag, setDeploymentDepthDrag] = useState<DeploymentDepthDragState | null>(null);
+  const deploymentDepthDragLastPointRef = useRef<BattlePosition | null>(null);
+  const deploymentDepthWasDraggedRef = useRef(false);
+
+  useEffect(() => {
+    if (!deploymentDepthDrag) {
+      return undefined;
+    }
+    const clearDepthDrag = () => {
+      setDeploymentDepthDrag(null);
+      deploymentDepthDragLastPointRef.current = null;
+    };
+    window.addEventListener("pointerup", clearDepthDrag);
+    window.addEventListener("pointercancel", clearDepthDrag);
+    window.addEventListener("blur", clearDepthDrag);
+    return () => {
+      window.removeEventListener("pointerup", clearDepthDrag);
+      window.removeEventListener("pointercancel", clearDepthDrag);
+      window.removeEventListener("blur", clearDepthDrag);
+    };
+  }, [deploymentDepthDrag]);
   const selectedUnits = deployableUnits.filter((unit) => selectedUnitIds.includes(unit.id));
   const reserveUnits = deployableUnits.filter((unit) => !selectedUnitIds.includes(unit.id));
   const reserveUnitIdSet = new Set(reserveUnitIds);
@@ -770,6 +817,169 @@ export function DeploymentScreen({
       y: ((event.clientY - rect.top) / rect.height) * defaultBattleMapBounds.height,
     });
   };
+
+  const pointFromPreviewClient = (clientX: number, clientY: number): BattlePosition | null => {
+    const preview = deploymentPreviewRef.current;
+    if (!preview) {
+      return null;
+    }
+    const rect = preview.getBoundingClientRect();
+    return clampSketchPoint({
+      x: ((clientX - rect.left) / rect.width) * defaultBattleMapBounds.width,
+      y: ((clientY - rect.top) / rect.height) * defaultBattleMapBounds.height,
+    });
+  };
+
+  const applyDeploymentDepthDragDelta = (
+    segmentId: string,
+    edge: DeploymentDepthDragEdge,
+    delta: BattlePosition,
+  ) => {
+    if (Math.hypot(delta.x, delta.y) < 0.35) {
+      return;
+    }
+    deploymentDepthWasDraggedRef.current = true;
+    if (edge === "rear") {
+      adjustSegmentHandle(segmentId, {
+        deploymentLimitDelta: { x: delta.x, y: 0 },
+        deploymentLimitSizeDelta: { width: -delta.x, height: 0 },
+      });
+      return;
+    }
+    if (edge === "forward") {
+      adjustSegmentHandle(segmentId, {
+        deploymentLimitSizeDelta: { width: delta.x, height: 0 },
+      });
+      return;
+    }
+    if (edge === "north") {
+      adjustSegmentHandle(segmentId, {
+        deploymentLimitDelta: { x: 0, y: delta.y },
+        deploymentLimitSizeDelta: { width: 0, height: -delta.y },
+      });
+      return;
+    }
+    adjustSegmentHandle(segmentId, {
+      deploymentLimitSizeDelta: { width: 0, height: delta.y },
+    });
+  };
+
+  const startDeploymentDepthDrag = (
+    event: PointerEvent<HTMLButtonElement>,
+    segment: FrontlineSegment,
+    edge: DeploymentDepthDragEdge,
+  ) => {
+    if (deploymentSketchMode || !segment.deploymentLimit) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    assignSegment(segment.id);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDeploymentDepthDrag({ segmentId: segment.id, edge });
+    deploymentDepthDragLastPointRef.current = pointFromPreviewClient(event.clientX, event.clientY);
+    deploymentDepthWasDraggedRef.current = false;
+  };
+
+  const moveDeploymentDepthDrag = (event: PointerEvent<HTMLButtonElement>) => {
+    if (!deploymentDepthDrag) {
+      return;
+    }
+    const nextPoint = pointFromPreviewClient(event.clientX, event.clientY);
+    const previousPoint = deploymentDepthDragLastPointRef.current;
+    if (!nextPoint || !previousPoint) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    const delta = {
+      x: nextPoint.x - previousPoint.x,
+      y: nextPoint.y - previousPoint.y,
+    };
+    applyDeploymentDepthDragDelta(deploymentDepthDrag.segmentId, deploymentDepthDrag.edge, delta);
+    deploymentDepthDragLastPointRef.current = nextPoint;
+  };
+
+  const finishDeploymentDepthDrag = (event: PointerEvent<HTMLButtonElement>) => {
+    if (!deploymentDepthDrag) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDeploymentDepthDrag(null);
+    deploymentDepthDragLastPointRef.current = null;
+  };
+
+  const startDeploymentDepthMouseDrag = (
+    event: MouseEvent<HTMLButtonElement>,
+    segment: FrontlineSegment,
+    edge: DeploymentDepthDragEdge,
+  ) => {
+    if (deploymentSketchMode || !segment.deploymentLimit) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    assignSegment(segment.id);
+    setDeploymentDepthDrag({ segmentId: segment.id, edge });
+    deploymentDepthDragLastPointRef.current = pointFromPreviewClient(event.clientX, event.clientY);
+    deploymentDepthWasDraggedRef.current = false;
+  };
+
+  const clickDeploymentDepthHandle = (
+    event: MouseEvent<HTMLButtonElement>,
+    segmentId: string,
+    edge: DeploymentDepthDragEdge,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (deploymentDepthWasDraggedRef.current) {
+      deploymentDepthWasDraggedRef.current = false;
+      return;
+    }
+    const stepDelta: Record<DeploymentDepthDragEdge, BattlePosition> = {
+      rear: { x: -3, y: 0 },
+      forward: { x: 3, y: 0 },
+      north: { x: 0, y: -2 },
+      south: { x: 0, y: 2 },
+    };
+    applyDeploymentDepthDragDelta(segmentId, edge, stepDelta[edge]);
+  };
+
+  useEffect(() => {
+    if (!deploymentDepthDrag) {
+      return undefined;
+    }
+    const handleMouseMove = (event: globalThis.MouseEvent) => {
+      if (event.buttons !== 1) {
+        return;
+      }
+      const nextPoint = pointFromPreviewClient(event.clientX, event.clientY);
+      const previousPoint = deploymentDepthDragLastPointRef.current;
+      if (!nextPoint || !previousPoint) {
+        return;
+      }
+      const delta = {
+        x: nextPoint.x - previousPoint.x,
+        y: nextPoint.y - previousPoint.y,
+      };
+      applyDeploymentDepthDragDelta(deploymentDepthDrag.segmentId, deploymentDepthDrag.edge, delta);
+      deploymentDepthDragLastPointRef.current = nextPoint;
+    };
+    const clearMouseDrag = () => {
+      setDeploymentDepthDrag(null);
+      deploymentDepthDragLastPointRef.current = null;
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", clearMouseDrag);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", clearMouseDrag);
+    };
+  }, [deploymentDepthDrag]);
 
   const simplifySketchPoints = (points: BattlePosition[]): BattlePosition[] => {
     const clamped = points.map(clampSketchPoint);
@@ -1814,7 +2024,8 @@ export function DeploymentScreen({
               <div
                 className={`deployment-frontline-preview ${deploymentSketchMode ? "sketch-drawing" : ""} ${
                   deploymentSketchDragActive ? "dragging-sketch" : ""
-                }`}
+                } ${deploymentDepthDrag ? "dragging-depth" : ""}`}
+                ref={deploymentPreviewRef}
                 aria-label="戦区戦線プレビュー"
                 onClick={handleDeploymentPreviewClick}
                 onPointerDown={handleDeploymentSketchPointerDown}
@@ -1887,6 +2098,45 @@ export function DeploymentScreen({
                     {segment.deploymentLimit?.label ?? "出撃帯"}
                   </span>
                 ))}
+                {activeSegment?.deploymentLimit &&
+                  (["rear", "forward", "north", "south"] as const).map((edge) => (
+                    <button
+                      key={`${activeSegment.id}-deployment-depth-${edge}`}
+                      type="button"
+                      className={`deployment-depth-handle ${edge} ${
+                        deploymentDepthDrag?.segmentId === activeSegment.id && deploymentDepthDrag.edge === edge
+                          ? "dragging"
+                          : ""
+                      }`}
+                      style={previewDeploymentDepthHandleStyle(activeSegment, edge)}
+                      onClick={(event) => clickDeploymentDepthHandle(event, activeSegment.id, edge)}
+                      onPointerDown={(event) => startDeploymentDepthDrag(event, activeSegment, edge)}
+                      onPointerMove={moveDeploymentDepthDrag}
+                      onPointerUp={finishDeploymentDepthDrag}
+                      onPointerCancel={finishDeploymentDepthDrag}
+                      onMouseDown={(event) => startDeploymentDepthMouseDrag(event, activeSegment, edge)}
+                      title={
+                        edge === "rear"
+                          ? "出撃帯の後端をドラッグ"
+                          : edge === "forward"
+                            ? "出撃帯の前端をドラッグ"
+                            : edge === "north"
+                              ? "出撃帯の北端をドラッグ"
+                              : "出撃帯の南端をドラッグ"
+                      }
+                      aria-label={
+                        edge === "rear"
+                          ? "出撃帯後端ドラッグ"
+                          : edge === "forward"
+                            ? "出撃帯前端ドラッグ"
+                            : edge === "north"
+                              ? "出撃帯北端ドラッグ"
+                              : "出撃帯南端ドラッグ"
+                      }
+                    >
+                      <span>{edge === "rear" ? "後" : edge === "forward" ? "前" : edge === "north" ? "北" : "南"}</span>
+                    </button>
+                  ))}
                 {frontlineSegments.map((segment) => (
                   <button
                     key={segment.id}
