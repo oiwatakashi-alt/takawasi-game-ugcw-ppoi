@@ -1,0 +1,46 @@
+{
+  "id": "takawasi-enemy-command-linked-frontline-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command enemy command-network cards linked to frontline pressure response and queued issue",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding linked-frontline enemy command cards."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "Enemy command-network cards derive the linked frontline from group.targetSegment and existing pressureReports, display pressure/defender/reserve/recommendation context, and call applyFrontlinePressureResponse through a new 対応戦線 action. Because applyFrontlinePressureResponse already routes through issueOrQueueBattleCommand, the action queues under 予約指揮 without adding BattleState or save fields."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and advance until enemy command-network cards appear.",
+    "Verify each command group with a target frontline shows 対応戦線 with frontline pressure, defenders, reserves, and recommendation.",
+    "Click 詳細 and verify the enemy group still selects/scrolls as before.",
+    "Click 対応戦線 with queue mode off and verify the same frontline pressure response applies.",
+    "Enable 予約指揮, click 対応戦線, and verify a frontline pressure command is queued.",
+    "Verify quiet or missing linked frontline cards disable 対応戦線.",
+    "Confirm console error count is 0 and enemy command-network card text does not overlap at desktop 1440px."
+  ]
+}

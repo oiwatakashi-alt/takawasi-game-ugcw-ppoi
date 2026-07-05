@@ -3772,6 +3772,24 @@ main {
   color: #7a2f2c;
 }
 
+.enemy-command-group-main .enemy-command-frontline-link {
+  border-left: 3px solid rgba(47, 83, 58, 0.34);
+  padding-left: 6px;
+  white-space: normal;
+}
+
+.enemy-command-group-main .enemy-command-frontline-link.watch {
+  color: #5d5649;
+}
+
+.enemy-command-group-main .enemy-command-frontline-link.warning {
+  color: #765222;
+}
+
+.enemy-command-group-main .enemy-command-frontline-link.danger {
+  color: #7a2f2c;
+}
+
 .enemy-command-group-card.locked {
   border-color: rgba(95, 52, 46, 0.46);
 }

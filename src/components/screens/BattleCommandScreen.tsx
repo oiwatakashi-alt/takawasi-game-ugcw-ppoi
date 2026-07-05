@@ -4807,7 +4807,11 @@ export function BattleCommandScreen({
             <span>発見敵 {spottedEnemyCount}/{battle.enemyUnits.length}</span>
           </div>
           <div className="enemy-command-network-list">
-            {enemyCommandGroups.map((group) => (
+            {enemyCommandGroups.map((group) => {
+              const linkedPressureReport = group.targetSegment
+                ? pressureReports.find((report) => report.segment.id === group.targetSegment?.id)
+                : undefined;
+              return (
               <article key={group.id} className={`enemy-command-group-card ${group.state} ${group.responseStatusTone}`}>
                 <button
                   className="enemy-command-group-main"
@@ -4840,6 +4844,13 @@ export function BattleCommandScreen({
                     主脅威 {mapEnemyDisplayName(group.leadThreat)} {enemyAssaultPhaseLabels[group.leadThreat.assaultPlan.phase]} /{" "}
                     {group.targetSegment?.name ?? group.targetName}
                   </small>
+                  {linkedPressureReport && (
+                    <small className={`enemy-command-frontline-link ${linkedPressureReport.level}`}>
+                      対応戦線 {linkedPressureReport.segment.name} / {frontlinePressureLevelLabels[linkedPressureReport.level]} / 敵圧
+                      {Math.round(linkedPressureReport.pressure)} / 守備{linkedPressureReport.defenders.length} / 予備
+                      {linkedPressureReport.reserves.length} / 推奨{linkedPressureReport.recommendationLabel}
+                    </small>
+                  )}
                   {group.pursuitTarget ? (
                     <small>
                       追撃候補 {mapEnemyDisplayName(group.pursuitTarget)} / {group.pursuitReason} / 凝集
@@ -4860,6 +4871,14 @@ export function BattleCommandScreen({
                   </button>
                   <button className="enemy-command-group-action" type="button" onClick={() => inspectEnemyCommandGroup(group)}>
                     詳細
+                  </button>
+                  <button
+                    className="enemy-command-group-action"
+                    type="button"
+                    disabled={!linkedPressureReport || linkedPressureReport.level === "quiet"}
+                    onClick={() => linkedPressureReport && applyFrontlinePressureResponse(linkedPressureReport)}
+                  >
+                    対応戦線
                   </button>
                   <button
                     className="enemy-command-group-action"
@@ -4887,7 +4906,8 @@ export function BattleCommandScreen({
                   </button>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
