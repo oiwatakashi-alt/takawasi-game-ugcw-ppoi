@@ -375,7 +375,7 @@ Still deferred:
 
 - direct drag placement
 - freehand line drawing
-- advanced elevation-specific line-of-sight beyond current rectangle hill modifiers and deeper defilade/covered-position rules
+- deeper elevation-specific line-of-sight beyond current hill/reverse-slope rectangles
 - deeper enemy staff hierarchy beyond current officer command and morale routing
 - freehand drag-style formation rotation
 
@@ -1378,6 +1378,19 @@ Implemented:
 - `waves.ts` gives this profile forward enemy entry points so the selected hill-side brigade can produce a fireable high-ground target-audit candidate within the first live tick window.
 - Battle Command shows the tactical profile label in the top HUD and logs the profile summary during battle creation.
 - Desktop 1440px browser QA verified `http://127.0.0.1:5173/?takawasiTerrainProfile=high-ground` through reset -> Camp -> Deployment -> Battle -> 1x tick. The battle showed `高地稜線 移動84% / 高地射界`, selected sight `射線 減衰 森林遮蔽帯/高地稜線 / 高地射界 高地稜線`, action reason `射撃判断: アンデッド群集 / 優先最接近 / 減衰 森林遮蔽帯/高地稜線 / 高地射界 高地稜線`, and target audit `射線減衰 森林遮蔽帯/高地稜線 高地射界 高地稜線 / 距離33 / 戦列距離31 / 有効射程34`. Broken images 0, console errors 0, horizontal overflow false. Mobile QA remains outside the current target. QA report: `outputs/takawasi-high-ground-los-profile-qa-report.json`.
+
+## Implemented Defilade / Covered Position LOS Slice - 2026-07-05
+
+LOS now distinguishes a target using deep cover or the reverse side of a ridge from a target merely touching a cover edge.
+
+Implemented:
+
+- `lineOfSightBlockage` detects `低姿勢遮蔽` when the target sits inside forest, village, or trench terrain away from the edge.
+- Deep-cover targets increase effective blockage, reduce fire output, and slightly reduce effective range rather than acting as only display text.
+- `lineOfSightBlockage` also detects reverse-slope hill targets as `逆斜面遮蔽` when the shooter is not on high ground and the target is across the hill centerline.
+- Reverse-slope targets apply a stronger fire/range penalty than the previous generic `敵稜線` case while preserving the older uphill modifier for non-reverse-slope hill targets.
+- Battle Command target-audit rows now include LOS modifiers even when the result is blocked, so `遮断` rows can still explain whether the problem is forest, trench, low posture, or ridge geometry.
+- Desktop 1440px browser QA verified `http://127.0.0.1:5173/?takawasiTerrainProfile=high-ground` through reset -> Camp -> Deployment -> Battle -> 1x and 3x movement. The battle still showed `高地射線検証` and `高地稜線 移動84% / 高地射界`; after enemy movement, target audit showed `低姿勢遮蔽 塹壕掩体線` with reduced effective range (`有効射程33`) while high-ground firing labels remained visible. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. The natural browser pass did not produce a visible `逆斜面遮蔽` target, so a later deterministic reverse-slope QA profile remains useful. Mobile QA remains outside the current target. QA report: `outputs/takawasi-defilade-covered-position-los-qa-report.json`.
 
 ## Implemented Frontline Terrain Assessment Slice - 2026-07-04
 

@@ -1843,13 +1843,13 @@ const targetAuditStatus = (entry: TargetAuditEntry): string => {
   if (!entry.inArcAndRange) {
     return "射界外/遠距離";
   }
+  const modifier = entry.lineOfSight.modifiers.length > 0 ? ` ${entry.lineOfSight.modifiers.join("/")}` : "";
   if (entry.lineOfSight.blocked) {
-    return `射線遮断 ${entry.lineOfSight.blockers.join("/")}`;
+    return `射線遮断 ${entry.lineOfSight.blockers.join("/")}${modifier}`;
   }
   if (entry.isFocusTarget) {
     return "指名目標";
   }
-  const modifier = entry.lineOfSight.modifiers.length > 0 ? ` ${entry.lineOfSight.modifiers.join("/")}` : "";
   return entry.lineOfSight.blockage > 0
     ? `射線減衰 ${entry.lineOfSight.blockers.join("/")}${modifier}`
     : `射撃可能${modifier}`;

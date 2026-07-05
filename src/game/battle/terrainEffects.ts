@@ -228,6 +228,18 @@ const activeZonesAt = (position: BattlePosition, terrainZones: BattleTerrainZone
 const isCoverEdgeTerrain = (zone: BattleTerrainZone): boolean =>
   zone.terrainTag === "forest" || zone.terrainTag === "village" || zone.terrainTag === "trench";
 
+const zoneCenter = (zone: BattleTerrainZone): BattlePosition => ({
+  x: zone.zone.x + zone.zone.width / 2,
+  y: zone.zone.y + zone.zone.height / 2,
+});
+
+const isReverseSlopeTarget = (from: BattlePosition, to: BattlePosition, hill: BattleTerrainZone): boolean => {
+  const center = zoneCenter(hill);
+  const horizontalPass = from.x < center.x ? to.x > center.x + hill.zone.width * 0.16 : to.x < center.x - hill.zone.width * 0.16;
+  const verticalPass = Math.abs(to.y - center.y) <= hill.zone.height * 0.58;
+  return horizontalPass && verticalPass;
+};
+
 export const lineOfSightBlockage = (
   from: BattlePosition,
   to: BattlePosition,
@@ -241,6 +253,8 @@ export const lineOfSightBlockage = (
   const toHighGround = toZones.find((zone) => zone.terrainTag === "hill");
   const fromCoverEdge = fromZones.find((zone) => isCoverEdgeTerrain(zone) && edgeDistance(zone, from) <= 7);
   const toCoverEdge = toZones.find((zone) => isCoverEdgeTerrain(zone) && edgeDistance(zone, to) <= 7);
+  const toDeepCover = toZones.find((zone) => isCoverEdgeTerrain(zone) && edgeDistance(zone, to) > 7);
+  const reverseSlopeTarget = !!toHighGround && !fromHighGround && isReverseSlopeTarget(from, to, toHighGround);
 
   for (let index = 1; index < sampleCount; index += 1) {
     const ratio = index / sampleCount;
@@ -275,23 +289,30 @@ export const lineOfSightBlockage = (
   }
 
   const highGroundFactor = fromHighGround ? 0.62 : 1;
-  const counterSlopeFactor = !fromHighGround && toHighGround ? 1.14 : 1;
+  const counterSlopeFactor = reverseSlopeTarget ? 1.26 : !fromHighGround && toHighGround ? 1.14 : 1;
+  const deepCoverFactor = toDeepCover ? 1.12 : 1;
   const blockage = Array.from(sampledZones.values()).reduce(
-    (sum, entry) => sum + entry.weight * highGroundFactor * counterSlopeFactor,
+    (sum, entry) => sum + entry.weight * highGroundFactor * counterSlopeFactor * deepCoverFactor,
     0,
   );
   const modifiers = [
     fromHighGround ? `高地射界 ${fromHighGround.name}` : undefined,
     fromCoverEdge ? `遮蔽端射撃 ${fromCoverEdge.name}` : undefined,
     toCoverEdge ? `敵遮蔽端 ${toCoverEdge.name}` : undefined,
-    !fromHighGround && toHighGround ? `敵稜線 ${toHighGround.name}` : undefined,
+    toDeepCover ? `低姿勢遮蔽 ${toDeepCover.name}` : undefined,
+    reverseSlopeTarget ? `逆斜面遮蔽 ${toHighGround?.name}` : !fromHighGround && toHighGround ? `敵稜線 ${toHighGround.name}` : undefined,
   ].filter((modifier): modifier is string => !!modifier);
   const fireMultiplier =
     (fromHighGround ? 1.08 : 1) *
     (fromCoverEdge ? 1.04 : 1) *
     (toCoverEdge ? 0.92 : 1) *
-    (!fromHighGround && toHighGround ? 0.94 : 1);
-  const rangeMultiplier = (fromHighGround ? 1.08 : 1) * (fromCoverEdge ? 1.02 : 1);
+    (toDeepCover ? 0.86 : 1) *
+    (reverseSlopeTarget ? 0.88 : !fromHighGround && toHighGround ? 0.94 : 1);
+  const rangeMultiplier =
+    (fromHighGround ? 1.08 : 1) *
+    (fromCoverEdge ? 1.02 : 1) *
+    (toDeepCover ? 0.96 : 1) *
+    (reverseSlopeTarget ? 0.96 : 1);
   return {
     blocked: blockage >= lineOfSightBlockedThreshold,
     blockage,

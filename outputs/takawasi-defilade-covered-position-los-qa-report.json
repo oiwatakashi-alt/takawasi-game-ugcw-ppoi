@@ -1,0 +1,36 @@
+{
+  "target": "defilade-covered-position-los",
+  "date": "2026-07-05",
+  "devServer": "http://127.0.0.1:5173/?takawasiTerrainProfile=high-ground",
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "desktopQa": {
+    "viewport": "1440x900",
+    "flow": [
+      "open high-ground LOS tactical profile",
+      "reset campaign",
+      "army camp",
+      "deployment",
+      "battle start",
+      "1x tick",
+      "3x enemy movement",
+      "target audit and LOS label inspection"
+    ],
+    "passed": true,
+    "mobileQa": "skipped: mobile/cellphone QA is outside the current target",
+    "observations": [
+      "High-ground profile loaded and showed 高地射線検証.",
+      "Terrain callouts still showed 高地稜線 移動84% / 高地射界.",
+      "Selected unit sight line showed 高地射界 and target audit effective range.",
+      "After additional enemy movement, target audit showed 低姿勢遮蔽 塹壕掩体線 with reduced effective range.",
+      "Reverse-slope modifier logic is implemented, but this natural browser pass did not produce a visible 逆斜面遮蔽 label."
+    ],
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false
+  }
+}

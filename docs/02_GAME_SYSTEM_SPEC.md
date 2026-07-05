@@ -245,7 +245,7 @@ Current abstraction limits:
 
 - terrain now exists as BattleState terrain zones with movement, fatigue, cover, range, and fire modifiers
 - current Active Front battle renders forest, marsh, and trench zones; units and enemies use local terrain for movement, condition/fatigue, effective range, fire output, and casualty cover
-- basic visibility/concealment exists: observation posts increase spotting range; terrain and enemy type add concealment; terrain line-of-sight blockers can prevent long-range spotting; player and structure fire select spotted targets with clear line of fire only
+- visibility/concealment exists: observation posts increase spotting range; terrain and enemy type add concealment; terrain line-of-sight blockers can prevent long-range spotting; high ground, cover-edge firing, low-posture deep cover, and reverse-slope ridge cases adjust fire/range multipliers; player and structure fire select spotted targets with clear line of fire only
 - field-hospital recovery exists: battle results split raw battle casualties, recovered wounded, and permanent casualties; campaign unit strength only loses permanent casualties
 - field-hospital evacuation-line recovery exists: `BattleResult.medicalRecoveryDetails` stores base recovered, bonus recovered, effective recovery rate, source label, and reason per unit. `results.ts` evaluates functioning `fieldHospital` proximity against each unit's fallback destination and final position, then After Action shows `救護線` entries such as `追加収容+2 / 実効収容率22% / 野戦病院支援圏 / 後退点20 / 現位置45`. Campaign application writes the same rescue-line note into unit battle history.
 - bridge choke pathing exists for bridge/rail sectors: `BattleState.chokePoints` creates a `鉄道橋隘路`, enemy movement routes through the lane until crossed, and choke pressure/delay is displayed in Battle Command
@@ -366,7 +366,7 @@ Current implementation note, 2026-07-02:
 - Battle-time selected-frontline direct controls now exist. Battle Command can select a pressure card/segment, move the line forward/back, widen or compress its command area, and drag the selected line's anchor/fallback handles; these edits update the runtime `FrontlineSegment` and assigned brigades' StandingOrders so autonomous movement reacts immediately.
 - Enemy morale routing/regrouping now exists. `EnemyAssaultPlan` stores morale and morale state; `resolveTick` applies morale shock from player/structure fire, moves low-morale groups into `動揺` or `潰走`, then lets routed groups rally through `再集結` before returning to normal pressure. Battle Command shows the state on enemy map tokens, alerts, and the battle log.
 - Sector-specific deployment depth limits now exist. `FrontlineSegment.deploymentLimit` stores the allowed pre-battle deployment band; Deployment shows `出撃深度` and `許可帯`, and the active-line handle editor can push, pull, widen, narrow, or directly drag the band edges as part of the saved `deploymentPlan.frontlineGeometry`. StandingOrder draft/template alignment and Battle creation clamp initial anchors to the adjusted sector-derived band.
-- Fully arbitrary unconstrained freehand editing beyond the current compacted 8-point frontage, deeper defilade/elevation handling, and richer objective-event chains remain later work.
+- Fully arbitrary unconstrained freehand editing beyond the current compacted 8-point frontage, deeper elevation handling beyond current low-posture/reverse-slope rules, and richer objective-event chains remain later work.
 
 ## Unit Types
 
