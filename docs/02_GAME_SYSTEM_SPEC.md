@@ -79,9 +79,13 @@ The selected directive is stored in `CampaignState.doctrines.staffIntelligenceDi
 
 Army Camp recommendations also read the active directive. Staff/division replacement scoring already weighs current sector terrain, risk, structures, and enemy-composition threats; the directive now shifts that weighting so, for example, `敵情分析` favors stronger enemy-reading command choices, `兵站偵察` raises quartermaster/reserve value, and `工兵測量` raises engineer staff and engineer-support value. Recommendation cards must show the active directive in `戦場補正` so the player can see why the staff is recommending a change.
 
+Doctrine screen now also reads recent battle/officer/unit histories and turns them into `前戦参謀教訓` cards. Command-transmission congestion can produce `司令部伝達の再訓練`, recommending `軍団指揮` if missing or `軍制拡張` when command doctrine is already adopted; the same card can switch the current staff directive. Other history families can recommend `防諜警戒` for enemy-intel failures, `兵站偵察` for supply/ammo strain, and `工兵測量` for facility or construction lessons. This makes the doctrine screen a post-battle planning surface rather than only a static upgrade tree.
+
 Desktop 1440px QA verified that selecting `敵情分析` shows `小任務+8`, recon preview `精密偵察92` with `参謀支援+8`, and the next generated strategic turn message `敵情分析班が戦区情報を整理。初期敵情+2、教訓値4。` with operation intel `偵察照合済み`. Mobile QA is not a current target.
 
 Desktop 1440px QA also verified that Army Camp `参謀部推奨` follows the selected directive: `敵情分析` displayed `参謀任務敵情分析` and `参謀任務補正: 敵情分析`, then switching to `工兵測量` updated the same recommendation context to `参謀任務工兵測量`.
+
+Desktop 1440px QA verified `前戦参謀教訓`: initial reset showed no lesson card; after a battle with `一括混線 +1秒`, Doctrine showed `司令部伝達の再訓練`, `根拠: 伝令/混線記録`, and `推奨方針: 軍制拡張`; pressing `軍制拡張を採用` made the row `採用済み`, and pressing `兵站偵察に切替` updated `現在の参謀任務`. Console errors 0, broken images 0, and QA campaign reset afterward. Mobile QA is not a current target.
 
 ## Enemy Intel Readability
 

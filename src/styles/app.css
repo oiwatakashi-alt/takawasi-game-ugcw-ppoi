@@ -1568,6 +1568,52 @@ main {
   gap: 8px;
 }
 
+.staff-lesson-advisory {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(202, 156, 86, 0.42);
+  border-radius: 6px;
+  background: rgba(48, 36, 20, 0.68);
+}
+
+.staff-lesson-advisory > strong {
+  color: #f1c87e;
+  font-size: 0.86rem;
+}
+
+.staff-lesson-advisory article {
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid rgba(183, 170, 140, 0.26);
+  background: rgba(18, 16, 13, 0.58);
+}
+
+.staff-lesson-advisory span {
+  color: #f3dfaa;
+  font-weight: 700;
+}
+
+.staff-lesson-advisory p,
+.staff-lesson-advisory small {
+  color: #c8b895;
+  margin: 0;
+}
+
+.staff-lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.staff-lesson-actions button {
+  min-height: 30px;
+  border: 1px solid rgba(208, 179, 111, 0.38);
+  background: rgba(69, 64, 41, 0.78);
+  color: #f5e7c7;
+}
+
 .staff-directive-grid button {
   display: grid;
   align-content: start;

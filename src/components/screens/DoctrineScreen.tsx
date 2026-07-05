@@ -19,6 +19,86 @@ const careerRows = [
   { id: "intelligence", name: "敵情分析", level: 0, effect: "偵察/教訓反映", note: "敵情誤認の教訓を整理し、次ターン初期敵情と偵察任務を改善する。" },
 ] satisfies Array<{ id: DoctrineIconId; name: string; level: number; effect: string; note: string }>;
 
+interface StaffLessonAdvisory {
+  id: string;
+  title: string;
+  summary: string;
+  evidence: string;
+  directiveMode: StaffIntelligenceDirectiveMode;
+  doctrineId?: DoctrineIconId;
+  doctrineLabel?: string;
+}
+
+const countHistoryMatches = (entries: string[], patterns: string[]): number =>
+  entries.filter((entry) => patterns.some((pattern) => entry.includes(pattern))).length;
+
+const buildStaffLessonAdvisories = (campaign: CampaignState): StaffLessonAdvisory[] => {
+  const officerHistory = campaign.officers.flatMap((officer) => officer.history);
+  const unitHistory = campaign.army.units.flatMap((unit) => unit.battleHistory);
+  const allHistory = [...officerHistory, ...unitHistory, ...campaign.battleHistory.map((entry) => entry.summary)];
+  const hasDoctrine = (id: string) => campaign.doctrines.unlocked.includes(id);
+  const commandFrictionCount =
+    countHistoryMatches(officerHistory, ["伝令混線", "参謀長 警告、伝令混線"]) +
+    countHistoryMatches(unitHistory, ["伝令評価"]);
+  const misinformationCount = countHistoryMatches(allHistory, ["敵情誤認", "偵察教訓", "連鎖抑止失敗"]);
+  const supplyCount = countHistoryMatches(allHistory, ["補給点", "補給路寸断", "弾薬不足", "兵站主任 警告"]);
+  const engineeringCount = countHistoryMatches(allHistory, ["施設修理", "施設防衛", "築城線", "工兵主任 警告"]);
+
+  const advisories: StaffLessonAdvisory[] = [];
+  if (commandFrictionCount > 0) {
+    const doctrineId = hasDoctrine("command") ? (!hasDoctrine("organization") ? "organization" : undefined) : "command";
+    advisories.push({
+      id: "command-transmission",
+      title: "司令部伝達の再訓練",
+      summary:
+        doctrineId === "organization"
+          ? "前戦で命令集中時の混線が出た。軍制拡張で処理容量と部隊整理の余裕を増やす。"
+          : doctrineId === "command"
+            ? "前戦で伝令遅延が目立った。軍団指揮を整備して伝達時間と一括発令処理を改善する。"
+            : "前戦で伝令混線が出たが、主要な指揮系方針は採用済み。次戦は命令を束ねすぎない運用を優先する。",
+      evidence: `伝令/混線記録 ${commandFrictionCount}件`,
+      directiveMode: "balanced",
+      doctrineId,
+      doctrineLabel: doctrineId === "organization" ? "軍制拡張" : doctrineId === "command" ? "軍団指揮" : undefined,
+    });
+  }
+  if (misinformationCount > 0) {
+    advisories.push({
+      id: "counter-intelligence",
+      title: "偵察教訓の整理",
+      summary: "敵情誤認や目標イベントの連鎖失敗がある。次ターンは防諜警戒で教訓値を厚くする。",
+      evidence: `敵情/偵察教訓 ${misinformationCount}件`,
+      directiveMode: "counter_intelligence",
+      doctrineId: hasDoctrine("intelligence") ? undefined : "intelligence",
+      doctrineLabel: hasDoctrine("intelligence") ? undefined : "敵情分析",
+    });
+  }
+  if (supplyCount > 0) {
+    advisories.push({
+      id: "logistics-recon",
+      title: "補給路の再点検",
+      summary: "補給点や弾薬不足の記録がある。兵站偵察で小任務判断と戦闘補給を安定させる。",
+      evidence: `補給/弾薬記録 ${supplyCount}件`,
+      directiveMode: "logistics_recon",
+      doctrineId: hasDoctrine("logistics") ? undefined : "logistics",
+      doctrineLabel: hasDoctrine("logistics") ? undefined : "兵站",
+    });
+  }
+  if (engineeringCount > 0) {
+    advisories.push({
+      id: "engineer-survey",
+      title: "陣地線の測量",
+      summary: "施設任務や築城線の警告がある。工兵測量で修理と陣地整備を優先する。",
+      evidence: `施設/築城記録 ${engineeringCount}件`,
+      directiveMode: "engineer_survey",
+      doctrineId: hasDoctrine("engineering") ? undefined : "engineering",
+      doctrineLabel: hasDoctrine("engineering") ? undefined : "野戦工兵",
+    });
+  }
+
+  return advisories.slice(0, 3);
+};
+
 export function DoctrineScreen({
   campaign,
   onInvest,
@@ -32,6 +112,7 @@ export function DoctrineScreen({
   const strategicDoctrine = strategicDoctrineFromDoctrine(campaign.doctrines);
   const staffDirective = staffIntelligenceDirectiveFromDoctrine(campaign.doctrines);
   const staffDirectiveModes = Object.keys(staffIntelligenceDirectiveProfiles) as StaffIntelligenceDirectiveMode[];
+  const staffLessonAdvisories = buildStaffLessonAdvisories(campaign);
 
   return (
     <section className="career-layout">
@@ -98,6 +179,43 @@ export function DoctrineScreen({
             <span>ターン参謀任務</span>
             <strong>{staffDirective.label}</strong>
           </div>
+          {staffLessonAdvisories.length > 0 && (
+            <div className="staff-lesson-advisory">
+              <strong>前戦参謀教訓</strong>
+              {staffLessonAdvisories.map((advisory) => {
+                const directive = staffIntelligenceDirectiveProfiles[advisory.directiveMode];
+                const advisoryDoctrineId = advisory.doctrineId;
+                const canInvest =
+                  advisoryDoctrineId !== undefined &&
+                  !campaign.doctrines.unlocked.includes(advisoryDoctrineId) &&
+                  campaign.doctrines.points > 0;
+                return (
+                  <article key={advisory.id}>
+                    <span>{advisory.title}</span>
+                    <p>{advisory.summary}</p>
+                    <small>
+                      根拠: {advisory.evidence} / 推奨任務: {directive.label}
+                      {advisory.doctrineLabel ? ` / 推奨方針: ${advisory.doctrineLabel}` : ""}
+                    </small>
+                    <div className="staff-lesson-actions">
+                      <button type="button" onClick={() => onSetStaffIntelligenceDirective(advisory.directiveMode)}>
+                        {directive.label}に切替
+                      </button>
+                      {advisoryDoctrineId && (
+                        <button type="button" disabled={!canInvest} onClick={() => onInvest(advisoryDoctrineId)}>
+                          {campaign.doctrines.unlocked.includes(advisoryDoctrineId)
+                            ? "採用済み"
+                            : campaign.doctrines.points <= 0
+                              ? "方針点不足"
+                              : `${advisory.doctrineLabel}を採用`}
+                        </button>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
           <div className="staff-directive-grid">
             {staffDirectiveModes.map((mode) => {
               const profile = staffIntelligenceDirectiveProfiles[mode];

@@ -1,0 +1,48 @@
+{
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": "Doctrine screen staff lesson advisories from previous battle history",
+  "mobileQa": "skipped; mobile/cellphone is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "status": "passed",
+    "flow": [
+      "Reset campaign",
+      "Camp",
+      "Doctrine tab",
+      "Verify no initial 前戦参謀教訓 card",
+      "Deployment",
+      "Battle",
+      "Enable queued command mode with 停止して予約",
+      "Queue 弾性防御, 北へ15度, 敵指揮, 弾薬節約, 阻止射撃",
+      "Verify queue summary 一括混線 +1秒",
+      "Issue queue with 一括発令",
+      "Run 1x tick",
+      "Withdraw",
+      "Open After Action",
+      "Apply result to camp",
+      "Open Doctrine tab",
+      "Verify 前戦参謀教訓 recommendation",
+      "Click 軍制拡張を採用",
+      "Click 兵站偵察に切替",
+      "Reset campaign after QA"
+    ],
+    "observations": [
+      "Initial reset showed no 前戦参謀教訓 card",
+      "After command congestion, Doctrine showed 前戦参謀教訓 and 司令部伝達の再訓練",
+      "The advisory showed 根拠: 伝令/混線記録 and 推奨方針: 軍制拡張",
+      "Clicking 軍制拡張を採用 changed the doctrine row to 採用済み and consumed the available doctrine point",
+      "Clicking 兵站偵察に切替 updated 現在の参謀任務 and saved 兵站偵察",
+      "Campaign reset removed 前戦参謀教訓 and restored initial doctrine state"
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0
+  }
+}
