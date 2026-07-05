@@ -9,7 +9,7 @@ import { getUnitWeaponKey } from "../army/equipment";
 import { commandDutyLoadByOfficer, commandDutyProfileForOfficer } from "../army/commandDuty";
 import { armyHeadquartersProfile, normalizeStaffAssignments, staffSlotDefinitions } from "../army/headquarters";
 import type { CampaignState, ReserveDoctrinePlan } from "../campaign/types";
-import { defaultReserveDoctrinePlan } from "../campaign/deploymentPlan";
+import { defaultCommandIssuePlan, defaultReserveDoctrinePlan } from "../campaign/deploymentPlan";
 import { tacticalLessonProfileForUnit } from "../campaign/tacticalLessons";
 import { fireDisciplineFromDoctrine, strategicDoctrineFromDoctrine } from "../doctrine/applyDoctrine";
 import { officerCommandProfile, officerCommandSummary } from "../officers/effects";
@@ -738,6 +738,7 @@ export const createBattleState = (
   const fireDiscipline = fireDisciplineFromDoctrine(campaign.doctrines);
   const strategicDoctrine = strategicDoctrineFromDoctrine(campaign.doctrines);
   const reserveDoctrine = campaign.deploymentPlan?.reserveDoctrine ?? defaultReserveDoctrinePlan;
+  const commandIssuePlan = campaign.deploymentPlan?.commandIssuePlan ?? defaultCommandIssuePlan;
   const headquartersProfile = armyHeadquartersProfile(campaign.army, campaign.officers);
   const commandDutyLoads = commandDutyLoadByOfficer(campaign.army);
   const staffAssignments = normalizeStaffAssignments(campaign.army.formations[0]?.staffAssignments);
@@ -947,6 +948,7 @@ export const createBattleState = (
     fireDiscipline,
     strategicDoctrine,
     reserveDoctrine,
+    commandIssuePlan,
     commandPost,
     staffAdvisoryResponses: [],
     staffAccountabilityContext,
@@ -957,6 +959,7 @@ export const createBattleState = (
       `参謀支援: ${strategicDoctrine.label}（${strategicDoctrine.summary}）。`,
       `司令部: ${commandPost.label}（${commandPost.reasons.join(" / ")}）。`,
       `予備運用: ${reserveDoctrine.notes}`,
+      `伝令運用: ${commandIssuePlan.notes}`,
       ...(playerUnits.some((unit) => unit.tacticalLessonSummary && unit.tacticalLessonSummary !== "戦術教訓なし")
         ? [
             `戦術教訓: ${playerUnits

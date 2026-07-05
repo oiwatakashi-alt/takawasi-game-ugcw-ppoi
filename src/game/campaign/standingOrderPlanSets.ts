@@ -1,12 +1,19 @@
 import type { FrontlineGeometryAdjustment, StandingOrder } from "../battle/types";
 import { cloneStandingOrder } from "../battle/standingOrderDrafts";
-import type { CampaignState, ReserveDoctrinePlan, StandingOrderPlanSet, StandingOrderPlanSetEntry } from "./types";
+import type {
+  CampaignState,
+  CommandIssuePlan,
+  ReserveDoctrinePlan,
+  StandingOrderPlanSet,
+  StandingOrderPlanSetEntry,
+} from "./types";
 
 interface SaveStandingOrderPlanSetInput {
   operationId: string;
   sectorId: string;
   frontlineGeometry: FrontlineGeometryAdjustment;
   reserveDoctrine?: ReserveDoctrinePlan;
+  commandIssuePlan?: CommandIssuePlan;
   reserveUnitIds: string[];
   rearGuardUnitIds?: string[];
   entries: StandingOrderPlanSetEntry[];
@@ -79,6 +86,7 @@ const buildPlanSet = (
     sectorId: input.sectorId,
     frontlineGeometry: cloneFrontlineGeometry(input.frontlineGeometry),
     reserveDoctrine: input.reserveDoctrine,
+    commandIssuePlan: input.commandIssuePlan,
     reserveUnitIds: [...input.reserveUnitIds],
     rearGuardUnitIds: [...(input.rearGuardUnitIds ?? [])],
     entries,

@@ -1615,6 +1615,14 @@ Command-post fatigue follow-up implemented:
 - Battle Command shows the command-post label in the top HUD and the detailed `参謀長 ... / 指揮疲労...` reason inside `予約指揮`, so the next-battle effect of staff exhaustion or absence is visible before issuing orders.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five selected-brigade commands with initial `指揮疲労0で支障なし` and `一括混線 +1秒` -> After Action -> apply result -> next battle. The next battle showed `司令部 参謀長 アルンハイム 疲労100`, `参謀長不在扱い / 指揮疲労100で伝達+2秒/処理容量-2`, queued transmission previews with `司令部疲労+2秒`, and `一括混線 +2秒`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`, viewport reset, and QA campaign reset. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-command-post-fatigue-qa-report.json`.
 
+Deployment command issue plan follow-up implemented:
+
+- `DeploymentBattlePlan.commandIssuePlan` stores `標準発令`, `分割発令`, or `逐次発令` before the mandatory battle. This is a campaign/deployment choice, not a transient Battle Command toggle.
+- `StandingOrderPlanSet.commandIssuePlan` stores the same choice, so named deployment packages restore the command issue policy together with frontage, reserve doctrine, designated reserves, rear guards, and brigade StandingOrders.
+- `createBattleState` copies the selected plan into `BattleState.commandIssuePlan` and logs the chosen policy at battle start.
+- `BattleCommandScreen` displays the active policy in the `予約指揮` summary. `commandCongestionReport` uses it when calculating `一括混線`: split batches cap the effective simultaneous command count to the plan's batch size, while strict direct handling adds a penalty if the player still issues a multi-command batch.
+- Save normalization backfills the default `標準発令` for older saves without raising the save version. `npm run build` passed; browser QA for this slice was blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-command-issue-plan-qa-report.json` records build-only verification and the blocker. Mobile/cellphone QA is outside the current target.
+
 Deployment warning follow-up implemented:
 
 - Deployment now shows `司令部伝達` in the left briefing ledger using the same `commandPostProfileForCampaign` calculation as Battle creation.

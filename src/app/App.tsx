@@ -49,7 +49,7 @@ import {
   renameStandingOrderPlanSet,
   saveStandingOrderPlanSet,
 } from "../game/campaign/standingOrderPlanSets";
-import type { CampaignState, ReserveDoctrinePlan } from "../game/campaign/types";
+import type { CampaignState, CommandIssuePlan, ReserveDoctrinePlan } from "../game/campaign/types";
 import type { StandingOrderPlanSetEntry } from "../game/campaign/types";
 import { strategicDoctrineFromDoctrine } from "../game/doctrine/applyDoctrine";
 import type { StaffIntelligenceDirectiveMode } from "../game/doctrine/types";
@@ -91,6 +91,7 @@ export function App() {
     deployedUnitIds?: string[],
     frontlineGeometry?: FrontlineGeometryAdjustment,
     reserveDoctrine?: ReserveDoctrinePlan,
+    commandIssuePlan?: CommandIssuePlan,
     reserveUnitIds?: string[],
     rearGuardUnitIds?: string[],
   ) => {
@@ -98,18 +99,19 @@ export function App() {
     const scenario = createBattleScenario(campaign, operation, {
       tacticalTerrainProfile: tacticalTerrainProfileFromUrl(),
     });
-    const battleCampaign = frontlineGeometry || reserveDoctrine || reserveUnitIds || rearGuardUnitIds
+    const battleCampaign = frontlineGeometry || reserveDoctrine || commandIssuePlan || reserveUnitIds || rearGuardUnitIds
       ? saveDeploymentBattlePlan(
           campaign,
           operation.id,
           operation.sectorId,
           frontlineGeometry ?? campaign.deploymentPlan?.frontlineGeometry,
           reserveDoctrine,
+          commandIssuePlan,
           reserveUnitIds,
           rearGuardUnitIds,
         )
       : campaign;
-    if (frontlineGeometry || reserveDoctrine || reserveUnitIds || rearGuardUnitIds) {
+    if (frontlineGeometry || reserveDoctrine || commandIssuePlan || reserveUnitIds || rearGuardUnitIds) {
       setCampaign(battleCampaign);
     }
     setBattle(createBattleState(battleCampaign, scenario, deployedUnitIds));
@@ -151,6 +153,7 @@ export function App() {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine: ReserveDoctrinePlan | undefined,
+    commandIssuePlan: CommandIssuePlan | undefined,
     reserveUnitIds: string[],
     rearGuardUnitIds: string[],
     entries: StandingOrderPlanSetEntry[],
@@ -161,6 +164,7 @@ export function App() {
         sectorId,
         frontlineGeometry,
         reserveDoctrine,
+        commandIssuePlan,
         reserveUnitIds,
         rearGuardUnitIds,
         entries,
@@ -174,6 +178,7 @@ export function App() {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine: ReserveDoctrinePlan | undefined,
+    commandIssuePlan: CommandIssuePlan | undefined,
     reserveUnitIds: string[],
     rearGuardUnitIds: string[],
     entries: StandingOrderPlanSetEntry[],
@@ -184,6 +189,7 @@ export function App() {
         sectorId,
         frontlineGeometry,
         reserveDoctrine,
+        commandIssuePlan,
         reserveUnitIds,
         rearGuardUnitIds,
         entries,
@@ -208,11 +214,21 @@ export function App() {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine?: ReserveDoctrinePlan,
+    commandIssuePlan?: CommandIssuePlan,
     reserveUnitIds?: string[],
     rearGuardUnitIds?: string[],
   ) => {
     setCampaign((current) =>
-      saveDeploymentBattlePlan(current, operationId, sectorId, frontlineGeometry, reserveDoctrine, reserveUnitIds, rearGuardUnitIds),
+      saveDeploymentBattlePlan(
+        current,
+        operationId,
+        sectorId,
+        frontlineGeometry,
+        reserveDoctrine,
+        commandIssuePlan,
+        reserveUnitIds,
+        rearGuardUnitIds,
+      ),
     );
   }, []);
 

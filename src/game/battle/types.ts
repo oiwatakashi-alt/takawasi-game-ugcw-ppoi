@@ -1,5 +1,5 @@
 import type { StaffSlotId, UnitOrder, UnitType } from "../army/types";
-import type { ReserveDoctrinePlan } from "../campaign/types";
+import type { CommandIssuePlan, ReserveDoctrinePlan } from "../campaign/types";
 import type { BattleCommandPostProfile } from "./commandPost";
 import type { FireDisciplineProfile, StrategicDoctrineProfile } from "../doctrine/types";
 import type { FortificationInstance } from "../fortifications/types";
@@ -617,6 +617,7 @@ export interface BattleState {
   fireDiscipline?: FireDisciplineProfile;
   strategicDoctrine?: StrategicDoctrineProfile;
   reserveDoctrine?: ReserveDoctrinePlan;
+  commandIssuePlan?: CommandIssuePlan;
   commandPost?: BattleCommandPostProfile;
   fireMissions?: BattleFireMission[];
   firePlans?: BattleFirePlan[];

@@ -57,6 +57,9 @@ import type {
   TargetPriority,
 } from "../../game/battle/types";
 import {
+  commandIssuePlanLabels,
+  commandIssuePlans,
+  defaultCommandIssuePlan,
   defaultReserveDoctrinePlan,
   reserveDoctrineLabels,
   reserveDoctrinePlans,
@@ -64,6 +67,8 @@ import {
 import { tacticalLessonProfileForUnit } from "../../game/campaign/tacticalLessons";
 import type {
   CampaignState,
+  CommandIssueMode,
+  CommandIssuePlan,
   ReserveDoctrineMode,
   ReserveDoctrinePlan,
   StandingOrderPlanSet,
@@ -98,6 +103,7 @@ interface DeploymentScreenProps {
     unitIds: string[],
     frontlineGeometry?: FrontlineGeometryAdjustment,
     reserveDoctrine?: ReserveDoctrinePlan,
+    commandIssuePlan?: CommandIssuePlan,
     reserveUnitIds?: string[],
     rearGuardUnitIds?: string[],
   ) => void;
@@ -107,6 +113,7 @@ interface DeploymentScreenProps {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine: ReserveDoctrinePlan | undefined,
+    commandIssuePlan: CommandIssuePlan | undefined,
     reserveUnitIds: string[],
     rearGuardUnitIds: string[],
     entries: StandingOrderPlanSetEntry[],
@@ -117,6 +124,7 @@ interface DeploymentScreenProps {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine: ReserveDoctrinePlan | undefined,
+    commandIssuePlan: CommandIssuePlan | undefined,
     reserveUnitIds: string[],
     rearGuardUnitIds: string[],
     entries: StandingOrderPlanSetEntry[],
@@ -128,6 +136,7 @@ interface DeploymentScreenProps {
     sectorId: string,
     frontlineGeometry: FrontlineGeometryAdjustment,
     reserveDoctrine?: ReserveDoctrinePlan,
+    commandIssuePlan?: CommandIssuePlan,
     reserveUnitIds?: string[],
     rearGuardUnitIds?: string[],
   ) => void;
@@ -142,6 +151,7 @@ const reserveDoctrineModes: ReserveDoctrineMode[] = [
   "elastic_reserve",
   "fire_support_pool",
 ];
+const commandIssueModes: CommandIssueMode[] = ["standard_queue", "split_batches", "strict_direct"];
 
 const confidenceLabels: Record<OperationSpoilsIntel["confidence"], string> = {
   low: "信頼低",
@@ -325,6 +335,11 @@ export function DeploymentScreen({
       ? campaign.deploymentPlan.reserveDoctrine ?? defaultReserveDoctrinePlan
       : defaultReserveDoctrinePlan;
   const [reserveDoctrine, setReserveDoctrine] = useState<ReserveDoctrinePlan>(savedReserveDoctrine);
+  const savedCommandIssuePlan =
+    campaign.deploymentPlan?.operationId === operation.id && campaign.deploymentPlan.sectorId === operation.sectorId
+      ? campaign.deploymentPlan.commandIssuePlan ?? defaultCommandIssuePlan
+      : defaultCommandIssuePlan;
+  const [commandIssuePlan, setCommandIssuePlan] = useState<CommandIssuePlan>(savedCommandIssuePlan);
   const baseFrontlineSegments = useMemo(() => createFrontlineSegmentsForSector(sector), [sector]);
   const frontlineSegments = useMemo(
     () => applyFrontlineGeometryAdjustment(baseFrontlineSegments, frontlineGeometry),
@@ -785,13 +800,43 @@ export function DeploymentScreen({
       }
       return next;
     });
-    onSaveDeploymentPlan(operation.id, operation.sectorId, nextGeometry, reserveDoctrine, reserveUnitIds, rearGuardUnitIds);
+    onSaveDeploymentPlan(
+      operation.id,
+      operation.sectorId,
+      nextGeometry,
+      reserveDoctrine,
+      commandIssuePlan,
+      reserveUnitIds,
+      rearGuardUnitIds,
+    );
   };
 
   const applyReserveDoctrine = (mode: ReserveDoctrineMode) => {
     const nextDoctrine = reserveDoctrinePlans[mode];
     setReserveDoctrine(nextDoctrine);
-    onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, nextDoctrine, reserveUnitIds, rearGuardUnitIds);
+    onSaveDeploymentPlan(
+      operation.id,
+      operation.sectorId,
+      frontlineGeometry,
+      nextDoctrine,
+      commandIssuePlan,
+      reserveUnitIds,
+      rearGuardUnitIds,
+    );
+  };
+
+  const applyCommandIssuePlan = (mode: CommandIssueMode) => {
+    const nextPlan = commandIssuePlans[mode];
+    setCommandIssuePlan(nextPlan);
+    onSaveDeploymentPlan(
+      operation.id,
+      operation.sectorId,
+      frontlineGeometry,
+      reserveDoctrine,
+      nextPlan,
+      reserveUnitIds,
+      rearGuardUnitIds,
+    );
   };
 
   const applyFrontlinePreset = (preset: FrontlineGeometryPreset) => {
@@ -1146,7 +1191,15 @@ export function DeploymentScreen({
           const nextReserve = currentReserve.filter((id) => id !== unitId);
           const nextRearGuard = rearGuardUnitIds.filter((id) => id !== unitId);
           setRearGuardUnitIds(nextRearGuard);
-          onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, reserveDoctrine, nextReserve, nextRearGuard);
+          onSaveDeploymentPlan(
+            operation.id,
+            operation.sectorId,
+            frontlineGeometry,
+            reserveDoctrine,
+            commandIssuePlan,
+            nextReserve,
+            nextRearGuard,
+          );
           return nextReserve;
         });
       } else if (current.length < deploymentLimit) {
@@ -1167,7 +1220,15 @@ export function DeploymentScreen({
         : current.length < reserveSlotLimit
           ? [...current, unitId]
           : current;
-      onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, reserveDoctrine, next, rearGuardUnitIds);
+      onSaveDeploymentPlan(
+        operation.id,
+        operation.sectorId,
+        frontlineGeometry,
+        reserveDoctrine,
+        commandIssuePlan,
+        next,
+        rearGuardUnitIds,
+      );
       return next;
     });
   };
@@ -1182,7 +1243,15 @@ export function DeploymentScreen({
         : current.length < rearGuardSlotLimit
           ? [...current, unitId]
           : current;
-      onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, reserveDoctrine, reserveUnitIds, next);
+      onSaveDeploymentPlan(
+        operation.id,
+        operation.sectorId,
+        frontlineGeometry,
+        reserveDoctrine,
+        commandIssuePlan,
+        reserveUnitIds,
+        next,
+      );
       return next;
     });
   };
@@ -1197,7 +1266,15 @@ export function DeploymentScreen({
         return current;
       }
       const next = current.length < rearGuardSlotLimit ? [...current, unitId] : current;
-      onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, reserveDoctrine, reserveUnitIds, next);
+      onSaveDeploymentPlan(
+        operation.id,
+        operation.sectorId,
+        frontlineGeometry,
+        reserveDoctrine,
+        commandIssuePlan,
+        reserveUnitIds,
+        next,
+      );
       return next;
     });
   };
@@ -1346,7 +1423,15 @@ export function DeploymentScreen({
         `${terrainMitigationAdvisory.focusSegmentName}支援予備として保存。突破時の後退守備と再配置を優先する。`,
       );
     }
-    onSaveDeploymentPlan(operation.id, operation.sectorId, frontlineGeometry, reserveDoctrine, nextReserveUnitIds, rearGuardUnitIds);
+    onSaveDeploymentPlan(
+      operation.id,
+      operation.sectorId,
+      frontlineGeometry,
+      reserveDoctrine,
+      commandIssuePlan,
+      nextReserveUnitIds,
+      rearGuardUnitIds,
+    );
     setMitigationApplicationMessage(
       reserveCandidate && nextReserveUnitIds.includes(reserveCandidate.id)
         ? `${targetUnit.name}を${terrainMitigationAdvisory.focusSegmentName}へ再方針化し、${reserveCandidate.name}を支援予備に指定した。`
@@ -1467,6 +1552,10 @@ export function DeploymentScreen({
         planSet.reserveDoctrine.holdReadinessUntilPressure !== reserveDoctrine.holdReadinessUntilPressure ||
         planSet.reserveDoctrine.counterstrokeReadinessThreshold !== reserveDoctrine.counterstrokeReadinessThreshold
       : false;
+    const commandIssueChanged = planSet.commandIssuePlan
+      ? planSet.commandIssuePlan.mode !== commandIssuePlan.mode ||
+        planSet.commandIssuePlan.maxBatchSize !== commandIssuePlan.maxBatchSize
+      : false;
     const reserveUnitChanged = planSet.reserveUnitIds.join(",") !== reserveUnitIds.join(",");
     const rearGuardUnitChanged = (planSet.rearGuardUnitIds ?? []).join(",") !== rearGuardUnitIds.join(",");
     const sketchLineEntries = Object.entries(planSet.frontlineGeometry.sketchLines ?? {});
@@ -1493,6 +1582,7 @@ export function DeploymentScreen({
       changedUnits,
       geometryChanged,
       reserveDoctrineChanged,
+      commandIssueChanged,
       reserveUnitChanged,
       rearGuardUnitChanged,
       readinessTone,
@@ -1504,6 +1594,9 @@ export function DeploymentScreen({
       isSameOperation,
       geometryLabel: frontlineGeometryDisplayLabel(planSet.frontlineGeometry),
       reserveLabel: planSet.reserveDoctrine ? reserveDoctrineLabels[planSet.reserveDoctrine.mode] : "現行予備方針",
+      commandIssueLabel: planSet.commandIssuePlan
+        ? commandIssuePlanLabels[planSet.commandIssuePlan.mode]
+        : "現行伝令運用",
       sketchLineCount: sketchLineEntries.length,
       sketchLineSummaries,
     };
@@ -1519,6 +1612,7 @@ export function DeploymentScreen({
       operation.sectorId,
       frontlineGeometryWithSavedSketchLines(),
       reserveDoctrine,
+      commandIssuePlan,
       reserveUnitIds,
       rearGuardUnitIds,
       entries,
@@ -1536,6 +1630,7 @@ export function DeploymentScreen({
       operation.sectorId,
       frontlineGeometryWithSavedSketchLines(),
       reserveDoctrine,
+      commandIssuePlan,
       reserveUnitIds,
       rearGuardUnitIds,
       entries,
@@ -1574,10 +1669,12 @@ export function DeploymentScreen({
       return;
     }
     const nextReserveDoctrine = planSet.reserveDoctrine ?? reserveDoctrine;
+    const nextCommandIssuePlan = planSet.commandIssuePlan ?? commandIssuePlan;
     const nextReserveUnitIds = planSet.reserveUnitIds.filter((unitId) => selectedUnitIds.includes(unitId));
     const nextRearGuardUnitIds = (planSet.rearGuardUnitIds ?? []).filter((unitId) => selectedUnitIds.includes(unitId));
     setFrontlineGeometry(planSet.frontlineGeometry);
     setReserveDoctrine(nextReserveDoctrine);
+    setCommandIssuePlan(nextCommandIssuePlan);
     setReserveUnitIds(nextReserveUnitIds);
     setRearGuardUnitIds(nextRearGuardUnitIds);
     setDraftOrders((current) => ({
@@ -1595,6 +1692,7 @@ export function DeploymentScreen({
       operation.sectorId,
       planSet.frontlineGeometry,
       nextReserveDoctrine,
+      nextCommandIssuePlan,
       nextReserveUnitIds,
       nextRearGuardUnitIds,
     );
@@ -1680,6 +1778,10 @@ export function DeploymentScreen({
           <dd>{deploymentDepthLabel(sector)}</dd>
           <dt>予備運用</dt>
           <dd>{reserveDoctrineLabels[reserveDoctrine.mode]}</dd>
+          <dt>伝令運用</dt>
+          <dd>
+            {commandIssuePlanLabels[commandIssuePlan.mode]} / {commandIssuePlan.maxBatchSize}件単位
+          </dd>
           <dt>軍団司令部</dt>
           <dd>出撃+{headquartersProfile.deploymentSlotBonus} / 予備+{headquartersProfile.reserveReadinessBonus}</dd>
           <dt>司令部伝達</dt>
@@ -1753,7 +1855,16 @@ export function DeploymentScreen({
             className="primary-button"
             type="button"
             disabled={selectedUnitIds.length === 0}
-            onClick={() => onStartBattle(selectedUnitIds, frontlineGeometry, reserveDoctrine, reserveUnitIds, rearGuardUnitIds)}
+            onClick={() =>
+              onStartBattle(
+                selectedUnitIds,
+                frontlineGeometry,
+                reserveDoctrine,
+                commandIssuePlan,
+                reserveUnitIds,
+                rearGuardUnitIds,
+              )
+            }
           >
             選抜部隊で戦闘開始
           </button>
@@ -1779,6 +1890,30 @@ export function DeploymentScreen({
                 onClick={() => applyReserveDoctrine(mode)}
               >
                 {reserveDoctrineLabels[mode]}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="reserve-doctrine-panel">
+          <div className="section-title">
+            <span>伝令運用</span>
+            <strong>{commandIssuePlanLabels[commandIssuePlan.mode]}</strong>
+          </div>
+          <p>{commandIssuePlan.notes}</p>
+          <div className="reserve-doctrine-stats">
+            <span>{commandIssuePlan.maxBatchSize}件単位</span>
+            <span>{commandPostProfile.transmissionDelayModifier > 0 ? "司令部遅延あり" : "司令部遅延なし"}</span>
+            <span>{commandPostCapacityLabel}</span>
+          </div>
+          <div className="planner-button-grid reserve-doctrine">
+            {commandIssueModes.map((mode) => (
+              <button
+                key={mode}
+                className={commandIssuePlan.mode === mode ? "active" : ""}
+                type="button"
+                onClick={() => applyCommandIssuePlan(mode)}
+              >
+                {commandIssuePlanLabels[mode]}
               </button>
             ))}
           </div>
@@ -2840,7 +2975,8 @@ export function DeploymentScreen({
                         <span>
                           戦場 {preview.isSameOperation ? "現主戦場" : "別戦場保存"} / 戦線 {preview.geometryLabel}
                           {preview.geometryChanged ? "（現行と差分）" : "（現行一致）"} / 予備 {preview.reserveLabel}
-                          {preview.reserveDoctrineChanged ? "（方針差分）" : ""} / 指定予備 {preview.savedReserveCount}
+                          {preview.reserveDoctrineChanged ? "（方針差分）" : ""} / 伝令 {preview.commandIssueLabel}
+                          {preview.commandIssueChanged ? "（運用差分）" : ""} / 指定予備 {preview.savedReserveCount}
                           保存・現行{preview.currentReserveCount}
                           {preview.reserveUnitChanged ? "（指定差分）" : ""}
                           / 撤退後衛 {preview.savedRearGuardCount}保存・現行{preview.currentRearGuardCount}

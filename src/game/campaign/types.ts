@@ -6,11 +6,18 @@ import type { StrategicTurn, TheaterState } from "../theater/types";
 import type { FrontlineGeometryAdjustment, StandingOrder, StandingOrderTemplate } from "../battle/types";
 
 export type ReserveDoctrineMode = "balanced" | "prepared_counterstroke" | "elastic_reserve" | "fire_support_pool";
+export type CommandIssueMode = "standard_queue" | "split_batches" | "strict_direct";
 
 export interface ReserveDoctrinePlan {
   mode: ReserveDoctrineMode;
   holdReadinessUntilPressure: number;
   counterstrokeReadinessThreshold: number;
+  notes: string;
+}
+
+export interface CommandIssuePlan {
+  mode: CommandIssueMode;
+  maxBatchSize: number;
   notes: string;
 }
 
@@ -27,6 +34,7 @@ export interface DeploymentBattlePlan {
   sectorId: string;
   frontlineGeometry: FrontlineGeometryAdjustment;
   reserveDoctrine?: ReserveDoctrinePlan;
+  commandIssuePlan?: CommandIssuePlan;
   reserveUnitIds?: string[];
   rearGuardUnitIds?: string[];
   updatedAt: string;
@@ -46,6 +54,7 @@ export interface StandingOrderPlanSet {
   sectorId: string;
   frontlineGeometry: FrontlineGeometryAdjustment;
   reserveDoctrine?: ReserveDoctrinePlan;
+  commandIssuePlan?: CommandIssuePlan;
   reserveUnitIds: string[];
   rearGuardUnitIds?: string[];
   entries: StandingOrderPlanSetEntry[];

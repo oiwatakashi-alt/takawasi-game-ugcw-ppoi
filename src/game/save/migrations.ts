@@ -2,6 +2,7 @@ import type { SaveEnvelope } from "./types";
 import { normalizeArmyDivisions } from "../army/divisions";
 import { defaultStaffAssignments, normalizeStaffAssignments } from "../army/headquarters";
 import { createCampaign } from "../campaign/createCampaign";
+import { defaultCommandIssuePlan } from "../campaign/deploymentPlan";
 import { createInitialResources } from "../logistics/types";
 import { createEnemyCompositionIntel, normalizeEnemyCompositionIntel } from "../theater/enemyIntel";
 import type { Sector, StrategicOperation } from "../theater/types";
@@ -78,11 +79,13 @@ const normalizeCurrentCampaign = (campaignState: SaveEnvelope["campaignState"]):
     standingOrderTemplates: campaignState.standingOrderTemplates ?? [],
     standingOrderPlanSets: (campaignState.standingOrderPlanSets ?? []).map((planSet) => ({
       ...planSet,
+      commandIssuePlan: planSet.commandIssuePlan ?? defaultCommandIssuePlan,
       rearGuardUnitIds: planSet.rearGuardUnitIds ?? [],
     })),
     deploymentPlan: campaignState.deploymentPlan
       ? {
           ...campaignState.deploymentPlan,
+          commandIssuePlan: campaignState.deploymentPlan.commandIssuePlan ?? defaultCommandIssuePlan,
           rearGuardUnitIds: campaignState.deploymentPlan.rearGuardUnitIds ?? [],
         }
       : campaignState.deploymentPlan,

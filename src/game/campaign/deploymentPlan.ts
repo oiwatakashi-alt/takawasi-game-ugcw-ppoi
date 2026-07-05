@@ -1,5 +1,5 @@
 import type { FrontlineGeometryAdjustment } from "../battle/types";
-import type { CampaignState, ReserveDoctrineMode, ReserveDoctrinePlan } from "./types";
+import type { CampaignState, CommandIssueMode, CommandIssuePlan, ReserveDoctrineMode, ReserveDoctrinePlan } from "./types";
 
 const fallbackFrontlineGeometry: FrontlineGeometryAdjustment = {
   preset: "sector_default",
@@ -47,12 +47,39 @@ export const reserveDoctrineLabels: Record<ReserveDoctrineMode, string> = {
   fire_support_pool: "火力予備",
 };
 
+export const commandIssuePlans: Record<CommandIssueMode, CommandIssuePlan> = {
+  standard_queue: {
+    mode: "standard_queue",
+    maxBatchSize: 4,
+    notes: "標準発令。停止中に複数命令を積み、状況に応じて一括発令する。",
+  },
+  split_batches: {
+    mode: "split_batches",
+    maxBatchSize: 2,
+    notes: "分割発令。参謀長疲労や混線時は2件単位で処理し、同時発令の混線を抑える。",
+  },
+  strict_direct: {
+    mode: "strict_direct",
+    maxBatchSize: 1,
+    notes: "逐次発令。司令部が乱れている時に一命令ずつ通し、過剰な一括指揮を避ける。",
+  },
+};
+
+export const defaultCommandIssuePlan = commandIssuePlans.standard_queue;
+
+export const commandIssuePlanLabels: Record<CommandIssueMode, string> = {
+  standard_queue: "標準発令",
+  split_batches: "分割発令",
+  strict_direct: "逐次発令",
+};
+
 export const saveDeploymentBattlePlan = (
   campaign: CampaignState,
   operationId: string,
   sectorId: string,
   frontlineGeometry: FrontlineGeometryAdjustment | undefined,
   reserveDoctrine: ReserveDoctrinePlan = campaign.deploymentPlan?.reserveDoctrine ?? defaultReserveDoctrinePlan,
+  commandIssuePlan: CommandIssuePlan = campaign.deploymentPlan?.commandIssuePlan ?? defaultCommandIssuePlan,
   reserveUnitIds: string[] = [],
   rearGuardUnitIds: string[] = [],
 ): CampaignState => ({
@@ -62,12 +89,13 @@ export const saveDeploymentBattlePlan = (
     sectorId,
     frontlineGeometry: { ...(frontlineGeometry ?? campaign.deploymentPlan?.frontlineGeometry ?? fallbackFrontlineGeometry) },
     reserveDoctrine: { ...reserveDoctrine },
+    commandIssuePlan: { ...commandIssuePlan },
     reserveUnitIds: [...new Set(reserveUnitIds)],
     rearGuardUnitIds: [...new Set(rearGuardUnitIds)],
     updatedAt: new Date().toISOString(),
   },
   saveVersion: Math.max(campaign.saveVersion, 8),
-  lastMessage: `出撃戦線を${(frontlineGeometry ?? campaign.deploymentPlan?.frontlineGeometry ?? fallbackFrontlineGeometry).label}、予備運用を${reserveDoctrineLabels[reserveDoctrine.mode]}、指定予備${[...new Set(reserveUnitIds)].length}旅団、撤退後衛${[...new Set(rearGuardUnitIds)].length}旅団に調整した。`,
+  lastMessage: `出撃戦線を${(frontlineGeometry ?? campaign.deploymentPlan?.frontlineGeometry ?? fallbackFrontlineGeometry).label}、予備運用を${reserveDoctrineLabels[reserveDoctrine.mode]}、伝令運用を${commandIssuePlanLabels[commandIssuePlan.mode]}、指定予備${[...new Set(reserveUnitIds)].length}旅団、撤退後衛${[...new Set(rearGuardUnitIds)].length}旅団に調整した。`,
 });
 
 export const saveReserveDoctrinePlan = (
@@ -82,6 +110,7 @@ export const saveReserveDoctrinePlan = (
     sectorId,
     campaign.deploymentPlan?.frontlineGeometry ?? fallbackFrontlineGeometry,
     reserveDoctrine,
+    campaign.deploymentPlan?.commandIssuePlan ?? defaultCommandIssuePlan,
     campaign.deploymentPlan?.reserveUnitIds ?? [],
     campaign.deploymentPlan?.rearGuardUnitIds ?? [],
   );

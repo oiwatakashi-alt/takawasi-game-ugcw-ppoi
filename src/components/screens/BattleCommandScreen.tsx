@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { battleAssetUrls } from "../../assets/manifest";
 import type { UnitOrder } from "../../game/army/types";
-import { defaultReserveDoctrinePlan, reserveDoctrineLabels } from "../../game/campaign/deploymentPlan";
+import {
+  commandIssuePlanLabels,
+  defaultCommandIssuePlan,
+  defaultReserveDoctrinePlan,
+  reserveDoctrineLabels,
+} from "../../game/campaign/deploymentPlan";
 import { fireDisciplineWithDefaults } from "../../game/doctrine/applyDoctrine";
 import {
   applyFrontlineObjectiveSupport,
@@ -2628,6 +2633,7 @@ export function BattleCommandScreen({
   const selectedFireMission = activeFireMissionForUnit(battle, selectedUnit);
   const fireDiscipline = fireDisciplineWithDefaults(battle.fireDiscipline);
   const reserveDoctrine = battle.reserveDoctrine ?? defaultReserveDoctrinePlan;
+  const commandIssuePlan = battle.commandIssuePlan ?? defaultCommandIssuePlan;
   const maxFirePlanStages = fireDiscipline.maxPlannedStages;
   const firePlanStageSpacingSeconds = fireDiscipline.plannedStageSpacingSeconds;
   const selectedVolleyCooldown = selectedUnit
@@ -4373,6 +4379,9 @@ export function BattleCommandScreen({
           <strong>予約指揮</strong>
           <span>{commandQueueMode ? "予約中" : "直接発令"}</span>
           <span>{queuedCommands.length}件</span>
+          <span>
+            {commandIssuePlanLabels[commandIssuePlan.mode]} {commandIssuePlan.maxBatchSize}件単位
+          </span>
           {commandCongestionPreview && (
             <span className={commandCongestionPreview.delayPenaltySeconds > 0 ? "command-congestion-warning" : ""}>
               {commandCongestionPreview.label}

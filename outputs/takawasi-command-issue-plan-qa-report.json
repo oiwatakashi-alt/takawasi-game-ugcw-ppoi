@@ -1,0 +1,43 @@
+{
+  "id": "takawasi-command-issue-plan-qa",
+  "date": "2026-07-05",
+  "scope": "Deployment command issue plan persistence and Battle Command queue congestion policy",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "npm run build",
+      "status": "pass",
+      "notes": "TypeScript and Vite production build completed successfully after adding CommandIssuePlan to campaign, deployment, plan-set, battle state, command congestion, save normalization, and UI surfaces."
+    },
+    {
+      "check": "static call-path review",
+      "status": "pass",
+      "notes": "DeploymentScreen passes commandIssuePlan through deployment save, battle start, plan-set save/overwrite, and plan-set apply paths. createBattleState copies the saved plan into BattleState. BattleCommandScreen reads BattleState.commandIssuePlan for the queue summary."
+    },
+    {
+      "check": "logic review",
+      "status": "pass",
+      "notes": "commandCongestionReport keeps standard queue behavior, caps effective command count for split_batches, and adds a strict_direct penalty when multiple commands are batched under direct handling."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop in-app browser QA",
+      "status": "blocked",
+      "notes": "The in-app browser rejected localhost navigation/control for http://127.0.0.1:5173/ because of the browser URL policy. No browser workaround was attempted."
+    },
+    {
+      "check": "mobile QA",
+      "status": "out-of-scope",
+      "notes": "Mobile/cellphone QA is currently excluded from the active target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Reset campaign and open Deployment.",
+    "Verify the left deployment ledger shows 伝令運用 標準発令 / 4件単位.",
+    "Switch 伝令運用 to 分割発令 and verify the ledger changes to 2件単位.",
+    "Start the mandatory battle and verify Battle Command 予約指揮 shows 分割発令 2件単位.",
+    "Queue five selected-brigade commands and verify 一括混線 is reduced compared with 標準発令 under the same command-post capacity.",
+    "Repeat with 逐次発令 and verify batching multiple commands creates the policy-violation delay reason."
+  ]
+}

@@ -227,10 +227,19 @@ export const commandCongestionReport = (state: BattleState, commandCount: number
   const organizationBonus = state.strategicDoctrine?.activeDoctrineIds.includes("organization") ? 1 : 0;
   const commandPostModifier = state.commandPost?.commandCapacityModifier ?? 0;
   const capacity = Math.max(1, 2 + commandDoctrineBonus + organizationBonus + commandPostModifier);
-  const overload = Math.max(0, commandCount - capacity);
-  const delayPenaltySeconds = overload <= 0 ? 0 : clamp(Math.ceil(overload / 2), 1, 4);
+  const issuePlan = state.commandIssuePlan;
+  const effectiveCommandCount =
+    issuePlan?.mode === "split_batches" ? Math.min(commandCount, Math.max(1, issuePlan.maxBatchSize)) : commandCount;
+  const overload = Math.max(0, effectiveCommandCount - capacity);
+  const strictDirectPenalty = issuePlan?.mode === "strict_direct" && commandCount > 1 ? 1 : 0;
+  const delayPenaltySeconds =
+    overload <= 0 && strictDirectPenalty <= 0 ? 0 : clamp(Math.ceil(overload / 2) + strictDirectPenalty, 1, 4);
   const reasons = [
     `一括${commandCount}件`,
+    issuePlan?.mode === "split_batches" && commandCount > effectiveCommandCount
+      ? `分割${issuePlan.maxBatchSize}件単位`
+      : undefined,
+    issuePlan?.mode === "strict_direct" && commandCount > 1 ? "逐次発令方針違反+1秒" : undefined,
     `処理容量${capacity}`,
     commandDoctrineBonus > 0 ? "指揮幕僚+1" : undefined,
     organizationBonus > 0 ? "軍団編制+1" : undefined,
