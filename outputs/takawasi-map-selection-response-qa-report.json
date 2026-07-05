@@ -1,0 +1,84 @@
+{
+  "id": "takawasi-map-selection-response-qa",
+  "date": "2026-07-05",
+  "target": "Battle Command map selection inspector response actions",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "status": "pass",
+  "commands": {
+    "build": "npm run build",
+    "diffCheck": "git diff --check"
+  },
+  "flow": [
+    "Theater Command",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "Enable selection mode",
+    "Click structure",
+    "Use facility response from map-selection inspector",
+    "Run at 3x until enemies spawn",
+    "Click spotted enemy",
+    "Use enemy response from map-selection inspector"
+  ],
+  "implementationVerified": {
+    "selectionModeClass": "battle-map battle-map-field command-select",
+    "facilityInspectionActions": [
+      {
+        "text": "施設即応",
+        "disabled": false
+      },
+      {
+        "text": "修理優先",
+        "disabled": false
+      },
+      {
+        "text": "戦線対応",
+        "disabled": true
+      }
+    ],
+    "facilityResponseLog": "施設即応: 塹壕線へ4部隊を投入。周辺防衛を開始。",
+    "enemyInspectionActions": [
+      {
+        "text": "敵群対応",
+        "disabled": false
+      },
+      {
+        "text": "戦線斉射",
+        "disabled": false
+      },
+      {
+        "text": "選択旅団集中",
+        "disabled": false
+      },
+      {
+        "text": "施設即応",
+        "disabled": false
+      },
+      {
+        "text": "修理優先",
+        "disabled": false
+      },
+      {
+        "text": "戦線対応",
+        "disabled": false
+      }
+    ],
+    "enemyResponseLog": "敵群対応: 2旅団を中央塹壕線で固守 / 最接近へ移行。",
+    "enemyCountDuringQa": 16,
+    "spottedEnemyCountDuringQa": 5
+  },
+  "browserHealth": {
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "The battle advanced into line-collapse state during the 3x enemy-response check, but the target inspector response actions were visible and command logs were recorded before final health collection.",
+    "Mobile/cellphone QA remains outside the current active target."
+  ]
+}

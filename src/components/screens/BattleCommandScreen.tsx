@@ -4563,6 +4563,34 @@ export function BattleCommandScreen({
     return [];
   };
 
+  const facilityInspectionResponseUnits = (structure: BattleStructure): BattleUnit[] => {
+    const assignedUnits = battle.playerUnits.filter(
+      (unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.standingOrder.facilityAssignment?.structureId === structure.id,
+    );
+    const nearestEngineer = battle.playerUnits
+      .filter((unit) => unit.soldiers > 0 && unit.order !== "retreat" && unit.type === "engineer")
+      .sort((a, b) => distance(a.position, structure.position) - distance(b.position, structure.position))[0];
+    const nearestDefenders = battle.playerUnits
+      .filter(
+        (unit) =>
+          unit.soldiers > 0 &&
+          unit.order !== "retreat" &&
+          unit.type !== "artillery" &&
+          unit.unitId !== nearestEngineer?.unitId &&
+          !assignedUnits.some((assigned) => assigned.unitId === unit.unitId),
+      )
+      .sort((a, b) => {
+        const reserveBiasA = a.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
+        const reserveBiasB = b.standingOrder.frontlineSegmentId === "reserve-line" ? -8 : 0;
+        return distance(a.position, structure.position) + reserveBiasA - (distance(b.position, structure.position) + reserveBiasB);
+      })
+      .slice(0, Math.max(1, 3 - assignedUnits.length - (nearestEngineer ? 1 : 0)));
+    const responseUnits = nearestEngineer ? [...assignedUnits, nearestEngineer, ...nearestDefenders] : [...assignedUnits, ...nearestDefenders];
+    return responseUnits
+      .filter((unit, index) => responseUnits.findIndex((candidate) => candidate.unitId === unit.unitId) === index)
+      .slice(0, 4);
+  };
+
   const alertGroupActionLabel = (alert: BattleAlert): string | undefined => {
     if (alert.segmentId && (alert.id === "enemy-flanking" || alert.id === "enemy-breakthrough" || alert.id === "enemy-overextended")) {
       const report = pressureReports.find((candidate) => candidate.segment.id === alert.segmentId);
@@ -4749,6 +4777,39 @@ export function BattleCommandScreen({
       `${alert.title} / ${units.length}部隊`,
       applyGroupRecommendation,
     );
+  };
+
+  const applyInspectedFacilityResponse = (forceRepair: boolean) => {
+    const structure = inspectedStructure ?? selectedStructure;
+    if (!structure || finished) {
+      return;
+    }
+    const responseUnits = facilityInspectionResponseUnits(structure);
+    if (responseUnits[0]) {
+      setSelectedUnitId(responseUnits[0].unitId);
+    }
+    setInspectedStructureId(structure.id);
+    setSelectedEnemyId("");
+    setCommandMode("none");
+    scrollToPosition(structure.position);
+    issueOrQueueBattleCommand(
+      `map-inspect-facility:${structure.id}:${forceRepair ? "repair" : "defend"}`,
+      fortificationTypeLabels[structure.type],
+      forceRepair ? "施設修理" : "施設即応",
+      `${fortificationStatusLabels[structure.status]} / ${structure.facilityStateLabel} / ${responseUnits.length}部隊`,
+      (state) =>
+        applyFacilityDefenseResponse(state, structure.id, {
+          unitIds: responseUnits.map((unit) => unit.unitId),
+          forceRepair,
+        }),
+    );
+  };
+
+  const applyInspectedFrontlineResponse = () => {
+    if (!selectedFrontlinePressure || finished) {
+      return;
+    }
+    applyFrontlinePressureResponse(selectedFrontlinePressure);
   };
 
   const addFirePlanStage = (scope: FireMissionScope) => {
@@ -5798,6 +5859,58 @@ export function BattleCommandScreen({
                   {item.value} / {item.detail}
                 </span>
               ))}
+              {(selectedEnemy || inspectedStructure || selectedStructure || selectedFrontlinePressure) && (
+                <div className="map-selection-actions" aria-label="選択対象への即応指揮">
+                  {selectedEnemy && (
+                    <>
+                      <button
+                        type="button"
+                        disabled={!selectedEnemy.isSpotted || selectedEnemyResponseUnits.length === 0 || finished}
+                        onClick={applySelectedEnemyResponse}
+                      >
+                        敵群対応
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!selectedEnemy.isSpotted || selectedEnemyResponseUnits.length === 0 || finished}
+                        onClick={volleySelectedEnemyResponse}
+                      >
+                        戦線斉射
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!selectedEnemy.isSpotted || !selectedUnit || finished}
+                        onClick={focusSelectedEnemy}
+                      >
+                        選択旅団集中
+                      </button>
+                    </>
+                  )}
+                  {(inspectedStructure || selectedStructure) && (
+                    <>
+                      <button type="button" disabled={finished} onClick={() => applyInspectedFacilityResponse(false)}>
+                        施設即応
+                      </button>
+                      <button type="button" disabled={finished} onClick={() => applyInspectedFacilityResponse(true)}>
+                        修理優先
+                      </button>
+                    </>
+                  )}
+                  {selectedFrontlinePressure && (
+                    <button
+                      type="button"
+                      disabled={
+                        finished ||
+                        selectedFrontlinePressure.level === "quiet" ||
+                        (selectedFrontlinePressure.defenders.length === 0 && selectedFrontlinePressure.reserves.length === 0)
+                      }
+                      onClick={applyInspectedFrontlineResponse}
+                    >
+                      戦線対応
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           {selectedUnitFrontlinePressure && (
