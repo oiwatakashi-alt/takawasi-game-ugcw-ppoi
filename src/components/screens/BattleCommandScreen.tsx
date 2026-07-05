@@ -3201,6 +3201,89 @@ export function BattleCommandScreen({
   ].filter(
     (item): item is { tone: "ready" | "warning" | "danger"; title: string; summary: string; detail: string } => Boolean(item),
   );
+  const selectedOrderTransferComparisons = selectedUnit
+    ? [
+        selectedEnemy && selectedEnemyScreenAnchor && selectedEnemyScreenFallback
+          ? (() => {
+              const moveDistance = distance(selectedUnit.position, selectedEnemyScreenAnchor);
+              const fallbackDepth = Math.max(0, selectedEnemyScreenAnchor.x - selectedEnemyScreenFallback.x);
+              const enemyRisk =
+                selectedEnemy.assaultPlan.phase === "breakthrough" || selectedEnemy.assaultPlan.phase === "flanking"
+                  ? 34
+                  : selectedEnemy.type === "brute" || selectedEnemy.assaultPlan.commandState === "commanded"
+                    ? 22
+                    : 10;
+              const score = Math.round(76 + fallbackDepth * 0.7 - moveDistance * 0.65 - enemyRisk + (selectedEnemy.isSpotted ? 8 : -12));
+              const tone = score < 34 ? "danger" : score < 58 ? "warning" : "ready";
+              return {
+                tone,
+                title: "比較 敵前縁",
+                actionLabel: "敵前縁へ布陣",
+                score,
+                summary: `距離${Math.round(moveDistance)} / 後退余地${Math.round(fallbackDepth)} / ${
+                  selectedEnemy.isSpotted ? "目標指名可" : "未確認"
+                }`,
+                detail: `${mapEnemyDisplayName(selectedEnemy)}を基準に前へ寄せる。敵圧が近いほど高リスク、後退余地が大きいほど安全。`,
+              };
+            })()
+          : undefined,
+        selectedFrontlineSegment
+          ? (() => {
+              const moveDistance = distance(selectedUnit.position, selectedFrontlineSegment.anchor);
+              const pressure = selectedFrontlinePressure?.pressure ?? 0;
+              const defenderCount = selectedFrontlinePressure?.defenders.length ?? 0;
+              const reserveCount = selectedFrontlinePressure?.reserves.length ?? 0;
+              const supportValue = defenderCount * 8 + reserveCount * 6;
+              const score = Math.round(72 + supportValue - moveDistance * 0.55 - pressure * 0.045);
+              const tone = score < 34 ? "danger" : score < 58 ? "warning" : "ready";
+              return {
+                tone,
+                title: "比較 戦線転属",
+                actionLabel: "選択旅団を戦線へ",
+                score,
+                summary: `距離${Math.round(moveDistance)} / 敵圧${Math.round(pressure)} / 守備${defenderCount}+予備${reserveCount}`,
+                detail: `${selectedFrontlineSegment.name}の基準/後退線を写す。既存守備と予備が多いほど安定、敵圧が高いほど危険。`,
+              };
+            })()
+          : undefined,
+        inspectedOrAssignedStructure && inspectedFacilityAnchor
+          ? (() => {
+              const moveDistance = distance(selectedUnit.position, inspectedFacilityAnchor);
+              const facilityValue =
+                inspectedOrAssignedStructure.type === "supplyDepot"
+                  ? 24
+                  : inspectedOrAssignedStructure.type === "fieldHospital"
+                    ? 28
+                    : inspectedOrAssignedStructure.type === "observationPost"
+                      ? 20
+                      : 16;
+              const damageNeed = 100 - inspectedOrAssignedStructure.durability;
+              const pressure = inspectedOrAssignedStructure.tacticalPressure;
+              const score = Math.round(
+                68 + facilityValue + damageNeed * 0.22 + pressure * 0.035 - moveDistance * 0.6 - (inspectedOrAssignedStructure.status === "overrun" ? 26 : 0),
+              );
+              const tone = score < 34 ? "danger" : score < 58 ? "warning" : "ready";
+              return {
+                tone,
+                title: "比較 施設近接",
+                actionLabel: "施設近接へ基準",
+                score,
+                summary: `距離${Math.round(moveDistance)} / 耐久${Math.round(inspectedOrAssignedStructure.durability)} / 脅威${Math.round(pressure)}`,
+                detail: `${fortificationTypeLabels[inspectedOrAssignedStructure.type]}の近くで任務化。施設価値と損傷が高いほど優先、移動距離が長いほど負担。`,
+              };
+            })()
+          : undefined,
+      ].filter(
+        (item): item is {
+          tone: "ready" | "warning" | "danger";
+          title: string;
+          actionLabel: string;
+          score: number;
+          summary: string;
+          detail: string;
+        } => Boolean(item),
+      )
+    : [];
   const selectedTacticalSuggestions = selectedUnit
     ? alerts
         .map((alert) => {
@@ -6102,6 +6185,22 @@ export function BattleCommandScreen({
                       <strong>{forecast.title}</strong>
                       <span>{forecast.summary}</span>
                       <small>{forecast.detail}</small>
+                    </article>
+                  ))}
+                </div>
+              )}
+              {selectedOrderTransferComparisons.length > 0 && (
+                <div className="map-selection-comparisons" aria-label="選択旅団への転写候補比較">
+                  {selectedOrderTransferComparisons.map((candidate) => (
+                    <article key={`${candidate.title}-${candidate.actionLabel}`} className={`map-selection-comparison ${candidate.tone}`}>
+                      <strong>
+                        {candidate.title}
+                        <em>評価{candidate.score}</em>
+                      </strong>
+                      <span>{candidate.summary}</span>
+                      <small>
+                        {candidate.actionLabel} / {candidate.detail}
+                      </small>
                     </article>
                   ))}
                 </div>
