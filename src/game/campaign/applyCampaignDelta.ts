@@ -18,6 +18,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
   const staffAdvisorySummary = result.staffAdvisoryOutcomes[0]?.summary;
   const enemyCommandEffectSummary = result.enemyCommandEffectOutcomes[0]?.effectLabel;
   const objectiveEventResponseSummary = result.objectiveEventResponseOutcomes[0]?.summary;
+  const commandTransmissionSummary = result.commandTransmissionOutcomes[0]?.summary;
   const withdrawalPursuitSummary = result.withdrawalPursuitSummary;
   const objectiveSummary = result.objectiveOutcome.events.join(" ");
   const resources = addResources(
@@ -67,6 +68,14 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
         (outcome) =>
           `指揮網効果 ${outcome.roleLabel}/${outcome.resultLabel}/${outcome.lessonTag}/${outcome.metricLabel}`,
       );
+    const commandTransmissionEntries = result.commandTransmissionOutcomes
+      .filter((outcome) => outcome.unitId === unit.id)
+      .map(
+        (outcome) =>
+          `伝令評価 ${outcome.orderLabel}/${outcome.delaySeconds}秒/${outcome.assessment}${
+            outcome.congestionDelaySeconds > 0 ? `/混線+${outcome.congestionDelaySeconds}秒` : ""
+          }/${outcome.arrived ? "到達" : "未着"}`,
+      );
     const rearGuardPlan = result.withdrawalRearGuardPlanAssessments.find((entry) => entry.unitId === unit.id);
     const withdrawalRearGuardEntries = result.withdrawalRearGuard
       .filter((entry) => entry.unitId === unit.id)
@@ -98,6 +107,8 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
           objectiveEventEntries.length > 0 ? `、${objectiveEventEntries.join("・")}` : ""
         }${
           enemyCommandEffectEntries.length > 0 ? `、${enemyCommandEffectEntries.join("・")}` : ""
+        }${
+          commandTransmissionEntries.length > 0 ? `、${commandTransmissionEntries.join("・")}` : ""
         }${
           withdrawalRearGuardEntries.length > 0 ? `、${withdrawalRearGuardEntries.join("・")}` : ""
         }${
@@ -236,6 +247,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
           staffAdvisorySummary ||
           enemyCommandEffectSummary ||
           objectiveEventResponseSummary ||
+          commandTransmissionSummary ||
           withdrawalPursuitSummary ||
           objectiveSummary
             ? `${result.campaignMessage} ${objectiveSummary}${
@@ -244,6 +256,8 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
                 enemyCommandEffectSummary ? ` 敵指揮網評価: ${enemyCommandEffectSummary}` : ""
               }${
                 objectiveEventResponseSummary ? ` ${objectiveEventResponseSummary}` : ""
+              }${
+                commandTransmissionSummary ? ` 伝令評価: ${commandTransmissionSummary}` : ""
               }${
                 withdrawalPursuitSummary ? ` ${withdrawalPursuitSummary}` : ""
               }${
@@ -259,6 +273,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
       staffAdvisorySummary ||
       enemyCommandEffectSummary ||
       objectiveEventResponseSummary ||
+      commandTransmissionSummary ||
       withdrawalPursuitSummary ||
       objectiveSummary ||
       intelligencePreparation.confidenceShift > 0
@@ -268,6 +283,8 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
             enemyCommandEffectSummary ? ` 敵指揮網評価: ${enemyCommandEffectSummary}` : ""
           }${
             objectiveEventResponseSummary ? ` ${objectiveEventResponseSummary}` : ""
+          }${
+            commandTransmissionSummary ? ` 伝令評価: ${commandTransmissionSummary}` : ""
           }${
             withdrawalPursuitSummary ? ` ${withdrawalPursuitSummary}` : ""
           }${

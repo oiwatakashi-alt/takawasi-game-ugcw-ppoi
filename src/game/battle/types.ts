@@ -378,12 +378,26 @@ export interface BattleUnit {
     issuedAt: number;
     arrivesAt: number;
     delaySeconds: number;
+    congestionDelaySeconds?: number;
   };
+  commandTransmissionEvents?: BattleCommandTransmissionEvent[];
   reserveReadiness: number;
   currentTargetId?: string;
   actionReason: BattleActionReason;
   lastDamageDealt: number;
   isMoving: boolean;
+}
+
+export interface BattleCommandTransmissionEvent {
+  id: string;
+  label: string;
+  detail: string;
+  reasons: string[];
+  issuedAt: number;
+  arrivesAt: number;
+  delaySeconds: number;
+  congestionDelaySeconds: number;
+  arrivedAt?: number;
 }
 
 export interface EnemyBattleUnit {
@@ -639,6 +653,18 @@ export interface BattleResult {
   officerEvents: string[];
   divisionCommanderEvents: string[];
   intelligenceEvents: string[];
+  commandTransmissionOutcomes: {
+    id: string;
+    unitId: string;
+    unitName: string;
+    orderLabel: string;
+    delaySeconds: number;
+    congestionDelaySeconds: number;
+    arrived: boolean;
+    reasons: string[];
+    assessment: "円滑" | "遅延" | "混線";
+    summary: string;
+  }[];
   staffAccountabilityEvents: StaffAccountabilityEvent[];
   staffAdvisoryOutcomes: StaffAdvisoryOutcome[];
   enemyCommandEffectOutcomes: {

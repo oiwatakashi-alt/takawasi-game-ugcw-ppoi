@@ -1866,7 +1866,22 @@ export const resolveTick = (state: BattleState): BattleState => {
     .slice(0, 3);
   playerUnits = playerUnits.map((unit) =>
     unit.pendingOrder && unit.pendingOrder.arrivesAt <= elapsedSeconds
-      ? { ...unit, pendingOrder: undefined }
+      ? {
+          ...unit,
+          commandTransmissionEvents: unit.commandTransmissionEvents?.map((event) =>
+            event.id === unit.pendingOrder?.id
+              ? {
+                  ...event,
+                  reasons: unit.pendingOrder?.reasons ?? event.reasons,
+                  arrivesAt: unit.pendingOrder?.arrivesAt ?? event.arrivesAt,
+                  delaySeconds: unit.pendingOrder?.delaySeconds ?? event.delaySeconds,
+                  congestionDelaySeconds: unit.pendingOrder?.congestionDelaySeconds ?? event.congestionDelaySeconds,
+                  arrivedAt: elapsedSeconds,
+                }
+              : event,
+          ),
+          pendingOrder: undefined,
+        }
       : unit,
   );
   if (arrivedOrderLogs.length > 0) {

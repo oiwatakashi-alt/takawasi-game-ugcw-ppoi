@@ -1594,6 +1594,13 @@ Queue congestion follow-up implemented:
 - Pending orders keep the congestion reasons, for example `一括5件 / 処理容量3 / 指揮幕僚+1 / 混線+1秒`, so the player can see that command doctrine raises capacity but does not make mass re-tasking free.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five selected-brigade commands -> `一括混線 +1秒` -> `一括発令` -> active `伝令 4秒 / 阻止射撃` with congestion reasons -> 1x arrival clearing. Console errors/warnings 0, broken images 0, horizontal overflow false, and no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-queue-congestion-qa-report.json`.
 
+After Action carryover follow-up implemented:
+
+- `BattleUnit.commandTransmissionEvents` records battle-only issued commands separately from the single active `pendingOrder`, so overwritten queued commands can still be evaluated after battle.
+- `BattleResult.commandTransmissionOutcomes` summarizes each issued order with unit, order label, delay seconds, congestion seconds, arrived/unarrived state, Japanese reasons, and assessment `円滑/遅延/混線`.
+- `AfterActionScreen` now shows `伝令評価` totals and per-unit command rows. `applyBattleResult` writes the same command outcomes into campaign last message and brigade history as `伝令評価 ...`, and `tacticalLessons.ts` counts those histories as small next-battle readiness/control/fallback lessons.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five commands -> `一括混線 +1秒` -> `一括発令` -> 1x arrival -> `撤退実行` -> `戦果報告へ` -> apply result. After Action showed `発令5件 / 遅延5件 / 混線5件 / 最長4秒`; Army Camp retained `伝令評価` in last message, unit history, and `戦術教訓 伝令評価1件`. Console errors 0. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-after-action-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.

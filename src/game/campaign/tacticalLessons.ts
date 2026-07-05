@@ -38,6 +38,9 @@ export interface TacticalLessonProfile {
   facilityRepairCount: number;
   facilityResupplyCount: number;
   facilityDutyCount: number;
+  commandTransmissionCount: number;
+  commandTransmissionDelayCount: number;
+  commandTransmissionCongestionCount: number;
   doctrineLessonCounts: Record<FrontlineDoctrinePresetId, number>;
   preferredDoctrineId?: FrontlineDoctrinePresetId;
   preferredDoctrineLabel?: string;
@@ -159,6 +162,13 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
   const facilityRepairCount = countHistoryEntries(unit.battleHistory, "施設修理");
   const facilityResupplyCount = countHistoryEntries(unit.battleHistory, "補給拠点勤務");
   const facilityDutyCount = facilityDefenseCount + facilityRepairCount + facilityResupplyCount;
+  const commandTransmissionCount = countHistoryEntries(unit.battleHistory, "伝令評価");
+  const commandTransmissionDelayCount = unit.battleHistory.filter(
+    (entry) => entry.includes("伝令評価") && (entry.includes("遅延") || entry.includes("未着")),
+  ).length;
+  const commandTransmissionCongestionCount = unit.battleHistory.filter(
+    (entry) => entry.includes("伝令評価") && entry.includes("混線"),
+  ).length;
   const doctrineLessonCounts = doctrineLessonCountsForHistory(unit.battleHistory);
   const preferredDoctrineId =
     preferredDoctrineFromCounts(doctrineLessonCounts) ??
@@ -179,7 +189,8 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCommandActionCount +
       enemyCommandEffectCount * 2 +
       objectiveEventResponseCount * 2 +
-      facilityDutyCount,
+      facilityDutyCount +
+      commandTransmissionCount,
   );
   const controlRadiusBonus = Math.min(
     6,
@@ -190,7 +201,8 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCommandEffectCount +
       objectiveEventRecoveredCount +
       facilityDefenseCount +
-      facilityRepairCount,
+      facilityRepairCount +
+      commandTransmissionCongestionCount,
   );
   const fallbackMoraleModifier = Math.min(
     9,
@@ -199,7 +211,8 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCommandReserveCount * 2 +
       objectiveEventFailedCount * 2 +
       objectiveEventDelayedCount +
-      facilityRepairCount,
+      facilityRepairCount +
+      commandTransmissionDelayCount,
   );
   const lessonParts = [
     advisoryCount > 0 ? `参謀警告${advisoryCount}件` : undefined,
@@ -209,6 +222,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     enemyCommandEffectCount > 0 ? `指揮網効果${enemyCommandEffectCount}件` : undefined,
     objectiveEventResponseCount > 0 ? `目標イベント対応${objectiveEventResponseCount}件` : undefined,
     facilityDutyCount > 0 ? `施設任務${facilityDutyCount}件` : undefined,
+    commandTransmissionCount > 0 ? `伝令評価${commandTransmissionCount}件` : undefined,
   ].filter(Boolean);
   const summary =
     lessonParts.length > 0
@@ -234,6 +248,9 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     facilityRepairCount,
     facilityResupplyCount,
     facilityDutyCount,
+    commandTransmissionCount,
+    commandTransmissionDelayCount,
+    commandTransmissionCongestionCount,
     doctrineLessonCounts,
     preferredDoctrineId,
     preferredDoctrineLabel,

@@ -1201,6 +1201,33 @@ const staffAccountabilityEventsForBattle = (
     .filter((event): event is BattleResult["staffAccountabilityEvents"][number] => Boolean(event));
 };
 
+const commandTransmissionOutcomesForBattle = (state: BattleState): BattleResult["commandTransmissionOutcomes"] =>
+  state.playerUnits
+    .flatMap((unit) =>
+      (unit.commandTransmissionEvents ?? []).map((event) => {
+        const congestionDelaySeconds = event.congestionDelaySeconds ?? 0;
+        const arrived = typeof event.arrivedAt === "number";
+        const assessment: BattleResult["commandTransmissionOutcomes"][number]["assessment"] =
+          congestionDelaySeconds > 0 ? "混線" : event.delaySeconds >= 5 || !arrived ? "遅延" : "円滑";
+        const congestionLabel = congestionDelaySeconds > 0 ? ` / 混線+${congestionDelaySeconds}秒` : "";
+        const arrivalLabel = arrived ? "到達済み" : "未着";
+        return {
+          id: event.id,
+          unitId: unit.unitId,
+          unitName: unit.name,
+          orderLabel: event.label,
+          delaySeconds: event.delaySeconds,
+          congestionDelaySeconds,
+          arrived,
+          reasons: event.reasons,
+          assessment,
+          summary: `${unit.name}: ${event.label} ${event.delaySeconds}秒${congestionLabel} / ${arrivalLabel} / ${assessment}`,
+        };
+      }),
+    )
+    .sort((a, b) => b.delaySeconds - a.delaySeconds)
+    .slice(0, 12);
+
 export const createBattleResult = (state: BattleState, turnNumber: number): BattleResult => {
   const outcome = state.status === "held" ? "hold" : state.status === "withdrawn" ? "withdraw" : "collapse";
   const baseRawCasualtiesByUnit = Object.fromEntries(
@@ -1338,6 +1365,7 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
     state.playerUnits.map((unit) => [unit.unitId, equipmentWearForUnit(unit, outcome)]),
   );
   const intelligenceAfterAction = misinformationAfterAction(state);
+  const commandTransmissionOutcomes = commandTransmissionOutcomesForBattle(state);
   const staffAdvisoryOutcomes = staffAdvisoryOutcomesForBattle(state);
   const objectiveOutcome = objectiveOutcomeForBattle(state);
   const staffAccountabilityEvents = staffAccountabilityEventsForBattle(state, outcome, objectiveOutcome, structureDamage);
@@ -1363,6 +1391,7 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
     officerEvents,
     divisionCommanderEvents: divisionCommanderResult.events,
     intelligenceEvents: intelligenceAfterAction.events,
+    commandTransmissionOutcomes,
     staffAccountabilityEvents,
     staffAdvisoryOutcomes,
     enemyCommandEffectOutcomes,

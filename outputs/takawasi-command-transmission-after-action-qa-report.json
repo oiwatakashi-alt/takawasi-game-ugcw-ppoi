@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-command-transmission-after-action-qa",
+  "date": "2026-07-05",
+  "target": "command transmission outcomes carry into After Action, campaign history, and tactical lessons",
+  "environment": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "mobileQa": "skipped: outside current target"
+  },
+  "checks": [
+    {
+      "name": "build",
+      "result": "pass",
+      "evidence": "npm run build completed successfully"
+    },
+    {
+      "name": "queued command congestion",
+      "result": "pass",
+      "evidence": "queued five selected-brigade commands; UI showed 一括混線 +1秒 and each queued forecast showed 伝令予測 3秒 + 混線1秒"
+    },
+    {
+      "name": "arrival tracking",
+      "result": "pass",
+      "evidence": "after 一括発令 and 1x tick, battle log showed 第1戦列歩兵大隊へ阻止射撃が到達 and pending chip cleared"
+    },
+    {
+      "name": "after action command review",
+      "result": "pass",
+      "evidence": "After Action showed 伝令評価, 発令5件 / 遅延5件 / 混線5件 / 最長4秒, with per-order arrived/unarrived rows"
+    },
+    {
+      "name": "campaign carryover",
+      "result": "pass",
+      "evidence": "after applying result, Army Camp last message and selected unit history contained 伝令評価; tactical lesson summary showed 伝令評価1件 / 即応+1 / 統制+1 / 後退判断+1"
+    },
+    {
+      "name": "console errors",
+      "result": "pass",
+      "evidence": "in-app browser console error log was empty"
+    }
+  ],
+  "notes": [
+    "QA campaign was reset from the UI afterward; reset state returned to 第1戦略ターン and no 伝令評価 history remained visible."
+  ]
+}

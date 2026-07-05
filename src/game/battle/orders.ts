@@ -262,7 +262,19 @@ export const applyCommandCongestionToPendingOrders = (
               reasons: [...(unit.pendingOrder.reasons ?? [unit.pendingOrder.detail]), ...report.reasons],
               arrivesAt: unit.pendingOrder.arrivesAt + report.delayPenaltySeconds,
               delaySeconds: unit.pendingOrder.delaySeconds + report.delayPenaltySeconds,
+              congestionDelaySeconds: (unit.pendingOrder.congestionDelaySeconds ?? 0) + report.delayPenaltySeconds,
             },
+            commandTransmissionEvents: unit.commandTransmissionEvents?.map((event) =>
+              Math.abs(event.issuedAt - issuedAt) < 0.01
+                ? {
+                    ...event,
+                    reasons: [...event.reasons, ...report.reasons],
+                    arrivesAt: event.arrivesAt + report.delayPenaltySeconds,
+                    delaySeconds: event.delaySeconds + report.delayPenaltySeconds,
+                    congestionDelaySeconds: event.congestionDelaySeconds + report.delayPenaltySeconds,
+                  }
+                : event,
+            ),
           }
         : unit,
     ),
@@ -282,6 +294,7 @@ const markCommandTransmission = (
     return state;
   }
   const report = commandTransmissionReport(state, unit, intensity);
+  const pendingOrderId = `order-${state.elapsedSeconds}-${unitId}-${label}`;
   return {
     ...state,
     playerUnits: state.playerUnits.map((candidate) =>
@@ -289,14 +302,28 @@ const markCommandTransmission = (
         ? {
             ...candidate,
             pendingOrder: {
-              id: `order-${state.elapsedSeconds}-${unitId}-${label}`,
+              id: pendingOrderId,
               label,
               detail,
               reasons: report.reasons,
               issuedAt: state.elapsedSeconds,
               arrivesAt: state.elapsedSeconds + report.delaySeconds,
               delaySeconds: report.delaySeconds,
+              congestionDelaySeconds: 0,
             },
+            commandTransmissionEvents: [
+              {
+                id: pendingOrderId,
+                label,
+                detail,
+                reasons: report.reasons,
+                issuedAt: state.elapsedSeconds,
+                arrivesAt: state.elapsedSeconds + report.delaySeconds,
+                delaySeconds: report.delaySeconds,
+                congestionDelaySeconds: 0,
+              },
+              ...(candidate.commandTransmissionEvents ?? []),
+            ].slice(0, 16),
           }
         : candidate,
     ),

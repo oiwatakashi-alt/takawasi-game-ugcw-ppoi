@@ -40,6 +40,16 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
   const rearGuardActualByUnit = Object.fromEntries(result.withdrawalRearGuard.map((entry) => [entry.unitId, entry]));
   const medicalRecoveryByUnit = Object.fromEntries(result.medicalRecoveryDetails.map((entry) => [entry.unitId, entry]));
   const medicalBonusDetails = result.medicalRecoveryDetails.filter((entry) => entry.bonusRecovered > 0);
+  const commandTransmissionDelayedCount = result.commandTransmissionOutcomes.filter(
+    (outcome) => outcome.assessment !== "円滑",
+  ).length;
+  const commandTransmissionCongestedCount = result.commandTransmissionOutcomes.filter(
+    (outcome) => outcome.congestionDelaySeconds > 0,
+  ).length;
+  const commandTransmissionMaxDelay = result.commandTransmissionOutcomes.reduce(
+    (maximum, outcome) => Math.max(maximum, outcome.delaySeconds),
+    0,
+  );
   const tacticalLessonPreviews = Object.keys(result.casualtiesByUnit)
     .map((unitId) => ({
       unitId,
@@ -111,6 +121,20 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
             {result.intelligenceLessonOfficerIds.length > 0 && (
               <span>教訓記録 {result.intelligenceLessonOfficerIds.length}名</span>
             )}
+          </div>
+        )}
+        {result.commandTransmissionOutcomes.length > 0 && (
+          <div className="battle-spoils-box intelligence-review-box">
+            <strong>伝令評価</strong>
+            <span>
+              発令{result.commandTransmissionOutcomes.length}件 / 遅延{commandTransmissionDelayedCount}件 / 混線
+              {commandTransmissionCongestedCount}件 / 最長{commandTransmissionMaxDelay}秒
+            </span>
+            {result.commandTransmissionOutcomes.slice(0, 6).map((outcome) => (
+              <span key={outcome.id}>
+                {outcome.summary} / {outcome.reasons.slice(0, 4).join(" / ")}
+              </span>
+            ))}
           </div>
         )}
         {result.staffAccountabilityEvents.length > 0 && (
@@ -241,6 +265,15 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
               .map((outcome) => (
                 <p key={outcome.id}>
                   敵指揮網 {outcome.roleLabel} / {outcome.resultLabel} / {outcome.metricLabel} / 教訓 {outcome.lessonTag}
+                </p>
+              ))}
+            {result.commandTransmissionOutcomes
+              .filter((outcome) => outcome.unitId === unitId)
+              .map((outcome) => (
+                <p key={outcome.id}>
+                  伝令 {outcome.orderLabel} / {outcome.delaySeconds}秒 / {outcome.assessment}
+                  {outcome.congestionDelaySeconds > 0 ? ` / 混線+${outcome.congestionDelaySeconds}秒` : ""} /{" "}
+                  {outcome.arrived ? "到達済み" : "未着"}
                 </p>
               ))}
             {result.withdrawalRearGuard
