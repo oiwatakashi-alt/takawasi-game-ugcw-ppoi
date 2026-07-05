@@ -2724,6 +2724,28 @@ export function BattleCommandScreen({
         .join(" / ");
       const isOutsideControl = distanceToAnchor > unit.standingOrder.controlRadius;
       const tone = stress >= 96 || isOutsideControl ? "danger" : stress >= 68 || warnings ? "warning" : "stable";
+      const recommendedAction: "fallback" | "rest" | "hold" =
+        isOutsideControl || unit.morale < 34 || soldierRatio < 48
+          ? "fallback"
+          : unit.ammo < 35 || unit.condition < 45 || unit.morale < 48
+            ? "rest"
+            : "hold";
+      const recommendationLabel =
+        recommendedAction === "fallback" ? "推奨 後退守備" : recommendedAction === "rest" ? "推奨 休息補給" : "推奨 維持";
+      const recommendationReason =
+        recommendedAction === "fallback"
+          ? isOutsideControl
+            ? `基準線外 ${distanceToAnchor}`
+            : soldierRatio < 48
+              ? `兵力${soldierRatio}%`
+              : `士気${Math.round(unit.morale)}`
+          : recommendedAction === "rest"
+            ? unit.ammo < 35
+              ? `弾薬${Math.round(unit.ammo)}`
+              : unit.condition < 45
+                ? `疲労${Math.round(100 - unit.condition)}`
+                : `士気${Math.round(unit.morale)}`
+            : "現戦線を維持";
       return {
         unit,
         soldierRatio,
@@ -2731,6 +2753,9 @@ export function BattleCommandScreen({
         distanceToAnchor,
         warnings,
         tone,
+        recommendedAction,
+        recommendationLabel,
+        recommendationReason,
       };
     })
     .sort((a, b) => b.stress - a.stress)
@@ -3095,6 +3120,21 @@ export function BattleCommandScreen({
       `後退守備 / 士気${Math.round(unit.morale)} / 兵力${unit.soldiers}`,
       (state) => applyStandingOrderPreset(state, unit.unitId, "fallback_guard"),
     );
+  };
+
+  const issueFrontlineDefenderRecommendation = (
+    unit: BattleUnit,
+    action: "fallback" | "rest" | "hold",
+  ) => {
+    if (action === "fallback") {
+      issueFrontlineDefenderFallbackGuard(unit);
+      return;
+    }
+    if (action === "rest") {
+      issueFrontlineDefenderRest(unit);
+      return;
+    }
+    selectFrontlineDefender(unit);
   };
 
   const applyQueuedCommandBatch = (batchSize: number, issueLabel: string) => {
@@ -5168,7 +5208,18 @@ export function BattleCommandScreen({
               <em>ストレス、弾薬、士気、基準線距離から危険な旅団を先に表示。</em>
             </div>
             <div className="frontline-defender-diagnosis-list">
-              {selectedFrontlineDefenderDiagnostics.map(({ unit, soldierRatio, stress, distanceToAnchor, warnings, tone }) => (
+              {selectedFrontlineDefenderDiagnostics.map(
+                ({
+                  unit,
+                  soldierRatio,
+                  stress,
+                  distanceToAnchor,
+                  warnings,
+                  tone,
+                  recommendedAction,
+                  recommendationLabel,
+                  recommendationReason,
+                }) => (
                 <article key={`frontline-defender-${unit.unitId}`} className={`frontline-defender-card ${tone}`}>
                   <button
                     className="frontline-defender-main"
@@ -5186,8 +5237,18 @@ export function BattleCommandScreen({
                       {standingPostureLabels[unit.standingOrder.posture]} / {targetPriorityLabels[unit.standingOrder.targetPriority]} /{" "}
                       距離{distanceToAnchor} / {warnings || "余力維持"}
                     </small>
+                    <small className={`frontline-defender-recommendation ${recommendedAction}`}>
+                      {recommendationLabel} / {recommendationReason}
+                    </small>
                   </button>
                   <div className="frontline-defender-actions">
+                    <button
+                      type="button"
+                      disabled={finished || recommendedAction === "hold"}
+                      onClick={() => issueFrontlineDefenderRecommendation(unit, recommendedAction)}
+                    >
+                      推奨実行
+                    </button>
                     <button type="button" onClick={() => selectFrontlineDefender(unit)}>
                       選択
                     </button>
@@ -5199,7 +5260,8 @@ export function BattleCommandScreen({
                     </button>
                   </div>
                 </article>
-              ))}
+                ),
+              )}
               {selectedFrontlineDefenderDiagnostics.length === 0 && (
                 <span className="frontline-defender-empty">この戦線に守備旅団なし</span>
               )}
