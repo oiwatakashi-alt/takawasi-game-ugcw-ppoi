@@ -5196,6 +5196,8 @@ export function BattleCommandScreen({
         nextBattle = setStandingOrderTargetPriority(nextBattle, unit.unitId, "officer");
       } else if (alert.enemyId) {
         const enemy = state.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+        const terrainRole: MapInspectionResponseRole =
+          enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "terrain_enemy_block" : "terrain_enemy_focus";
         nextBattle = applyStandingOrderPreset(
           nextBattle,
           unit.unitId,
@@ -5205,6 +5207,7 @@ export function BattleCommandScreen({
         if (enemy?.isSpotted) {
           nextBattle = setUnitFocusTarget(nextBattle, unit.unitId, enemy.id);
         }
+        nextBattle = withMapInspectionResponseRole(nextBattle, [unit.unitId], terrainRole);
       } else if (alert.id === "enemy-wave") {
         nextBattle = applyStandingOrderPreset(nextBattle, unit.unitId, "aggressive_screen");
       } else if (alert.segmentId || alert.id.startsWith("choke-") || alert.id.startsWith("formation-")) {
@@ -5296,6 +5299,8 @@ export function BattleCommandScreen({
       } else if (alert.enemyId) {
         const enemy = state.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
         const preset = enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "elastic_defense" : "aggressive_screen";
+        const terrainRole: MapInspectionResponseRole =
+          enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "terrain_enemy_block" : "terrain_enemy_focus";
         for (const unit of units) {
           nextBattle = applyStandingOrderPreset(nextBattle, unit.unitId, preset);
           nextBattle = setStandingOrderTargetPriority(nextBattle, unit.unitId, enemy ? enemyResponsePriority(enemy) : "nearest");
@@ -5303,6 +5308,11 @@ export function BattleCommandScreen({
             nextBattle = setUnitFocusTarget(nextBattle, unit.unitId, enemy.id);
           }
         }
+        nextBattle = withMapInspectionResponseRole(
+          nextBattle,
+          units.map((unit) => unit.unitId),
+          terrainRole,
+        );
       } else if (alert.segmentId) {
         const preset = alert.severity === "danger" ? "fallback_guard" : "elastic_defense";
         for (const unit of units) {

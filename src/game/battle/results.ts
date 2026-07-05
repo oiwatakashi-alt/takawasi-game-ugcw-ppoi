@@ -68,6 +68,12 @@ const battleRoleForUnit = (unit: BattleState["playerUnits"][number]): string => 
   if (unit.mapInspectionResponseRole === "enemy_screen") {
     return "検査敵前縁布陣";
   }
+  if (unit.mapInspectionResponseRole === "terrain_enemy_block") {
+    return "地形敵封鎖";
+  }
+  if (unit.mapInspectionResponseRole === "terrain_enemy_focus") {
+    return "地形敵阻止";
+  }
   if (unit.mapInspectionResponseRole === "frontline_transfer") {
     return "検査戦線転属";
   }
@@ -201,6 +207,12 @@ const roleXpBonusForUnit = (unit: BattleState["playerUnits"][number], outcome: B
   }
   if (role === "検査敵前縁布陣") {
     return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "地形敵封鎖") {
+    return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0) + (unit.standingOrder.posture === "elastic_defense" ? 1 : 0);
+  }
+  if (role === "地形敵阻止") {
+    return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0) + (unit.standingOrder.posture === "aggressive_screen" ? 1 : 0);
   }
   if (role === "検査戦線転属") {
     return 2 + outcomeBonus + (distance(unit.position, unit.standingOrder.anchor) <= Math.max(12, unit.standingOrder.controlRadius) ? 1 : 0);
@@ -475,6 +487,18 @@ const commendationsForUnit = (
     commendations.push("確認敵群へ前縁布陣");
     if (unit.focusTargetId) {
       commendations.push("敵群を基準目標化");
+    }
+  }
+  if (role === "地形敵封鎖") {
+    commendations.push("地形機動敵を封鎖");
+    if (unit.focusTargetId) {
+      commendations.push("稜線裏敵群を指名");
+    }
+  }
+  if (role === "地形敵阻止") {
+    commendations.push("地形機動敵を阻止");
+    if (unit.focusTargetId) {
+      commendations.push("接近敵群へ集中射撃");
     }
   }
   if (role === "検査戦線転属") {
@@ -1019,6 +1043,8 @@ const officerXpForUnit = (
           role === "検査施設修理" ||
           role === "検査戦線対応" ||
           role === "検査敵前縁布陣" ||
+          role === "地形敵封鎖" ||
+          role === "地形敵阻止" ||
           role === "検査戦線転属" ||
           role === "検査施設担当" ||
           role === "検査施設基準"

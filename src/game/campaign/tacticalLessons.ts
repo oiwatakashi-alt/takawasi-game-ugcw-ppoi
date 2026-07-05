@@ -31,6 +31,9 @@ export interface TacticalLessonProfile {
   enemyCommandReserveCount: number;
   enemyCommandActionCount: number;
   enemyCommandEffectCount: number;
+  terrainEnemyBlockCount: number;
+  terrainEnemyFocusCount: number;
+  terrainEnemyResponseCount: number;
   objectiveEventResponseCount: number;
   objectiveEventRecoveredCount: number;
   objectiveEventDelayedCount: number;
@@ -152,6 +155,9 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
   const enemyCommandActionCount =
     enemyCommandNodeFireCount + enemyCommandInheritanceCutCount + enemyCollapsePursuitCount + enemyCommandReserveCount;
   const enemyCommandEffectCount = countHistoryEntries(unit.battleHistory, "指揮網効果");
+  const terrainEnemyBlockCount = countHistoryEntries(unit.battleHistory, "地形敵封鎖");
+  const terrainEnemyFocusCount = countHistoryEntries(unit.battleHistory, "地形敵阻止");
+  const terrainEnemyResponseCount = terrainEnemyBlockCount + terrainEnemyFocusCount;
   const objectiveEventResponseCount = countHistoryEntries(unit.battleHistory, "目標イベント対応");
   const objectiveEventRecoveredCount = unit.battleHistory.filter(
     (entry) => entry.includes("目標イベント対応") && entry.includes("再確保"),
@@ -182,6 +188,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCollapsePursuitCount,
       enemyCommandReserveCount,
     }) ??
+    (terrainEnemyBlockCount > 0 ? "elastic_refuse" : terrainEnemyFocusCount > 0 ? "kill_zone" : undefined) ??
     objectiveEventDoctrinePreference(unit.battleHistory) ??
     facilityDutyDoctrinePreference({ facilityDefenseCount, facilityRepairCount, facilityResupplyCount });
   const preferredDoctrineLabel = preferredDoctrineId ? doctrineLessonLabels[preferredDoctrineId] : undefined;
@@ -194,6 +201,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCommandInheritanceCutCount * 2 +
       enemyCommandActionCount +
       enemyCommandEffectCount * 2 +
+      terrainEnemyResponseCount * 2 +
       objectiveEventResponseCount * 2 +
       facilityDutyCount +
       commandTransmissionCount,
@@ -206,6 +214,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       enemyCommandInheritanceCutCount * 2 +
       enemyCollapsePursuitCount +
       enemyCommandEffectCount +
+      terrainEnemyResponseCount +
       objectiveEventRecoveredCount +
       facilityDefenseCount +
       facilityRepairCount +
@@ -216,6 +225,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     failedAdvisoryCount * 3 +
       withdrawalSupportCount * 2 +
       enemyCommandReserveCount * 2 +
+      terrainEnemyBlockCount +
       objectiveEventFailedCount * 2 +
       objectiveEventDelayedCount +
       facilityRepairCount +
@@ -228,6 +238,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     enemyCollapsePursuitCount > 0 ? `敵崩壊追撃${enemyCollapsePursuitCount}件` : undefined,
     enemyCommandReserveCount > 0 ? `指揮網予備投入${enemyCommandReserveCount}件` : undefined,
     enemyCommandEffectCount > 0 ? `指揮網効果${enemyCommandEffectCount}件` : undefined,
+    terrainEnemyResponseCount > 0 ? `地形敵対応${terrainEnemyResponseCount}件` : undefined,
     objectiveEventResponseCount > 0 ? `目標イベント対応${objectiveEventResponseCount}件` : undefined,
     facilityDutyCount > 0 ? `施設任務${facilityDutyCount}件` : undefined,
     commandTransmissionCount > 0 ? `伝令評価${commandTransmissionCount}件` : undefined,
@@ -249,6 +260,9 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     enemyCommandReserveCount,
     enemyCommandActionCount,
     enemyCommandEffectCount,
+    terrainEnemyBlockCount,
+    terrainEnemyFocusCount,
+    terrainEnemyResponseCount,
     objectiveEventResponseCount,
     objectiveEventRecoveredCount,
     objectiveEventDelayedCount,

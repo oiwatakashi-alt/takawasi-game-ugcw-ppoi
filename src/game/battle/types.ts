@@ -207,6 +207,8 @@ export type MapInspectionResponseRole =
   | "facility_repair"
   | "frontline_response"
   | "enemy_screen"
+  | "terrain_enemy_block"
+  | "terrain_enemy_focus"
   | "frontline_transfer"
   | "facility_transfer"
   | "facility_anchor";

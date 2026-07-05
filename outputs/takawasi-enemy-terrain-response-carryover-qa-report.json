@@ -1,0 +1,52 @@
+{
+  "id": "takawasi-enemy-terrain-response-carryover-qa",
+  "date": "2026-07-06",
+  "target": "http://127.0.0.1:5173/?takawasiTerrainProfile=reverse-slope",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Enemy terrain alert response role carryover",
+    "After Action role and commendation display",
+    "Army Camp unit-history tactical lesson from terrain enemy response"
+  ],
+  "flow": [
+    "Cleared browser storage through CDP and reloaded the reverse-slope tactical profile.",
+    "Strategic Map -> Camp -> Deployment -> Battle.",
+    "Started 1x battle tick, waited for enemy spawn, stopped the battle.",
+    "Verified visible alert: enemy terrain maneuver / reverse-slope ridge-hiding mob.",
+    "Clicked the alert recommendation: battle line blocking response.",
+    "Withdrew, opened After Action, and applied the result back to Army Camp.",
+    "Selected the responding brigade in Army Camp and verified unit history and tactical lesson carryover."
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Existing large chunk warning only."
+  },
+  "browserQa": {
+    "status": "passed",
+    "observed": {
+      "battleAlert": "敵地形機動: 稜線裏滞留",
+      "alertAction": "戦線で封鎖",
+      "afterActionRole": "任務 地形敵封鎖",
+      "afterActionCommendations": [
+        "地形機動敵を封鎖",
+        "稜線裏敵群を指名"
+      ],
+      "armyCampLesson": "戦術教訓 地形敵対応1件 / 伝令評価1件 / 得意弾性拒止 / 即応+3 / 統制+1 / 後退判断+2",
+      "armyCampHistory": "東方辺境防衛線防衛戦 - 逆斜面射線検証: 戦闘撤退、地形敵封鎖、永久損耗0、収容0、経験+4、装備摩耗-0.01、地形機動敵を封鎖・稜線裏敵群を指名"
+    },
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false,
+    "visibleUndefined": false
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current active target."
+  }
+}
