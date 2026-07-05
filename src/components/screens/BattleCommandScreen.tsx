@@ -304,6 +304,10 @@ interface EnemyCommandGroupReport {
   hierarchyLabel: string;
   hierarchyDetail: string;
   hierarchyTone: "idle" | "active" | "risk";
+  hierarchyRiskScore: number;
+  hierarchyOrphanedCount: number;
+  hierarchyRelayCount: number;
+  hierarchySourceChildCount: number;
   leadThreat: EnemyBattleUnit;
   pursuitTarget?: EnemyBattleUnit;
   pursuitReason: string;
@@ -775,6 +779,11 @@ const enemyCommandGroupRecommendation = (
   leadThreat: EnemyBattleUnit,
   pursuitOpportunityScore: number,
   totalPressure: number,
+  source: EnemyBattleUnit | undefined,
+  hierarchy: Pick<
+    EnemyCommandGroupReport,
+    "hierarchyRiskScore" | "hierarchyOrphanedCount" | "hierarchyRelayCount" | "hierarchySourceChildCount"
+  >,
 ): Pick<EnemyCommandGroupReport, "recommendedAction" | "recommendationLabel" | "recommendationReason"> => {
   const assaultLeadCount = enemyCommandTierCount(units, "assault_lead");
   const supportNodeCount = enemyCommandTierCount(units, "support_node");
@@ -784,6 +793,18 @@ const enemyCommandGroupRecommendation = (
       recommendedAction: "pursuit",
       recommendationLabel: "崩壊追撃",
       recommendationReason: `追撃機会${Math.round(pursuitOpportunityScore)}。崩れた指揮群を掃討して再集結を防ぐ。`,
+    };
+  }
+  if (
+    source &&
+    hierarchy.hierarchyRiskScore >= 34 &&
+    totalPressure < 1900 &&
+    (hierarchy.hierarchySourceChildCount > 0 || hierarchy.hierarchyRelayCount > 0 || hierarchy.hierarchyOrphanedCount > 0)
+  ) {
+    return {
+      recommendedAction: "fire",
+      recommendationLabel: "継承遮断",
+      recommendationReason: `崩壊リスク${hierarchy.hierarchyRiskScore} / 孤立${hierarchy.hierarchyOrphanedCount}。指揮核を撃って継承線を切る。`,
     };
   }
   if (
@@ -822,9 +843,10 @@ const enemyCommandGroupForecast = (
   source: EnemyBattleUnit | undefined,
   leadThreat: EnemyBattleUnit,
   targetSegment: BattleState["frontlineSegments"][number] | undefined,
-  recommendation: Pick<EnemyCommandGroupReport, "recommendedAction">,
+  recommendation: Pick<EnemyCommandGroupReport, "recommendedAction" | "recommendationLabel">,
   pursuitTarget: EnemyBattleUnit | undefined,
   pursuitOpportunityScore: number,
+  hierarchy: Pick<EnemyCommandGroupReport, "hierarchyRiskScore" | "hierarchyOrphanedCount" | "hierarchySourceChildCount">,
 ): Pick<EnemyCommandGroupReport, "forecastLabel" | "forecastDetail" | "forecastTone"> => {
   if (recommendation.recommendedAction === "fire") {
     const commandTarget =
@@ -833,9 +855,14 @@ const enemyCommandGroupForecast = (
       [...units].sort((a, b) => b.assaultPlan.commandInfluence - a.assaultPlan.commandInfluence || enemyThreatScore(b) - enemyThreatScore(a))[0] ??
       leadThreat;
     const responseCount = enemyResponseUnits(battle, commandTarget).slice(0, 3).length;
+    const inheritanceCut = recommendation.recommendationLabel === "継承遮断";
     return {
-      forecastLabel: `予測 指揮低下 / ${responseCount}旅団 / 弾薬高`,
-      forecastDetail: `${mapEnemyDisplayName(commandTarget)}を集中射撃。命中すれば同群の再集結と士気維持を崩す。`,
+      forecastLabel: inheritanceCut
+        ? `予測 継承遮断 / ${responseCount}旅団 / 弾薬高`
+        : `予測 指揮低下 / ${responseCount}旅団 / 弾薬高`,
+      forecastDetail: inheritanceCut
+        ? `${mapEnemyDisplayName(commandTarget)}を集中射撃。命中すれば${hierarchy.hierarchySourceChildCount}群の継承を切り、孤立${hierarchy.hierarchyOrphanedCount}群を崩しやすくする。`
+        : `${mapEnemyDisplayName(commandTarget)}を集中射撃。命中すれば同群の再集結と士気維持を崩す。`,
       forecastTone: responseCount >= 2 ? "effect" : "risk",
     };
   }
@@ -988,7 +1015,16 @@ const enemyCommandGroupHierarchyReadout = (
   allEnemies: EnemyBattleUnit[],
   units: EnemyBattleUnit[],
   source: EnemyBattleUnit | undefined,
-): Pick<EnemyCommandGroupReport, "hierarchyLabel" | "hierarchyDetail" | "hierarchyTone"> => {
+): Pick<
+  EnemyCommandGroupReport,
+  | "hierarchyLabel"
+  | "hierarchyDetail"
+  | "hierarchyTone"
+  | "hierarchyRiskScore"
+  | "hierarchyOrphanedCount"
+  | "hierarchyRelayCount"
+  | "hierarchySourceChildCount"
+> => {
   const commandNodes = units.filter((unit) => unit.assaultPlan.commandTier === "wave_command");
   const assaultLeads = units.filter((unit) => unit.assaultPlan.commandTier === "assault_lead");
   const supportNodes = units.filter((unit) => unit.assaultPlan.commandTier === "support_node");
@@ -1039,6 +1075,10 @@ const enemyCommandGroupHierarchyReadout = (
     hierarchyLabel,
     hierarchyDetail,
     hierarchyTone,
+    hierarchyRiskScore: riskScore,
+    hierarchyOrphanedCount: orphanedUnits.length,
+    hierarchyRelayCount: relayChildren.length + leadChildren.length,
+    hierarchySourceChildCount: sourceChildren.length,
   };
 };
 
@@ -1103,7 +1143,15 @@ const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[
           enemyThreatScore(b) - enemyThreatScore(a),
       )[0];
       const pursuitOpportunityScore = pursuitTarget ? enemyPursuitOpportunityScore(pursuitTarget) : 0;
-      const recommendation = enemyCommandGroupRecommendation(units, leadThreat, pursuitOpportunityScore, totalPressure);
+      const hierarchyReadout = enemyCommandGroupHierarchyReadout(battle.enemyUnits, units, source);
+      const recommendation = enemyCommandGroupRecommendation(
+        units,
+        leadThreat,
+        pursuitOpportunityScore,
+        totalPressure,
+        source,
+        hierarchyReadout,
+      );
       const forecast = enemyCommandGroupForecast(
         battle,
         units,
@@ -1113,10 +1161,10 @@ const enemyCommandGroupReports = (battle: BattleState): EnemyCommandGroupReport[
         recommendation,
         pursuitTarget,
         pursuitOpportunityScore,
+        hierarchyReadout,
       );
       const responseStatus = enemyCommandGroupResponseStatus(battle, units, targetSegment);
       const responseEffect = enemyCommandGroupResponseEffect(battle, units, targetSegment, responseStatus);
-      const hierarchyReadout = enemyCommandGroupHierarchyReadout(battle.enemyUnits, units, source);
       return {
         id,
         label: source?.assaultPlan.commandLabel ?? leadThreat?.assaultPlan.commandLabel ?? `${leadThreat?.assaultPlan.targetName ?? "敵群"}指揮`,

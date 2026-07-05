@@ -1505,6 +1505,18 @@ Implemented:
 - If a card's visible group does not include the officer token but its units are currently commanded by that officer, the UI still resolves the command source from the wider live enemy list.
 - Desktop 1440px QA verified reset -> Camp -> Deployment -> Battle -> 3x command waves -> stop. Five enemy command cards showed inheritance lines such as `継承 第2波指揮核 -> 2群 / 先導2 / 支援0 / 前衛0 / 中継0 / 孤立0 / 崩壊リスク0` and risk lines with `孤立` and `崩壊リスク`; console errors/warnings 0, broken images 0, horizontal overflow false, and no visible `NaN`. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-enemy-command-hierarchy-qa-report.json`.
 
+## Implemented Enemy Command Inheritance Recommendation Slice - 2026-07-05
+
+Enemy command inheritance now affects tactical recommendation and forecast text, so the hierarchy readout is not just decoration.
+
+Implemented:
+
+- Enemy command-network recommendation scoring now reads hierarchy risk, orphaned unit count, relay count, source-child count, source command node, pursuit opportunity, and total pressure.
+- When inheritance risk is high enough but immediate breakthrough pressure is not overwhelming, the recommended action becomes `継承遮断`, using the existing `指揮核射撃` action path.
+- `継承遮断` forecast rows show `予測 継承遮断`, participating brigade count, high ammo cost, source command target, affected child count, and orphaned groups that become easier to collapse.
+- Reserve commitment still wins when breakthrough/structure pressure is the immediate danger, preserving the previous battlefield-triage behavior.
+- Desktop 1440px QA verified reset -> Camp -> Deployment -> Battle -> 3x command waves -> stop. The command-network cards showed both reserve and inheritance-cut recommendations, including `推奨 継承遮断 / 崩壊リスク44 / 孤立2` and `予測 継承遮断 / 2旅団 / 弾薬高`; console errors/warnings 0, broken images 0, horizontal overflow false, and no visible `NaN`. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-enemy-command-hierarchy-qa-report.json`.
+
 ## Implemented Battle Objective Node Control Slice - 2026-07-04
 
 Victory, supply, and visibility markers now participate in battle state instead of being fixed tactical-board decoration.

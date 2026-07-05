@@ -1,5 +1,5 @@
 {
-  "id": "takawasi-enemy-command-hierarchy-qa",
+  "id": "takawasi-enemy-command-inheritance-recommendation-qa",
   "date": "2026-07-05",
   "target": "http://127.0.0.1:5173/",
   "viewport": {
@@ -12,7 +12,8 @@
     "Reset campaign",
     "Strategic Map -> Army Camp -> Deployment -> Battle Command",
     "Run battle at 3x until command-wave cards appear",
-    "Stop battle and inspect enemy command-network cards"
+    "Stop battle and inspect enemy command-network cards",
+    "Verify hierarchy risk changes recommendation and forecast text"
   ],
   "verified": {
     "elapsedText": "防衛時間 61/150秒",
@@ -20,6 +21,8 @@
     "commandSourceInheritanceVisible": true,
     "riskReadoutVisible": true,
     "toneClassesVisible": true,
+    "inheritanceCutRecommendationVisible": true,
+    "inheritanceCutForecastVisible": true,
     "sampleHierarchyLines": [
       "継承 第2波指揮核 -> 2群 / 先導2 / 支援0 / 前衛0 / 中継0 / 孤立0 / 崩壊リスク0",
       "継承 第2波指揮核 -> 2群 / 先導2 / 支援0 / 前衛0 / 中継0 / 孤立2 / 崩壊リスク44",
@@ -27,7 +30,17 @@
       "継承 第2波指揮核 -> 1群 / 先導0 / 支援1 / 前衛0 / 中継0 / 孤立1 / 崩壊リスク22",
       "継承 第2波指揮核 -> 1群 / 先導1 / 支援0 / 前衛0 / 中継0 / 孤立1 / 崩壊リスク22"
     ],
-    "sampleCardText": "第2波指揮核指揮下 / 陣地突破 / 影響69% / 階梯 突撃先導2 / 継承 第2波指揮核 -> 2群 / 崩壊リスク0 / 推奨 予備投入",
+    "sampleRecommendationLines": [
+      "推奨 予備投入 / 突撃先導2群。突破・施設襲撃を止めるため担当線へ予備を接続する。",
+      "推奨 継承遮断 / 崩壊リスク44 / 孤立2。指揮核を撃って継承線を切る。",
+      "推奨 指揮核射撃 / 支援節1群。敵の士気維持と銃列支援を指揮核射撃で切る。"
+    ],
+    "sampleForecastLines": [
+      "予測 突破封鎖 / 予備1 / 即応-32 / 中央塹壕線へ接続。現守備2旅団、主脅威群集を受け止める。",
+      "予測 継承遮断 / 2旅団 / 弾薬高 / 敵指揮を集中射撃。命中すれば2群の継承を切り、孤立2群を崩しやすくする。",
+      "予測 指揮低下 / 2旅団 / 弾薬高 / 敵指揮を集中射撃。命中すれば同群の再集結と士気維持を崩す。"
+    ],
+    "sampleCardText": "第2波指揮核指揮下 / 階梯 突撃先導2 / 継承 第2波指揮核 -> 2群 / 孤立2 / 崩壊リスク44 / 推奨 継承遮断 / 予測 継承遮断",
     "consoleErrorsWarnings": 0,
     "brokenImages": 0,
     "horizontalOverflow": false,
