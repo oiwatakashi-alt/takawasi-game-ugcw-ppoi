@@ -1,7 +1,7 @@
 {
   "id": "takawasi-command-issue-plan-qa",
   "date": "2026-07-05",
-  "scope": "Deployment command issue plan persistence and Battle Command queue congestion policy",
+  "scope": "Deployment command issue plan persistence, advisor, and Battle Command queue congestion policy",
   "result": "partial-pass",
   "verified": [
     {
@@ -18,6 +18,11 @@
       "check": "logic review",
       "status": "pass",
       "notes": "commandCongestionReport keeps standard queue behavior, caps effective command count for split_batches, and adds a strict_direct penalty when multiple commands are batched under direct handling."
+    },
+    {
+      "check": "advisor logic review",
+      "status": "pass",
+      "notes": "DeploymentScreen derives command issue advice from expected batch size, command/organization doctrine capacity, and command-post fatigue. It recommends standard_queue, split_batches, or strict_direct and exposes a one-click adoption path through the existing save function."
     }
   ],
   "notVerified": [
@@ -35,6 +40,8 @@
   "expectedManualFlow": [
     "Reset campaign and open Deployment.",
     "Verify the left deployment ledger shows 伝令運用 標準発令 / 4件単位.",
+    "Verify the 伝令運用 advisor shows a recommendation, risk label, and reasons such as 想定一括, 処理容量, and 過負荷 or 容量内.",
+    "If the recommendation differs from the saved plan, click 推奨運用を採用 and verify the selected plan updates and persists.",
     "Switch 伝令運用 to 分割発令 and verify the ledger changes to 2件単位.",
     "Start the mandatory battle and verify Battle Command 予約指揮 shows 分割発令 2件単位.",
     "Queue five selected-brigade commands and verify 一括混線 is reduced compared with 標準発令 under the same command-post capacity.",

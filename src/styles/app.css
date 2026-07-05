@@ -1962,6 +1962,42 @@ main {
   background: rgba(92, 47, 31, 0.86);
 }
 
+.command-issue-advisor {
+  display: grid;
+  gap: 6px;
+  padding: 9px;
+  color: #f1e5c9;
+  background: rgba(47, 45, 38, 0.62);
+  border: 1px solid rgba(183, 170, 140, 0.34);
+}
+
+.command-issue-advisor.warning {
+  background: rgba(77, 62, 35, 0.55);
+  border-color: rgba(208, 166, 82, 0.46);
+}
+
+.command-issue-advisor.danger {
+  background: rgba(83, 42, 35, 0.58);
+  border-color: rgba(220, 110, 90, 0.48);
+}
+
+.command-issue-advisor strong {
+  color: #f0d39a;
+}
+
+.command-issue-advisor span,
+.command-issue-advisor small {
+  color: #e8dcc2;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.command-issue-advisor button {
+  justify-self: start;
+  border-color: rgba(208, 166, 82, 0.58);
+  background: rgba(70, 58, 36, 0.86);
+}
+
 .deployment-lesson-recommendation {
   display: grid;
   gap: 6px;

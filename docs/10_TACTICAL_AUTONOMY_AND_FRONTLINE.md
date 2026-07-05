@@ -1621,6 +1621,7 @@ Deployment command issue plan follow-up implemented:
 - `StandingOrderPlanSet.commandIssuePlan` stores the same choice, so named deployment packages restore the command issue policy together with frontage, reserve doctrine, designated reserves, rear guards, and brigade StandingOrders.
 - `createBattleState` copies the selected plan into `BattleState.commandIssuePlan` and logs the chosen policy at battle start.
 - `BattleCommandScreen` displays the active policy in the `予約指揮` summary. `commandCongestionReport` uses it when calculating `一括混線`: split batches cap the effective simultaneous command count to the plan's batch size, while strict direct handling adds a penalty if the player still issues a multi-command batch.
+- `DeploymentScreen` now computes a `伝令運用` advisor from expected batch size, doctrine command/organization capacity, and command-post fatigue. It marks the risk as `通常運用可`, `混線注意`, or `高リスク`, explains reasons such as `想定一括5件 / 処理容量3 / 過負荷2`, and offers `推奨運用を採用` when the saved plan differs.
 - Save normalization backfills the default `標準発令` for older saves without raising the save version. `npm run build` passed; browser QA for this slice was blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-command-issue-plan-qa-report.json` records build-only verification and the blocker. Mobile/cellphone QA is outside the current target.
 
 Deployment warning follow-up implemented:

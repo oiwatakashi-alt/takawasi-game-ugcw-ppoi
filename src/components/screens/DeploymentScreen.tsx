@@ -74,7 +74,7 @@ import type {
   StandingOrderPlanSet,
   StandingOrderPlanSetEntry,
 } from "../../game/campaign/types";
-import { strategicDoctrineFromDoctrine } from "../../game/doctrine/applyDoctrine";
+import { fireDisciplineFromDoctrine, strategicDoctrineFromDoctrine } from "../../game/doctrine/applyDoctrine";
 import { officerCommandProfile, officerCommandSummary } from "../../game/officers/effects";
 import {
   enemyCompositionBrief,
@@ -174,6 +174,8 @@ const timelineCertaintyLabels: Record<BattleWaveTimelineEntry["intelCertainty"],
 };
 
 type RearGuardAdviceTone = "recommended" | "caution" | "danger";
+
+type CommandIssueAdviceTone = "stable" | "warning" | "danger";
 
 interface RearGuardAdvice {
   unitId: string;
@@ -316,6 +318,7 @@ export function DeploymentScreen({
     ),
   );
   const deployableUnits = campaign.army.units.filter((unit) => !assignedSideUnits.has(unit.id));
+  const fireDiscipline = fireDisciplineFromDoctrine(campaign.doctrines);
   const strategicDoctrine = strategicDoctrineFromDoctrine(campaign.doctrines);
   const headquartersProfile = armyHeadquartersProfile(campaign.army, campaign.officers);
   const commandPostProfile = commandPostProfileForCampaign(campaign);
@@ -501,6 +504,53 @@ export function DeploymentScreen({
             : "全旅団 指揮容量内",
     };
   }, [deploymentCommandProfiles, selectedUnits]);
+  const commandIssueAdvice = useMemo(() => {
+    const commandDoctrineBonus =
+      strategicDoctrine.activeDoctrineIds.includes("command") || fireDiscipline.activeDoctrineIds.includes("command") ? 1 : 0;
+    const organizationBonus = strategicDoctrine.activeDoctrineIds.includes("organization") ? 1 : 0;
+    const capacity = Math.max(1, 2 + commandDoctrineBonus + organizationBonus + commandPostProfile.commandCapacityModifier);
+    const likelyBatchSize = Math.max(1, Math.min(selectedUnitIds.length, 5));
+    const overload = Math.max(0, likelyBatchSize - capacity);
+    const fatigue = commandPostProfile.chiefOfStaffFatigue;
+    const recommendedMode: CommandIssueMode =
+      fatigue >= 70 || capacity <= 1
+        ? "strict_direct"
+        : overload >= 2 || commandPostProfile.transmissionDelayModifier > 0
+          ? "split_batches"
+          : "standard_queue";
+    const tone: CommandIssueAdviceTone =
+      recommendedMode === "strict_direct" ? "danger" : recommendedMode === "split_batches" ? "warning" : "stable";
+    const riskLabel =
+      recommendedMode === "strict_direct"
+        ? "高リスク"
+        : recommendedMode === "split_batches"
+          ? "混線注意"
+          : "通常運用可";
+    const reasons = [
+      `想定一括${likelyBatchSize}件`,
+      `処理容量${capacity}`,
+      overload > 0 ? `過負荷${overload}` : "容量内",
+      commandPostProfile.transmissionDelayModifier > 0 ? `伝達+${commandPostProfile.transmissionDelayModifier}秒` : undefined,
+      commandPostProfile.reasons[1] ?? commandPostProfile.reasons[0],
+    ].filter(Boolean) as string[];
+
+    return {
+      recommendedMode,
+      recommendedPlan: commandIssuePlans[recommendedMode],
+      capacity,
+      likelyBatchSize,
+      overload,
+      tone,
+      riskLabel,
+      reasons,
+      summary:
+        recommendedMode === "strict_direct"
+          ? "司令部が乱れているため、一命令ずつ通して過剰な一括指揮を避ける。"
+          : recommendedMode === "split_batches"
+            ? "現在の司令部容量では大きな一括発令が混線しやすい。2件単位の分割が妥当。"
+            : "現在の参謀長と編制なら標準の一括予約運用で処理できる。",
+    };
+  }, [commandPostProfile, fireDiscipline.activeDoctrineIds, selectedUnitIds.length, strategicDoctrine.activeDoctrineIds]);
   const plannerOfficerProfile = plannerUnit ? deploymentCommandProfiles.get(plannerUnit.id) : undefined;
   const plannerTacticalLessonProfile = plannerUnit ? tacticalLessonProfileForUnit(plannerUnit) : undefined;
   const plannerLessonDoctrine = plannerTacticalLessonProfile?.preferredDoctrineId
@@ -1904,6 +1954,18 @@ export function DeploymentScreen({
             <span>{commandIssuePlan.maxBatchSize}件単位</span>
             <span>{commandPostProfile.transmissionDelayModifier > 0 ? "司令部遅延あり" : "司令部遅延なし"}</span>
             <span>{commandPostCapacityLabel}</span>
+          </div>
+          <div className={`command-issue-advisor ${commandIssueAdvice.tone}`}>
+            <strong>
+              推奨 {commandIssuePlanLabels[commandIssueAdvice.recommendedMode]} / {commandIssueAdvice.riskLabel}
+            </strong>
+            <span>{commandIssueAdvice.summary}</span>
+            <small>{commandIssueAdvice.reasons.join(" / ")}</small>
+            {commandIssuePlan.mode !== commandIssueAdvice.recommendedMode && (
+              <button type="button" onClick={() => applyCommandIssuePlan(commandIssueAdvice.recommendedMode)}>
+                推奨運用を採用
+              </button>
+            )}
           </div>
           <div className="planner-button-grid reserve-doctrine">
             {commandIssueModes.map((mode) => (
