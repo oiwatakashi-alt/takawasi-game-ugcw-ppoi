@@ -1,0 +1,80 @@
+{
+  "id": "takawasi-coordinated-fire-plan-qa",
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "Battle-only coordinated staged fire plans",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "reload app",
+      "reset campaign",
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "verify fire-plan controls visible",
+      "3x enemy spawn, then pause",
+      "focus a spotted enemy group",
+      "add two 戦線 stages",
+      "start plan while paused",
+      "resume 1x",
+      "verify stage 1 active and stage 2 log"
+    ],
+    "evidence": {
+      "draft": [
+        "第1段 +0秒 / 戦線斉射 / 群集",
+        "第2段 +9秒 / 戦線斉射 / 群集"
+      ],
+      "paused_pending_strip": [
+        "火力計画第1段 戦線斉射 アンデッド群集 待機 0秒 / 第2段 戦線斉射 アンデッド群集 待機 9秒"
+      ],
+      "stage_one": {
+        "battle_time": "防衛時間 38/150秒",
+        "fire_plan_strip": "第1段 戦線斉射 アンデッド群集 射撃中 / 第2段 戦線斉射 アンデッド群集 待機 6秒",
+        "fire_mission_strip": "戦線斉射アンデッド群集 / 4旅団 / 残り5秒",
+        "selected_panel_contains": "火力 戦線斉射 5秒",
+        "log_contains": "第1戦列歩兵大隊 火力計画 第1段: 戦線斉射 4旅団がアンデッド群集へ射撃開始。",
+        "volleying_map_tokens_observed": 3
+      },
+      "stage_two": {
+        "battle_time": "防衛時間 57/150秒",
+        "log_contains": "第1戦列歩兵大隊 火力計画 第2段: 戦線斉射 4旅団がアンデッド群集へ射撃開始。"
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "flow": [
+      "set mobile viewport while in Battle",
+      "verify fire-plan controls visible",
+      "pause battle",
+      "focus spotted enemy",
+      "add one 旅団 stage",
+      "reset viewport"
+    ],
+    "evidence": {
+      "initial_layout": {
+        "width": 390,
+        "has_fire_plan_controls": true,
+        "selected_panel_visible": true,
+        "battle_map_visible": true,
+        "map_scroll_overflow": true
+      },
+      "draft": [
+        "第1段 +0秒 / 旅団斉射 / 群集"
+      ],
+      "selected_panel_contains": "集中 アンデッド群集",
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "notes": [
+    "BattleFirePlan is battle-only and is not persisted into StandingOrderTemplate or saves.",
+    "Plan stages are converted into BattleFireMission entries by resolveTick when due.",
+    "Mobile keeps page horizontal overflow false; the battle map itself intentionally remains horizontally scrollable."
+  ]
+}

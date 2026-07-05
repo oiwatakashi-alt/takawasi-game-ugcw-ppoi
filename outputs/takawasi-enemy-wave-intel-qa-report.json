@@ -1,0 +1,39 @@
+{
+  "slice": "enemy-wave-intel-from-persisted-composition",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle",
+      "3x tick for 22 seconds"
+    ],
+    "observed": {
+      "deploymentWaveLine": "初波1秒 / 間隔12秒 / 指揮波82%",
+      "enemyCompositionLine": "群集+銃兵+突破体 / 敵情信頼中 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "battleWavePlan": "初波1秒 / 間隔12秒 / 指揮波82%",
+      "enemyWavesAfterTick": 6,
+      "commandSignalVisible": true
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "full wave schedule timeline UI",
+    "enemy intel UI beyond compact text summary",
+    "doctrine-intent-aware command recommendation weighting"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "takawasi-deployment-map-click-sketch-editing",
+  "date": "2026-07-04",
+  "target": "Deployment desktop frontline sketch editing",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "out_of_scope_current_target",
+  "flow": [
+    "reset campaign via UI",
+    "Strategic Map -> Army Camp -> Deployment",
+    "open map-click sketch drawing for 森林左翼線",
+    "place two sketch points on the deployment frontage preview",
+    "verify 戦線描画 2/5, one draft polyline, two draft points, and enabled 描画確定",
+    "press 1点戻す and verify 戦線描画 1/5, one draft point, no draft polyline, and disabled 描画確定",
+    "add two more points and confirm a three-point saved sketch line",
+    "press 既存線を編集 and verify the existing three points load back as draft points",
+    "add a fourth point and confirm a four-point saved sketch line",
+    "save a standing-order plan set and open 内容確認"
+  ],
+  "observed": {
+    "twoPointDraft": {
+      "instruction": "戦線描画 2/5",
+      "draftPoints": 2,
+      "draftPolylines": 1,
+      "confirmEnabled": true
+    },
+    "afterUndo": {
+      "instruction": "戦線描画 1/5",
+      "draftPoints": 1,
+      "draftPolylines": 0,
+      "confirmEnabled": false
+    },
+    "threePointConfirm": {
+      "shapeLabel": "形状3点",
+      "savedPolylines": 1,
+      "savedPoints": 3
+    },
+    "editExisting": {
+      "instruction": "戦線描画 3/5",
+      "draftPoints": 3,
+      "draftPolylines": 1
+    },
+    "fourPointConfirm": {
+      "shapeLabel": "形状4点",
+      "savedPolylines": 1,
+      "savedPoints": 4,
+      "saveNote": "計画セット保存時に戦線形状 1線を含める。"
+    },
+    "planSetPreview": {
+      "rowSummaryIncludes": "形状1線",
+      "contentPreviewIncludes": "保存戦線形状 森林左翼線 4点"
+    }
+  },
+  "checks": {
+    "npmRunBuild": "pass",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false,
+    "qaCampaignReset": true
+  }
+}

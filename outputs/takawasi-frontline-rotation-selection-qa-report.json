@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-frontline-rotation-selection-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command frontline rotation candidate selection",
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "Strategic Map -> Army Camp -> Deployment -> Battle",
+      "Advanced battle at 3x until frontline pressure cards became active",
+      "Verified selected-frontline 战闘交代 panel showed candidate comparison",
+      "Selected non-default tired defender 第1歩兵 instead of default 予備歩兵",
+      "Executed selected rotation through the visible DOM action",
+      "Withdrew and opened After Action",
+      "Reset campaign after QA"
+    ],
+    "verifiedSignals": [
+      "Candidate panel showed 守備2 / 予備1 on 森林左翼線",
+      "Manual selection changed active tired candidate to 第1歩兵",
+      "Battle log showed 戦闘交代: 第1戦列歩兵大隊を後退線へ下げ、第4戦列歩兵大隊が森林左翼線を引き継ぐ。",
+      "After Action showed 第1戦列歩兵大隊 as 任務 戦闘交代 / 損耗旅団を後退線へ整理",
+      "After Action showed 第4戦列歩兵大隊 as 任務 後衛援護 / 交代旅団を援護、即応予備を投入",
+      "Campaign reset returned to the initial strategic map"
+    ],
+    "diagnostics": {
+      "consoleErrors": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    },
+    "notes": [
+      "Playwright role/locator clicks timed out on some dense Battle Command controls after long battle ticks, so visible DOM node clicks were used for the local app verification.",
+      "The final verified product behavior is based on DOM text, After Action text, console logs, image checks, and page dimensions."
+    ]
+  }
+}

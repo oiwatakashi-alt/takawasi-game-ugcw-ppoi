@@ -1,0 +1,49 @@
+{
+  "date": "2026-07-03",
+  "target": "Officer assignment and promotion command UI / desktop 1440px",
+  "commands": [
+    "npm run build",
+    "npm run dev -- --host 127.0.0.1",
+    "local Playwright desktop 1440x1000 flow"
+  ],
+  "flow": [
+    "Open http://127.0.0.1:5173/ at 1440x1000",
+    "Reset campaign",
+    "Strategic Map -> Camp",
+    "Open Officers tab",
+    "Click フォス / 次部隊へ配属",
+    "Click アルンハイム / 将軍へ昇進",
+    "Open Army tab"
+  ],
+  "officersScreen": {
+    "initialPromotionButtons": [
+      "フォス: 大佐へ昇進 enabled at 経験 34/34",
+      "ケラー: 少佐へ昇進 enabled at 経験 18/18",
+      "アルンハイム: 将軍へ昇進 enabled at 経験 46/46"
+    ],
+    "assignmentExamples": [
+      "少佐 フォス: 配属 第1戦列歩兵大隊 -> 第4戦列歩兵大隊",
+      "少佐 クルーガー: 配属 第4戦列歩兵大隊 -> 第1戦列歩兵大隊",
+      "フォス history: 第4戦列歩兵大隊へ配属変更",
+      "クルーガー history: 交換配属: フォスと交代"
+    ],
+    "promotionExamples": [
+      "大佐 アルンハイム -> 将軍 アルンハイム",
+      "アルンハイム experience 46 -> 0",
+      "アルンハイム history: 将軍へ昇進"
+    ]
+  },
+  "armyScreen": {
+    "armyShowsSwappedCommander": true,
+    "verifiedText": "軍編成タブの選択部隊指揮官表示に少佐 クルーガーが反映された"
+  },
+  "browserQa": {
+    "desktopWidth": 1440,
+    "desktopHeight": 1000,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false,
+    "note": "In-app browser connection timed out during this pass, so the final desktop flow was verified with local Playwright against the same dev server."
+  },
+  "mobile": "skipped by current product target"
+}

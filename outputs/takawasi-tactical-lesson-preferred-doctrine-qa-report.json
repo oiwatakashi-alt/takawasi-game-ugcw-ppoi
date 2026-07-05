@@ -1,0 +1,43 @@
+{
+  "feature": "tactical-lesson-preferred-doctrine",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "warning": "Vite chunk size warning remains for index bundle over 500 kB"
+  },
+  "setup": {
+    "saveKey": "takawasi-game-save",
+    "injectedHistory": "QA注入: 東方辺境防衛線防衛戦: 戦線崩壊、阻止反撃、永久損耗0、収容0、経験+3、装備摩耗-0.03、参謀警告対応 右翼泥濘線/殺傷地帯/対応及ばず",
+    "cleanup": "localStorage QA save removed after verification"
+  },
+  "checks": [
+    {
+      "step": "Deployment tactical lesson summary",
+      "status": "passed",
+      "evidence": "Deployment displayed `戦術教訓 参謀警告1件 / 得意殺傷地帯 / 即応+3 / 統制+1 / 後退判断+3`."
+    },
+    {
+      "step": "Battle unit lesson carryover",
+      "status": "passed",
+      "evidence": "Battle Command selected-unit panel displayed `得意殺傷地帯`, `予備即応 56`, `基準 X34 Y23 / 半径22`, and `後退 士気35以下`."
+    },
+    {
+      "step": "Staff advisory lesson preference",
+      "status": "passed",
+      "evidence": "After running at 3x and pausing, staff advisory displayed `森林左翼線: 殺傷地帯` with detail `敵圧1078 / 守備2 / 予備1 / 教訓殺傷地帯 / 群集 接近`."
+    },
+    {
+      "step": "Asset and layout health",
+      "status": "passed",
+      "evidence": "Broken images 0, console errors 0, document horizontal overflow false."
+    }
+  ],
+  "result": "passed"
+}

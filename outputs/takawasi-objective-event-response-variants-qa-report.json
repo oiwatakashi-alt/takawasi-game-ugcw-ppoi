@@ -1,0 +1,54 @@
+{
+  "id": "takawasi-objective-event-response-variants",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Objective-event tactical response profiles",
+    "Battle Command objective-node action labels",
+    "Objective-event alert-card action labels",
+    "Objective staff recommendation and selected-frontline objective-support labels",
+    "Desktop QA only; mobile is outside current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Reset campaign state at 第1戦略ターン",
+    "Strategic Map",
+    "Camp",
+    "Deployment",
+    "Battle",
+    "3x until objective events",
+    "Apply 視界点奪回・観測復旧 from alert card",
+    "Reset QA campaign"
+  ],
+  "observations": [
+    "Initial Battle objective staff cards displayed event intent labels such as 観測線保持, 補給線保持, and 主線保持.",
+    "After objective pressure, warning cards and objective panels displayed 勝利点奪回・指揮線奪回 and 視界点奪回・観測復旧.",
+    "Applying 視界点奪回・観測復旧 logged 警報対応 and 目標対応: 視界点奪回・観測復旧.",
+    "The selected responding engineer showed 優先 敵指揮, 弾薬 通常射撃, an expanded response radius, and an objective anchor near the visibility node.",
+    "QA campaign was reset to 第1戦略ターン afterward."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Browser DOM snapshot was unavailable due an in-app browser compatibility error, so QA used read-only DOM evaluation plus unique button locators within the documented browser API."
+  ]
+}

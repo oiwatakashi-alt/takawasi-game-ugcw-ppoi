@@ -1,0 +1,70 @@
+{
+  "id": "takawasi-division-duty-burden",
+  "createdAt": "2026-07-03T20:35:00+09:00",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Division commander duplicate clearing",
+    "Division commander command-duty load",
+    "Shared command-duty load in Army, Officers, Deployment, and Battle",
+    "Desktop-only browser QA; mobile is not a current target"
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "Reset campaign",
+    "Open Army Camp",
+    "Verify initial division commander load labels",
+    "Assign フォス from 第1師団 to 第2師団 commander slot",
+    "Verify 第1師団 commander clears and duplicate フォス count is 1",
+    "Open Officers tab",
+    "Verify フォス shows 師団長兼任: 第2師団 / 負荷140",
+    "Open Deployment",
+    "Verify フォス brigade command capacity uses the division-duty load",
+    "Start Battle",
+    "Verify Battle command summary includes combined duty load"
+  ],
+  "observations": {
+    "armyCamp": {
+      "initialDivisionSummaries": [
+        "第1師団 戦線固守 / 師団長 フォス / 統制+2 即応+6 / 師団長負荷 140",
+        "第2師団 予備守備 / 師団長 ヴェーバー / 統制+3 即応+14 / 師団長負荷 140"
+      ],
+      "afterReassignVossToSecondDivision": [
+        "第1師団 戦線固守 / 統制+1 即応+2",
+        "第2師団 予備守備 / 師団長 フォス / 統制+3 即応+14 / 師団長負荷 140"
+      ],
+      "duplicateVossDivisionCommanderCount": 1
+    },
+    "officers": {
+      "hasVossSecondDivisionBurden": true,
+      "hasVossFirstDivisionBurden": false,
+      "sample": "少佐 フォス ... 師団長兼任: 第2師団 / 負荷140"
+    },
+    "deployment": {
+      "hasReducedVossCapacity": true,
+      "sample": "第1戦列歩兵大隊 ... 初期指揮容量 760/913",
+      "hasSecondDivisionVossSummary": true
+    },
+    "battle": {
+      "hasDutySummary": true,
+      "expectedSummary": "兼任負荷-140 (師団長兼任 第2師団 負荷140)",
+      "hasSecondDivisionVossSummary": true
+    }
+  },
+  "qualityGates": {
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "status": "passed",
+  "notes": [
+    "normalizeArmyDivisions now distinguishes explicit unassigned commanders from old saves missing the commander field.",
+    "Division commander burden currently affects brigade command capacity only when the officer also commands a brigade. Full division-level fatigue and political costs remain deferred."
+  ]
+}

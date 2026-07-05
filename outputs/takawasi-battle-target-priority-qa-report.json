@@ -1,0 +1,64 @@
+{
+  "id": "takawasi-battle-target-priority-qa",
+  "createdAt": "2026-07-02T14:15:05+09:00",
+  "target": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "result": "passed"
+  },
+  "desktop1440": {
+    "flow": "reset -> Camp -> Deployment -> Battle -> selected brigade command panel -> 3x tick",
+    "verified": [
+      "selected command panel shows `優先目標` controls",
+      "selected command panel shows `弾薬方針` controls",
+      "first brigade changed from `最接近` to `敵指揮`",
+      "first brigade changed from `通常射撃` to `集中射撃`",
+      "active buttons showed `敵指揮` and `集中射撃`",
+      "selected unit card showed `目標 敵指揮` and `弾薬 集中射撃`",
+      "Japanese battle log recorded target-priority and ammo-policy changes",
+      "changes persisted after 3x tick and enemy command wave appearance",
+      "battle map retained intentional horizontal scroll",
+      "broken images 0",
+      "console errors 0",
+      "page horizontal overflow false"
+    ],
+    "observedBattleState": {
+      "elapsed": "64/150",
+      "wavesSpawned": 4,
+      "enemyCommandAlert": true,
+      "activeButtons": ["固守", "射界南東", "敵指揮", "集中射撃", "保持"],
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false,
+      "mapScrollOverflow": true
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "verified": [
+      "two command-control rows remained present",
+      "`敵指揮` active state remained present",
+      "`集中射撃` active state remained present",
+      "battle map remained visible",
+      "battle map retained intentional horizontal scroll",
+      "broken images 0",
+      "recent console errors 0",
+      "page horizontal overflow false"
+    ],
+    "observedBattleState": {
+      "commandRowCount": 2,
+      "activeButtons": ["固守", "射界南東", "敵指揮", "集中射撃", "保持"],
+      "brokenImages": 0,
+      "recentConsoleErrors": 0,
+      "pageHorizontalOverflow": false,
+      "mapScrollOverflow": true
+    }
+  },
+  "notes": [
+    "The slice intentionally updates StandingOrder fields during the battle instead of creating a separate direct-fire target marker.",
+    "Viewport override was reset after mobile QA."
+  ]
+}

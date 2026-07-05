@@ -1,0 +1,66 @@
+{
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "field-hospital-casualty-recovery",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "Strategic Map",
+      "Camp Engineering",
+      "Build Field Hospital",
+      "Deployment",
+      "Battle",
+      "3x tick",
+      "Retreat",
+      "After Action"
+    ],
+    "engineering": {
+      "fieldHospitalCard": true,
+      "effectText": "収容 +20%",
+      "builtStructuresAfterBuild": 2,
+      "resourcesAfterBuild": {
+        "materials": 288,
+        "engineerLabor": 79
+      }
+    },
+    "deployment": {
+      "fieldHospitalAppears": true
+    },
+    "battle": {
+      "fieldHospitalAppears": true,
+      "hospitalStatus": "稼働中",
+      "engagementLinesBeforeRetreat": 5,
+      "brokenImages": 0,
+      "consoleErrors": 0
+    },
+    "afterAction": {
+      "medicalSupplyText": true,
+      "recoveryRate": 14,
+      "recoveredTotal": 1,
+      "sampleRecoveredRow": "第2工兵中隊 戦闘損耗 1 / 収容 1 / 永久損耗 0",
+      "brokenImages": 0,
+      "consoleErrors": 0
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "screen": "After Action",
+    "hasRecoveredLabel": true,
+    "recoveredText": "負傷兵収容率: 14% / 収容復帰 1名",
+    "pageHorizontalOverflow": false,
+    "documentScrollWidth": 390,
+    "overflowCandidates": 0,
+    "brokenImages": 0,
+    "consoleErrors": 0
+  },
+  "notes": [
+    "Field-hospital recovery separates raw battle casualties, recovered wounded, and permanent casualties.",
+    "Campaign application subtracts permanent casualties only and consumes medical supplies separately."
+  ]
+}

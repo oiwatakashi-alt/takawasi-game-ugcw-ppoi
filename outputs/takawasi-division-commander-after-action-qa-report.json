@@ -1,0 +1,55 @@
+{
+  "id": "takawasi-division-commander-after-action",
+  "createdAt": "2026-07-03T20:55:00+09:00",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Division commander XP and risk in BattleResult",
+    "After Action division command section",
+    "Officer history persistence after applying battle result",
+    "Desktop-only browser QA; mobile is not a current target"
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "Reset campaign",
+    "Open Army Camp",
+    "Open Deployment",
+    "Start battle",
+    "Withdraw",
+    "Open After Action",
+    "Apply result",
+    "Open Officers tab"
+  ],
+  "observations": {
+    "afterAction": {
+      "hasDivisionCommandSection": true,
+      "events": [
+        "第1師団師団長 フォス: 6旅団統制、戦線固守・火力支援・工兵支援、師団指揮経験+6、危険度12",
+        "第2師団師団長 ヴェーバー: 1旅団統制、予備保持、師団指揮経験+3、危険度12"
+      ]
+    },
+    "officers": {
+      "hasDivisionHistory": true,
+      "samples": [
+        "フォス ... 東方辺境防衛線防衛戦: 第1師団師団指揮、経験+6、危険度12",
+        "ヴェーバー ... 東方辺境防衛線防衛戦: 第2師団師団指揮、経験+3、危険度12"
+      ]
+    }
+  },
+  "qualityGates": {
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "status": "passed",
+  "notes": [
+    "Division commander XP is aggregated from subordinate brigade roles, readiness, pressure, and battle outcome.",
+    "Division commander risk is recorded separately from brigade command risk; division-command wounds are still deferred."
+  ]
+}

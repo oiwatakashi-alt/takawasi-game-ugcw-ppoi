@@ -1,0 +1,38 @@
+{
+  "id": "takawasi-objective-fire-intel-effects",
+  "date": "2026-07-04",
+  "target": "desktop 1440x900",
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "3x tick progression",
+      "Withdraw",
+      "After Action"
+    ],
+    "signals": {
+      "initialFireAmmoLine": "斉射弾薬x1.00",
+      "tickedObjectiveEffect": "目標効果 勝利点+4戦線 / 補給+0.16弾薬 / 斉射弾薬x0.86 / 視界-14 / 制圧-0.08 / 敵波不明瞭",
+      "tickedFireAmmoLine": "斉射弾薬x0.86",
+      "tickedWaveIntelLine": "敵波判読 敵波不明瞭",
+      "spottedSignal": "発見 1/5",
+      "afterActionObjectiveLine": "勝利点喪失 0% / 補給点保持 100% / 視界点喪失 0%"
+    },
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "notes": [
+    "Supply objective control now changes fire mission and staged fire plan ammunition multipliers.",
+    "Visibility objective control now exposes wave-intel clarity in the HUD and selected-unit command panel.",
+    "After Action still carries objective outcome lines."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "takawasi-enemy-command-action-after-action-qa",
+  "date": "2026-07-04",
+  "target": "Enemy command-network action carryover into After Action and Army Camp unit history",
+  "viewport": "desktop 1440x900",
+  "mobileQa": "skipped intentionally; mobile is outside the current active target",
+  "flow": [
+    "Reset campaign",
+    "Strategic Map -> Camp -> Deployment -> Battle",
+    "Enable queue mode",
+    "Run at 3x until enemy command-network appears",
+    "Stop battle",
+    "Queue command group 指揮核射撃 and 予備投入",
+    "Apply queued commands",
+    "Withdraw to After Action",
+    "Apply result to Camp",
+    "Select affected brigades and inspect unit history",
+    "Reset campaign after QA"
+  ],
+  "observations": {
+    "battleCommand": "予約指揮: 2件を一括発令; active fire mission 戦線斉射 敵指揮体 / 5旅団 / 残り9秒 / 軍団斉射規律",
+    "afterActionCommandRole": "第4戦列歩兵大隊 and 第6塹壕歩兵大隊 showed 任務 敵指揮核制圧 / 敵指揮核を射撃制圧、戦線斉射に参加",
+    "afterActionReserveRole": "衛戍予備歩兵大隊 showed 任務 指揮網予備投入 / 敵指揮網への予備投入、即応予備を消費",
+    "armyHistoryCommandRole": "第4戦列歩兵大隊 history retained 戦闘撤退、敵指揮核制圧、永久損耗8、収容0、経験+6、装備摩耗-0.01、敵指揮核を射撃制圧・戦線斉射に参加",
+    "armyHistoryReserveRole": "衛戍予備歩兵大隊 history retained 戦闘撤退、指揮網予備投入、永久損耗0、収容0、経験+2、装備摩耗-0.02、敵指揮網への予備投入・即応予備を消費"
+  },
+  "checks": {
+    "npmRunBuild": "passed",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "campaignResetAfterQa": true
+  }
+}

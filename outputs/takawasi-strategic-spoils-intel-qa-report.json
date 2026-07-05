@@ -1,0 +1,58 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "strategic-spoils-intel-and-reward-forecast",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "theater": {
+      "hasMainSpoilsIntel": true,
+      "hasSideSpoilsIntel": true,
+      "hasImprovedRifleForecast": true,
+      "sideOperationButtons": 4
+    },
+    "autoResolve": {
+      "operation": "黒沼の敵前進巣襲撃",
+      "outcome": "success",
+      "lastMessageHasSpoils": true,
+      "messageExcerpt": "戦利品 改良針撃銃+27 / 針撃銃+44。",
+      "improvedRifleStock": {
+        "before": 620,
+        "after": 647
+      }
+    },
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasRecoveryCandidates": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "afterAction": {
+      "hasSpoils": true,
+      "capturedWeaponsExcerpt": [
+        "針撃銃 +12",
+        "猟兵銃 +3",
+        "工兵器材 +2"
+      ],
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  },
+  "mobile390": {
+    "theater": {
+      "hasSideSpoilsIntel": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasRecoveryCandidates": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  }
+}

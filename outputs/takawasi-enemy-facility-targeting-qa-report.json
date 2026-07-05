@@ -1,0 +1,44 @@
+{
+  "id": "takawasi-enemy-facility-targeting-qa",
+  "date": "2026-07-05",
+  "target": "Enemy facility-targeting slice",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite build completed; large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "3x wave observation"
+    ],
+    "observed": {
+      "enemyCount": 20,
+      "facilityRaiderCount": 12,
+      "structureTargetingCount": 1,
+      "matchingText": [
+        "敵波接近 群集 48体 / 塹壕破砕:塹壕線",
+        "群集 / 陣地突破 / 施設襲撃 / 第2波指揮核",
+        "破砕体 / 陣地突破 / 施設襲撃 / 第2波指揮核"
+      ]
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false
+    }
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  },
+  "notes": [
+    "Enemy groups with assaultPlan.targetStructureId receive structure-raider styling and visible 施設襲撃 labels when spotted.",
+    "The targeted trench structure showed the targeting class while retaining facility tactical-state text."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "strategic-doctrine-effects",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "viewport": "default",
+    "checks": [
+      "Doctrine screen shows current strategic staff support card.",
+      "Initial command doctrine shows side-operation quality +6.",
+      "Engineering doctrine investment changes strategic staff card to build cost 85%, repair +15, fortification effect 112%.",
+      "Engineering screen shows discounted trench cost as materials 68 / engineer labor 16.",
+      "Engineering screen shows repair amount +45.",
+      "Organization doctrine investment changes Deployment selected unit limit to 7/7.",
+      "Battle creation log includes strategic staff support summary."
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "mobile": {
+    "viewport": "390x900",
+    "checks": [
+      "Strategic map has no page horizontal overflow.",
+      "Doctrine strategic support card is visible.",
+      "Deployment selected unit limit remains visible.",
+      "Doctrine and Deployment have no page horizontal overflow."
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  }
+}

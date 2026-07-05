@@ -1,0 +1,52 @@
+{
+  "id": "takawasi-objective-event-response-assessment",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Battle objective event alert action",
+    "After Action objective-event response assessment",
+    "Campaign message and localStorage result application",
+    "Desktop QA only; mobile is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Strategic Map",
+    "Camp",
+    "Deployment",
+    "Battle",
+    "3x ticks until objective events",
+    "Objective alert action: 視界点奪回",
+    "Withdraw",
+    "After Action",
+    "Apply result to campaign"
+  ],
+  "observations": [
+    "Battle alert showed 視界点: 観測点沈黙 and action 視界点奪回.",
+    "After Action showed 目標イベント対応 entries for 第4戦列歩兵大隊, 東方辺境猟兵隊, and 第2工兵中隊.",
+    "Each visible assessment read 観測点沈黙に対応、未回復（支配0%）.",
+    "Per-unit rows showed 目標イベント 視界地点/林縁観測丘 / 観測点沈黙 / 未回復.",
+    "Next-battle preview showed 次戦教訓 目標イベント対応1件 / 即応+2.",
+    "After applying the result, the campaign advanced to 第2戦略ターン and the top message retained the first objective-event response summary."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed"
+}

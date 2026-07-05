@@ -1,0 +1,46 @@
+{
+  "feature": "High-ground LOS tactical terrain profile",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped - mobile is outside the current target",
+  "url": "http://127.0.0.1:5173/?takawasiTerrainProfile=high-ground",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning remains non-blocking and pre-existing."
+  },
+  "flow": [
+    "open high-ground tactical terrain profile URL",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "選抜部隊で戦闘開始",
+    "1倍 tick for 12 seconds"
+  ],
+  "verifiedSignals": {
+    "topbar": "東方辺境防衛線防衛戦 - 高地射線検証 / 地形 高地射線検証",
+    "terrainCallouts": [
+      "森林遮蔽帯 移動72% / 射線遮蔽 / 遮蔽端",
+      "泥濘低地 移動48% / 射線減衰",
+      "塹壕掩体線 移動72% / 射線減衰 / 遮蔽端",
+      "高地稜線 移動84% / 高地射界",
+      "開豁地 移動100% / 射線影響なし"
+    ],
+    "selectedUnitSight": "射線 減衰 森林遮蔽帯/高地稜線 / 高地射界 高地稜線",
+    "actionReason": "射撃判断: アンデッド群集 / 優先最接近 / 減衰 森林遮蔽帯/高地稜線 / 高地射界 高地稜線",
+    "targetAudit": "射線減衰 森林遮蔽帯/高地稜線 高地射界 高地稜線 / 距離33 / 戦列距離31 / 有効射程34",
+    "hasHighGroundModifier": true,
+    "hasEffectiveRange": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "notes": [
+    "The profile is activated only by the URL query takawasiTerrainProfile=high-ground.",
+    "The profile appends hill/open terrain to the current sector battle scenario and moves initial QA enemy entry closer so the selected hill unit can produce a fireable high-ground LOS candidate.",
+    "Normal campaign state and save migration are not changed."
+  ]
+}

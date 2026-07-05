@@ -1,0 +1,88 @@
+{
+  "feature": "enemy-command-response-effect",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 720,
+    "profile": "desktop"
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed-before-browser-qa",
+    "note": "Final build rerun is recorded separately after documentation updates."
+  },
+  "flow": [
+    "Existing localhost app tab selected",
+    "Deployment screen -> selected force battle start",
+    "Battle -> 3x command-wave wait",
+    "Observed enemy command-network cards before response",
+    "Pressed first recommended command-network response",
+    "Observed response status and response-effect rows",
+    "Reset campaign back to strategic turn"
+  ],
+  "preResponseEvidence": {
+    "enemyCommandCardCount": 5,
+    "effectRows": [
+      "効果 未測定 / 対応実行後に指揮崩壊、凝集、戦線補強を測定する。",
+      "効果 未測定 / 対応実行後に指揮崩壊、凝集、戦線補強を測定する。",
+      "効果 未測定 / 対応実行後に指揮崩壊、凝集、戦線補強を測定する。"
+    ],
+    "recommendationButton": "推奨実行"
+  },
+  "postResponseEvidence": {
+    "clickedRecommended": true,
+    "recommendedActionButtonCount": 5,
+    "actionEvidence": [
+      "敵指揮網対応",
+      "効果中",
+      "予備接続",
+      "崩壊追撃"
+    ],
+    "measuredEffectRows": [
+      {
+        "status": "効果中 予備接続 / 1旅団が中央塹壕線へ接続中。予備即応を消費済み。",
+        "effect": "効果 戦線補強 / 守備3旅団 / 1旅団圧637 / 中央塹壕線の受け止め量を測定中。1旅団圧が下がるほど突破封鎖が安定する。",
+        "className": "enemy-command-response-effect cost",
+        "disabledButtons": [
+          "推奨実行",
+          "予備投入"
+        ]
+      },
+      {
+        "status": "効果中 予備接続 / 1旅団が中央塹壕線へ接続中。予備即応を消費済み。",
+        "effect": "効果 戦線補強 / 守備3旅団 / 1旅団圧105 / 中央塹壕線の受け止め量を測定中。1旅団圧が下がるほど突破封鎖が安定する。",
+        "className": "enemy-command-response-effect effect",
+        "disabledButtons": [
+          "予備投入"
+        ]
+      }
+    ]
+  },
+  "resetEvidence": {
+    "resetClicked": true,
+    "flags": [
+      "第1戦略ターン",
+      "戦略キャンペーンマップ",
+      "幕舎"
+    ],
+    "horizontalOverflow": false,
+    "scrollWidth": 1440,
+    "clientWidth": 1440
+  },
+  "checks": {
+    "hasMeasuredEffect": true,
+    "effectEvidence": [
+      "効果 戦線補強",
+      "1旅団圧"
+    ],
+    "brokenImages": [],
+    "consoleErrorsOrWarnings": [],
+    "hasNaN": false,
+    "campaignResetAfterQa": true
+  }
+}

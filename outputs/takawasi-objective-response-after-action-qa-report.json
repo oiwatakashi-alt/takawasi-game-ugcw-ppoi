@@ -1,0 +1,43 @@
+{
+  "feature": "Objective response after-action carryover",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reset campaign",
+    "Theater -> Camp -> Deployment -> Battle",
+    "click objective response button 補給点防衛",
+    "withdraw battle",
+    "open After Action",
+    "apply result to camp",
+    "select 東方辺境猟兵隊 in Army Camp",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "objectiveResponseLog": true,
+    "afterActionRole": "任務 補給点防衛",
+    "afterActionCommendation": "補給線を防衛",
+    "afterActionRoleLines": [
+      "東方辺境猟兵隊 戦闘損耗 0 / 収容 0 / 永久損耗 0 / 経験 +2 / 装備摩耗 -0.01 / 任務 補給点防衛 / 補給線を防衛",
+      "第3野戦砲兵中隊 戦闘損耗 0 / 収容 0 / 永久損耗 0 / 経験 +2 / 装備摩耗 -0.02 / 任務 補給点防衛 / 補給線を防衛"
+    ],
+    "officerRoleCarryover": "東方辺境猟兵隊指揮官: 補給点防衛、指揮経験+4",
+    "armyHistoryLine": "東方辺境防衛線防衛戦: 戦闘撤退、補給点防衛、永久損耗0、収容0、経験+2、装備摩耗-0.01、補給線を防衛",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "BattleUnit now carries a battle-runtime objectiveResponseRole marker.",
+    "BattleResult converts objective response roles into Japanese battle roles, XP bonuses, officer XP, and commendations.",
+    "applyBattleResult already writes BattleResult role and commendations into unit battleHistory, so Army Camp inherits the objective-response history without a new save migration.",
+    "Mobile QA was intentionally skipped because mobile is outside the current target."
+  ]
+}

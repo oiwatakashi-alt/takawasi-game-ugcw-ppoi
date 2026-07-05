@@ -1,0 +1,58 @@
+{
+  "id": "takawasi-staff-accountability-after-action",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "After Action staff-slot accountability display",
+    "Staff accountability carryover into officer history",
+    "Staff XP and command-fatigue carryover",
+    "Desktop QA only; mobile is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened the app at 1440x900.",
+    "Reset the campaign.",
+    "Clicked 幕舎で準備する.",
+    "Clicked 出撃配置へ.",
+    "Clicked 選抜部隊で戦闘開始.",
+    "Clicked 撤退.",
+    "Clicked 戦果報告へ.",
+    "Verified the 参謀責任 block in After Action.",
+    "Clicked 結果を反映して幕舎へ.",
+    "Opened the 将校 tab.",
+    "Verified staff-accountability entries in officer histories.",
+    "Reset the QA campaign."
+  ],
+  "observations": [
+    "After Action showed 参謀長 アルンハイム: 警告 / 戦線整理不足 / 戦線100%で撤退判断 / 教訓 戦線整理警告 / 経験+1 / 疲労+4.",
+    "After Action showed 兵站主任 ヴェーバー: 功績 / 補給維持 / 補給点係争 / 平均弾薬81 / 教訓 補給維持 / 経験+3 / 疲労+1.",
+    "After Action showed 工兵主任 メッツ: 功績 / 築城線維持 / 損傷14 / 稼働施設1 / 教訓 築城維持 / 経験+3 / 疲労+1.",
+    "After Action showed 砲兵主任 バウアー: 警告 / 火力効果限定 / 敵制圧0% / 発生波0 / 教訓 火力効果警告 / 経験+1 / 疲労+4.",
+    "The Officers tab retained the same staff accountability entries in recent officer history with 経験+ and 疲労+ values."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "The QA used a quick withdraw result because this slice validates result generation, After Action display, and officer-history carryover rather than long battle balance.",
+    "Mobile QA was intentionally skipped because the current goal excludes cellphone/mobile support."
+  ]
+}

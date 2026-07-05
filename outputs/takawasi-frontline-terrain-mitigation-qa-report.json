@@ -1,0 +1,48 @@
+{
+  "feature": "Frontline terrain mitigation advisory",
+  "date": "2026-07-04",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "verify initial terrain mitigation card",
+    "switch frontline geometry to 広域警戒線",
+    "verify caution mitigation card and recommended-geometry action",
+    "click 弱線を選択",
+    "verify 右翼泥濘線 selection",
+    "click 推奨形へ変更",
+    "verify return to 戦区標準",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "initialMitigationClass": "terrain-mitigation-card stable",
+    "initialMitigationText": "戦線評価: 安定 / 右翼泥濘線が最低評価82 / 現戦線は平均93 / 最低82 / 推奨形は戦区標準",
+    "wideGeometryActiveText": "広域警戒線 / 平均89 / 最低59",
+    "wideMitigationClass": "terrain-mitigation-card caution",
+    "wideMitigationText": "戦線弱点: 配備前確認 / 右翼泥濘線が最低評価59 / 戦区標準へ切替: 平均+4 / 最低+23",
+    "wideMitigationButtons": [
+      "弱線を選択",
+      "推奨形へ変更"
+    ],
+    "weakLineSelection": "右翼泥濘線 / 施設防衛 / 評価59 / 推奨 弾性拒止",
+    "recommendedGeometryAfterClick": "戦区標準 / 平均93 / 最低82 / 地形推奨",
+    "geometryButtonCount": 7,
+    "bestPresetCount": 1,
+    "terrainAssessmentCards": 5,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "The normal active-front seed is strong, so initial mitigation is stable and points to reserve support on the weakest right-flank line.",
+    "Switching to 広域警戒線 intentionally exposes a weaker right-flank score and surfaces corrective geometry/facility/reserve advice."
+  ]
+}

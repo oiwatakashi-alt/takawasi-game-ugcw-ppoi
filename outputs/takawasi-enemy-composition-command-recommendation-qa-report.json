@@ -1,0 +1,54 @@
+{
+  "slice": "enemy-composition-command-recommendation",
+  "date": "2026-07-03",
+  "scope": {
+    "summary": "Army Camp staff/division command recommendations now include an inferred enemy composition forecast from the current mandatory battle context.",
+    "mobileQa": "skipped: mobile is no longer a current target"
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "flow": [
+      "reload",
+      "Strategic Map",
+      "Camp / Army",
+      "inspect recommendation cards",
+      "apply first recommendation"
+    ],
+    "observed": {
+      "initialReputation": "威信 52",
+      "afterApplyReputation": "威信 48",
+      "enemyForecastVisible": true,
+      "contextExample": "東方辺境防衛線 / 塹壕 / 敵圧42 / 危険78% / 主敵群集+銃兵+突破体",
+      "initialRecommendationExamples": [
+        "工兵主任をシュタインへ変更 改善+72 / 威信-4",
+        "工兵主任をクルーガーへ変更 改善+54 / 威信-4",
+        "第2師団師団長をアルンハイムへ変更 改善+101 / 威信-6"
+      ],
+      "afterApplyRecommendationExample": "兵站主任をフォスへ変更 改善+34 / 威信-5",
+      "formattedRiskLabel": true,
+      "uglyRiskFloatPresent": false,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Added enemy composition threat types and forecast helper to command recommendation context.",
+    "Recommendation context labels now include main enemy forecast.",
+    "Staff recommendation scoring now weighs roles against mob, riflemen, brute, and undead-officer threats.",
+    "Division commander scoring now adjusts morale, control, reserve, directive, and trait value against inferred enemy composition.",
+    "Army Camp passes inferred enemy threats from the current mandatory battle sector context."
+  ],
+  "deferred": [
+    "True strategic intel field on StrategicOperation rather than inferred forecast.",
+    "Recon-quality uncertainty in command recommendations.",
+    "Enemy composition forecast display on Theater/Deployment briefing.",
+    "Doctrine-intent-aware recommendation weighting.",
+    "Political backlash and loyalty events after repeated command reshuffles."
+  ]
+}

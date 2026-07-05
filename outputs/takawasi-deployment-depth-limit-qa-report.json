@@ -1,0 +1,70 @@
+{
+  "slice": "sector-specific-deployment-depth-limit",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": "Strategic Map -> Camp -> Deployment -> Forward Line -> Battle",
+    "deployment": {
+      "hasDeploymentScreen": true,
+      "hasDepthLabel": true,
+      "depthLabel": "森林泥濘出撃帯",
+      "hasAllowedBand": true,
+      "deploymentLimitOverlays": 5,
+      "activeLimit": "X6-62 / Y11-36",
+      "frontlineGeometry": "前進主線",
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "battle": {
+      "hasBattle": true,
+      "hasForwardLineLog": true,
+      "playerUnits": 6,
+      "maxPlayerLogicalX": 54,
+      "allowedForwardX": 68,
+      "positionsWithinDeploymentDepth": true,
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "deployment": {
+      "hasDeploymentScreen": true,
+      "hasDepthLabel": true,
+      "depthLabel": "森林泥濘出撃帯",
+      "hasAllowedBand": true,
+      "deploymentLimitOverlays": 5,
+      "summaryIncludes": [
+        "出撃深度 森林泥濘出撃帯",
+        "許可帯 X6-62 / Y11-36"
+      ],
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "battle": {
+      "hasBattle": true,
+      "playerUnits": 6,
+      "mapHorizontalScroll": {
+        "intentional": true,
+        "clientWidth": 370,
+        "scrollWidth": 1680
+      },
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "consoleErrors": 0
+  },
+  "notes": [
+    "FrontlineSegment now carries a sector-specific deploymentLimit.",
+    "Deployment shows the active depth label and X/Y allowed band.",
+    "Saved or drafted standing orders are clamped to the selected segment deployment band.",
+    "Battle creation clamps default and saved initial positions to the same deployment band."
+  ]
+}

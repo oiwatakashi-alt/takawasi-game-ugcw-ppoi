@@ -1,0 +1,62 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "recon-intel-confidence-and-spoils-forecast",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "initialTheater": {
+      "hasConfidenceLabels": true,
+      "hasForecastRanges": true,
+      "hasReconLowConfidence": true,
+      "sideOperationButtons": 4,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "afterReconAutoResolve": {
+      "operation": "黒沼偵察",
+      "outcome": "success",
+      "hasReconMessage": true,
+      "hasRevisedIntel": true,
+      "hasHighConfidenceAfterRecon": true,
+      "hasRecoveryMultiplier": true,
+      "recoveryMultiplierText": "回収効率 x1.12"
+    },
+    "afterRevisedRaidAutoResolve": {
+      "operation": "黒沼の敵前進巣襲撃",
+      "outcome": "success",
+      "messageExcerpt": "戦利品 改良針撃銃+33 / 針撃銃+55。",
+      "hasBoostedImprovedRifleReward": true
+    },
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasRecoveryCandidates": true,
+      "hasRevisedIntel": true,
+      "hasConfidenceAndRange": true,
+      "hasRecoveryMultiplier": true,
+      "excerpt": "信頼高 / 針撃銃 33-43 / 猟兵銃 9-13 / 工兵器材 6-8 / 回収効率 x1.12",
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  },
+  "mobile390": {
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasConfidenceAndRange": true,
+      "hasRecoveryMultiplier": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "theater": {
+      "hasConfidence": true,
+      "hasRange": true,
+      "hasRevisedOrInitialIntel": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "pass": "battle-command-queue",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x900",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Vite chunk-size warning only."
+  },
+  "flow": [
+    "reset/current campaign state",
+    "Strategic Map -> Camp",
+    "Camp -> Deployment",
+    "Deployment -> Battle",
+    "enable command queue with 停止して予約",
+    "queue 阻止射撃, 敵指揮, 弾薬節約, 後退",
+    "delete first queued command",
+    "apply remaining queued commands",
+    "verify selected brigade state and QA signals",
+    "reset campaign"
+  ],
+  "observed": {
+    "queueEnabled": "予約指揮 panel changed to 予約中 and battle speed active state became 停止.",
+    "queuedBeforeDelete": [
+      "#1 第1戦列歩兵大隊 阻止射撃",
+      "#2 第1戦列歩兵大隊 優先 敵指揮",
+      "#3 第1戦列歩兵大隊 弾薬節約",
+      "#4 第1戦列歩兵大隊 後退"
+    ],
+    "selectedBeforeApply": "Selected brigade still showed 優先 最接近 / 弾薬 通常射撃 before applying queued commands.",
+    "queuedAfterDelete": 3,
+    "afterApply": {
+      "queueItems": 0,
+      "queueMode": "直接発令",
+      "selectedHasRetreat": true,
+      "selectedHasOfficerPriority": true,
+      "selectedHasConserveAmmo": true
+    },
+    "reset": {
+      "turnOne": true,
+      "hasMainBattle": true
+    }
+  },
+  "qa": {
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "mobileQa": "skipped intentionally; mobile is no longer a current gate"
+  }
+}

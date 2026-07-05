@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-enemy-command-response-status-qa",
+  "date": "2026-07-05",
+  "target": "Enemy command-network response status and same-action lockout",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "戦役をリセット",
+      "幕舎で準備する",
+      "出撃配置へ",
+      "選抜部隊で戦闘開始",
+      "3倍",
+      "wait for enemy command-network cards",
+      "confirm 未対応 status",
+      "推奨実行",
+      "confirm 効果中 status and disabled same-action buttons",
+      "戦役をリセット"
+    ],
+    "observed": {
+      "initialStatus": "未対応 / 推奨または個別対応を選択可能。",
+      "afterRecommendedActionStatus": "効果中 予備接続 / 1旅団が中央塹壕線へ接続中。予備即応を消費済み。",
+      "disabledAfterAction": [
+        "推奨実行",
+        "予備投入"
+      ],
+      "battleLogEvidence": "敵指揮網対応: 第2波指揮核へ予備投入。中央塹壕線に1旅団を接続。"
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true,
+      "viewportResetAfterQa": true
+    }
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "takawasi-division-command",
+  "createdAt": "2026-07-03T19:45:00+09:00",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Army Camp division commander/directive controls",
+    "Deployment division command summary propagation",
+    "Battle initial StandingOrder effects from division directive",
+    "Desktop-only browser QA; mobile is no longer a current gate"
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "Reload local app",
+    "Reset campaign",
+    "Open Army Camp",
+    "Verify initial division summaries",
+    "Change 第1師団 directive to 弾性防御",
+    "Open Deployment",
+    "Start selected-unit battle",
+    "Inspect Battle Command unit cards"
+  ],
+  "observations": {
+    "armyCamp": {
+      "initialDivisionSummaries": [
+        "第1師団 戦線固守 / 師団長 フォス / 統制+2 即応+6",
+        "第2師団 予備守備 / 師団長 ヴェーバー / 統制+3 即応+14"
+      ],
+      "directiveChanged": true,
+      "changedDivisionSummary": "第1師団 弾性防御 / 師団長 フォス / 統制+3 即応+8",
+      "lastMessageObserved": "師団命令を更新した。"
+    },
+    "deployment": {
+      "hasElasticSummary": true,
+      "hasReserveSummary": true,
+      "sampleRows": [
+        "第1戦列歩兵大隊 ... 第1師団 弾性防御 / 師団長 フォス / 統制+3 即応+8",
+        "第2工兵中隊 ... 第1師団 弾性防御 / 師団長 フォス / 統制+3 即応+8",
+        "衛戍予備歩兵大隊 ... 第2師団 予備守備 / 師団長 ヴェーバー / 統制+3 即応+14"
+      ]
+    },
+    "battle": {
+      "hasDivisionSummary": true,
+      "firstDivisionEffects": [
+        "待機姿勢 弾性防御",
+        "目標 最大集団",
+        "師団 第1師団 弾性防御 / 師団長 フォス / 統制+3 即応+8"
+      ],
+      "secondDivisionReserveEffects": [
+        "待機姿勢 後退守備",
+        "目標 敵指揮",
+        "弾薬 弾薬節約",
+        "師団 第2師団 予備守備 / 師団長 ヴェーバー / 統制+3 即応+14"
+      ]
+    }
+  },
+  "qualityGates": {
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "status": "passed",
+  "notes": [
+    "Division directives are applied during battle creation before officer/headquarters modifiers.",
+    "Division-command exclusivity, burden, fatigue, and multi-corps hierarchy remain deferred."
+  ]
+}

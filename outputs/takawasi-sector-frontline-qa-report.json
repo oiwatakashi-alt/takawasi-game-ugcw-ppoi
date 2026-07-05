@@ -1,0 +1,44 @@
+{
+  "desktop": {
+    "deploymentHasProfile": true,
+    "previewVisible": true,
+    "segmentButtons": [
+      "森林左翼線基準 34:24",
+      "中央塹壕線基準 38:47",
+      "右翼泥濘線基準 35:71",
+      "後方砲兵線基準 22:56",
+      "塹壕補修線基準 43:55"
+    ],
+    "saved": {
+      "saveVersion": 3,
+      "campaignSaveVersion": 3,
+      "segment": "right-flank",
+      "anchor": {
+        "x": 35,
+        "y": 71
+      },
+      "fallback": {
+        "x": 15,
+        "y": 73
+      }
+    },
+    "battleHasDynamicSegments": true,
+    "battleCardHasSelectedSegment": true,
+    "battleHasAppliedLog": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "mobile": {
+    "deploymentHasProfile": true,
+    "previewVisible": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "screenshots": [
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-sector-frontline-deployment-desktop.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-sector-frontline-battle-desktop.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-sector-frontline-deployment-mobile.png"
+  ]
+}

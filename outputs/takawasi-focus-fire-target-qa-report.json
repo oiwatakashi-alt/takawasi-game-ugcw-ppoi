@@ -1,0 +1,84 @@
+{
+  "id": "takawasi-focus-fire-target-qa",
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "Battle Command focus-fire target marking",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "viewport": "default desktop browser viewport",
+    "flow": [
+      "reload app",
+      "reset campaign",
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "click 3x and wait for enemy waves",
+      "click 敵を指名",
+      "click first spotted enemy group",
+      "verify selected panel/card focus target",
+      "click 指名解除"
+    ],
+    "evidence": {
+      "enemy_spawn": {
+        "battle_time": "防衛時間 35/150秒",
+        "enemy_buttons": 3,
+        "spotted_enemy_buttons": 2
+      },
+      "focus_assign": {
+        "spotted_enemy_count_before_click": 10,
+        "selected_panel_contains": "集中 アンデッド群集",
+        "selected_card_contains": "集中 アンデッド群集",
+        "focused_enemy_count": 1,
+        "log_contains": "第1戦列歩兵大隊の集中射撃目標をアンデッド群集 23体へ指定。",
+        "current_target_alignment": "selected card target was アンデッド群集 after focus assignment"
+      },
+      "focus_clear": {
+        "selected_panel_contains": "集中 なし",
+        "selected_card_contains": "集中 なし",
+        "focused_enemy_count": 0,
+        "log_contains": "第1戦列歩兵大隊の集中射撃指定を解除。"
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "flow": [
+      "set mobile viewport",
+      "verify selected command panel and focus controls",
+      "click 敵を指名",
+      "tap first spotted enemy group",
+      "verify selected panel/card focus target",
+      "reset viewport"
+    ],
+    "evidence": {
+      "initial_layout": {
+        "width": 390,
+        "has_focus_button": true,
+        "has_clear_button": true,
+        "command_rows": 2,
+        "selected_panel_visible": true,
+        "battle_map_visible": true,
+        "map_scroll_overflow": true
+      },
+      "focus_assign": {
+        "spotted_enemy_count_before_click": 18,
+        "selected_panel_contains": "集中 アンデッド群集",
+        "selected_card_contains": "集中 アンデッド群集",
+        "focused_enemy_count": 1,
+        "log_contains": "第1戦列歩兵大隊の集中射撃目標をアンデッド群集 7体へ指定。"
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "notes": [
+    "focusTargetId is battle-only and is not persisted into StandingOrderTemplate",
+    "resolveTick uses the focus target only while it remains alive, spotted, in range, and in the formation fire arc",
+    "mobile QA happened after battle status reached collapse, but the focus-target UI path and DOM updates were still verified with live spotted enemy groups"
+  ]
+}

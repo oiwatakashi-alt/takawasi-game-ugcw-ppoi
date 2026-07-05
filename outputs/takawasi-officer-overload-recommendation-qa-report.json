@@ -1,0 +1,42 @@
+{
+  "name": "takawasi officer overload recommendation QA",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x1000",
+  "mobileQa": "skipped intentionally; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "load app",
+    "reset campaign",
+    "open Camp",
+    "open Deployment",
+    "verify command overload warning",
+    "click 将校調整へ",
+    "verify Officers overload panel",
+    "click 推奨配属",
+    "return to Deployment",
+    "verify all selected brigades are within command capacity"
+  ],
+  "checks": {
+    "beforeWarning": true,
+    "officersHasOverloadPanel": true,
+    "recommendationCount": 1,
+    "assignmentApplied": true,
+    "afterDeploymentCapacitySolved": true,
+    "afterDeploymentStillStartable": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "observedText": {
+    "recommendation": "推奨 アルンハイム 大佐 / 予測 110 -> 0 / 容量 980 / 推奨配属",
+    "afterDeployment": "指揮容量 / 全旅団 指揮容量内"
+  },
+  "notes": [
+    "The recommendation scorer evaluates total command overload after the assignment swap, not only the target brigade.",
+    "The first verified recommendation assigns Alnheim to the overloaded trench infantry battalion and reduces total overload from 110 to 0."
+  ]
+}

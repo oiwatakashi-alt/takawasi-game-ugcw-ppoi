@@ -1,0 +1,41 @@
+{
+  "feature": "local-counterstroke-response",
+  "date": "2026-07-03",
+  "scope": "desktop-only",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command"
+    ],
+    "battleRun": {
+      "speed": "3x",
+      "overextendedEvidence": [
+        "群集21 / 突出 / 動揺",
+        "phaseCounts included overextended: 1",
+        "右翼泥濘線 危険 / 主脅威 群集 突出 低脅威 / 局地反撃"
+      ],
+      "counterstrokeEvidence": [
+        "戦線圧力対応: 右翼泥濘線で局地反撃。",
+        "戦線斉射: 2旅団がアンデッド群集 21体へ9秒斉射（軍団斉射規律）。",
+        "第6塹壕歩兵大隊: 阻止射撃 / 集中射撃 / 戦線斉射 9秒",
+        "北森猟兵分隊: 阻止射撃 / 集中射撃 / 戦線斉射 9秒",
+        "集中射撃目標をアンデッド群集 21体へ指定。"
+      ],
+      "note": "The QA sample reached lineIntegrity 0 before the counterstroke click, but the UI command remained enabled and applied battle-runtime fire orders correctly. A later balance pass should keep counterstroke opportunities available before collapse more often."
+    },
+    "brokenImages": [],
+    "consoleErrors": [],
+    "pageOverflow": false,
+    "mobileQa": "skipped by current product direction; mobile is no longer a current gate"
+  }
+}

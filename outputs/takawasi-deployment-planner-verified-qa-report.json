@@ -1,0 +1,34 @@
+{
+  "desktop": {
+    "plannerVisible": true,
+    "saved": {
+      "saveVersion": 3,
+      "campaignSaveVersion": 3,
+      "templateCount": 1,
+      "segment": "right-flank",
+      "posture": "aggressive_screen",
+      "targetPriority": "officer",
+      "ammoPolicy": "conserve",
+      "moraleBelow": 55,
+      "facilityMode": "defend"
+    },
+    "battleHasAppliedLog": true,
+    "firstCardHasRightFlank": true,
+    "firstCardHasPreset": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "mobile": {
+    "plannerVisible": true,
+    "saveVisible": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "screenshots": [
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-verified-desktop.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-verified-battle.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-verified-mobile.png"
+  ]
+}

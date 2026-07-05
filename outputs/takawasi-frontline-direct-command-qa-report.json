@@ -1,0 +1,42 @@
+{
+  "createdAt": "2026-07-03",
+  "slice": "frontline-direct-command",
+  "scope": "desktop-only tactical battle QA",
+  "mobileQa": "skipped by current user direction",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserFlow": [
+    "Strategic Campaign Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "verified": {
+    "battleMapVisible": true,
+    "pressureCardCount": 5,
+    "frontlineCommandPanelVisible": true,
+    "frontlineHandleCount": 2,
+    "pressureCardSelectionSync": true,
+    "selectedSegmentAfterPressureCardClick": "中央塹壕線",
+    "frontlinePanelAfterSelection": "中央塹壕線平常敵圧 0守備 1旅団基準 X38 Y47後退 X17 Y49半径 18戦線前進戦線後退幅拡大幅圧縮戦線へ移動",
+    "frontlineForwardApplied": true,
+    "frontlineWidthApplied": true,
+    "unitAutonomyReactedToLineMove": true,
+    "brokenImages": [],
+    "consoleErrors": [],
+    "desktop1440": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflowCandidates": []
+    }
+  },
+  "notes": [
+    "Frontline forward moved the selected line anchor from X34 to X38 and shifted the selected line fallback from X16 to X20.",
+    "Width expansion raised selected line control radius from 17 to 19.",
+    "The selected brigade action reason changed to returning to anchor after the line moved, proving the line edit affects StandingOrder-driven tick behavior."
+  ]
+}

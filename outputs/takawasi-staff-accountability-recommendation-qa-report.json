@@ -1,0 +1,50 @@
+{
+  "id": "takawasi-staff-accountability-recommendation",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Staff accountability history feeding Army Camp staff recommendations",
+    "Previous staff evaluation display on recommendation cards",
+    "Desktop QA only; mobile is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900.",
+    "Reset campaign.",
+    "Camp -> Deployment -> Battle -> Retreat -> After Action.",
+    "Verified staff accountability warning/merit was generated.",
+    "Applied result to Army Camp.",
+    "Verified 参謀部推奨 displayed 前戦評価 and staff-warning-driven replacement candidates.",
+    "Reset QA campaign."
+  ],
+  "observations": [
+    "After Action showed 参謀長 アルンハイム: 警告 / 戦線整理不足 and 砲兵主任 バウアー: 警告 / 火力効果限定.",
+    "Recommendation card showed 前戦評価: 参謀長警告 / 戦線整理不足 / 戦線整理警告 -> 候補評価なし.",
+    "Recommendation card showed 工兵主任功績 / 築城線維持 / 築城維持 on an engineering-related recommendation.",
+    "No duplicate 前戦評価 prefix after cleanup."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA skipped because current target excludes cellphone/mobile."
+  ]
+}

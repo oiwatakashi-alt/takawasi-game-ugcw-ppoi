@@ -1,0 +1,38 @@
+{
+  "desktop": {
+    "plannerVisible": true,
+    "saved": {
+      "saveVersion": 3,
+      "campaignSaveVersion": 3,
+      "templateCount": 1,
+      "first": {
+        "unitId": "unit-infantry-1",
+        "posture": "aggressive_screen",
+        "segment": "center-line",
+        "targetPriority": "officer",
+        "ammoPolicy": "conserve",
+        "fallbackEnabled": true,
+        "moraleBelow": 55,
+        "facilityMode": null
+      }
+    },
+    "battleHasAppliedLog": true,
+    "battleHasPlannedValues": true,
+    "appliedUnit": "第1戦列歩兵大隊\n選択\n\n戦列歩兵 / 兵力 760 / 士気 78 / 弾薬 92\n\n針撃銃 / 射程 30 / 目標 未捕捉 / 損耗付与 0.0\n\n行動: 基準位置を保持\n\n戦線 中央塹壕線\n姿勢 阻止射撃\n目標 敵指揮\n弾薬 弾薬節約\n後退 士気55以下\n施設 塹壕線 防衛\n左翼線\n中央塹壕線\n右翼湿地線\n予備砲兵線\n工兵支援線\n塹壕線:防衛\n保持\n前進\n側面機動\n休息/補給\n築城/修理\n後退",
+    "brokenImages": 0,
+    "overflow": 1,
+    "errors": []
+  },
+  "mobile": {
+    "plannerVisible": true,
+    "buttonsReadable": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "screenshots": [
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-desktop.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-applied-battle.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-mobile.png"
+  ]
+}

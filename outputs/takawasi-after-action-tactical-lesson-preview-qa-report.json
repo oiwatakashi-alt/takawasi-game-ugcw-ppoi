@@ -1,0 +1,46 @@
+{
+  "feature": "after-action-tactical-lesson-preview",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "warning": "Vite chunk size warning remains for index bundle over 500 kB"
+  },
+  "flow": [
+    "reset campaign from UI",
+    "Theater -> Army Camp -> Deployment -> Battle",
+    "run battle at 3x until staff advisory appears",
+    "apply one staff advisory",
+    "pause, withdraw, open After Action",
+    "reset campaign from UI after QA"
+  ],
+  "checks": [
+    {
+      "step": "staff advisory application",
+      "status": "passed",
+      "evidence": "Applied `中央塹壕線: 殺傷地帯` from staff advisory panel."
+    },
+    {
+      "step": "After Action next-battle lesson preview",
+      "status": "passed",
+      "evidence": "After Action displayed `次戦教訓`, including `第4戦列歩兵大隊: 次戦教訓 参謀警告1件 / 得意殺傷地帯 / 即応+5 / 統制+2` and the same preview on involved unit rows."
+    },
+    {
+      "step": "layout and runtime health",
+      "status": "passed",
+      "evidence": "Broken images 0, console errors 0, document horizontal overflow false."
+    },
+    {
+      "step": "cleanup",
+      "status": "passed",
+      "evidence": "Campaign reset returned the app to Theater with `幕舎で準備する` visible and no After Action screen."
+    }
+  ],
+  "result": "passed"
+}

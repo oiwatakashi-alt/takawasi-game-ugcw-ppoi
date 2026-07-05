@@ -1,0 +1,60 @@
+{
+  "feature": "reserve-readiness-and-prepared-counterstroke",
+  "date": "2026-07-03",
+  "scope": "desktop 1440px browser QA only; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "route": [
+    "Strategic Map",
+    "Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "checks": {
+    "initialBattle": {
+      "pressureCardsShowReadiness": true,
+      "samplePressureCard": "森林左翼線 平常 / 敵圧 0 / 守備 1旅団 / 予備 1 / 即応 58(1)",
+      "selectedUnitShowsReadiness": true,
+      "sampleSelectedUnit": "第1戦列歩兵大隊 / 予備即応 18"
+    },
+    "afterTicksAt3x": {
+      "elapsedText": "防衛時間 95/150秒",
+      "pressureCardsShowReadiness": true,
+      "counterstrokeVisible": true,
+      "enemyPhaseSamples": [
+        "群集7 / 突出 / 維持",
+        "群集34 / 側面圧 / 維持",
+        "群集46 / 突出 / 維持"
+      ],
+      "note": "予備即応は交戦・斉射・移動で消費されるため、戦闘後半サンプルでは即応0が多い。初期表示とtick消費は確認済み。"
+    },
+    "reserveCommit": {
+      "clicked": "first frontline pressure action when it was recommending 予備投入",
+      "verifiedLog": "戦線圧力対応: 森林左翼線で予備投入。",
+      "effect": "reserve brigade reassigned to the pressured line with elastic/fallback/focus behavior"
+    },
+    "localCounterstroke": {
+      "exactCounterstrokeButtons": 3,
+      "clicked": "局地反撃",
+      "verifiedLog": "戦線圧力対応: 右翼泥濘線で局地反撃。守備1旅団 / 予備0旅団。",
+      "verifiedEffects": [
+        "selected unit posture shows 阻止射撃",
+        "selected unit ammo policy shows 集中射撃",
+        "focus target is set",
+        "戦線斉射 9秒 is active",
+        "log shows 戦線斉射: 1旅団がアンデッド群集 51体へ9秒斉射"
+      ]
+    },
+    "visualHealth": {
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": false
+    }
+  },
+  "knownGaps": [
+    "反撃準備の初期表示と消費は確認できたが、準備済み予備による早期局地反撃は乱数/戦況依存で今回のQAでは主に突出敵への局地反撃として確認した。",
+    "次は予備隊専用UIまたは戦区別の予備配備計画を追加すると、反撃準備をプレイヤーが意図して育てやすくなる。"
+  ]
+}

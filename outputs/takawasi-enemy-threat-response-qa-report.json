@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-07-03",
+  "scope": "Battle Command enemy threat response desktop QA",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "route": [
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "result": {
+    "hasBattle": true,
+    "enemyCount": 24,
+    "spottedEnemyCount": 16,
+    "hasEnemyIntentPanel": true,
+    "panelHasSegment": true,
+    "panelHasResponseUnits": true,
+    "panelHasRecommendation": true,
+    "focusedEnemyCountAfterResponse": 1,
+    "activeFireMission": "戦線斉射アンデッド群集 / 3旅団 / 残り8秒 / 軍団斉射規律",
+    "volleyingPlayerCount": 2,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "unexpectedOverflowOutsideMapScroll": 0
+  },
+  "observedLog": "敵群対応斉射: 衛戍予備歩兵大隊基準で中央塹壕線の斉射を要請。戦線斉射: 3旅団がアンデッド群集 15体へ9秒斉射（軍団斉射規律）。",
+  "notes": [
+    "Enemy intent panel now shows 推定担当戦線, 対応旅団, and 推奨対応.",
+    "担当戦線で対応 applied a standing-order response, target priority, and focus target to the responsible brigade.",
+    "担当戦線斉射 created a line FireMission from the responsible brigade's segment.",
+    "Mobile-specific QA remains deferred by current project direction."
+  ]
+}

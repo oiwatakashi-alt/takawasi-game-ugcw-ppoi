@@ -1,0 +1,53 @@
+{
+  "id": "takawasi-standing-order-plan-set",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Named multi-brigade standing-order plan sets",
+    "Deployment-side save and one-click apply for the selected battle plan",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900.",
+    "Reset campaign from the UI.",
+    "Camp -> Deployment.",
+    "Verified 計画セット保存 and 戦線計画セット were visible.",
+    "Clicked 計画セット保存.",
+    "Verified localStorage saveVersion 7, campaign saveVersion 7, and one plan set with 7 entries.",
+    "Changed selected brigade posture to 弾性防御.",
+    "Clicked 一括適用 for 戦線計画 1.",
+    "Verified selected brigade summary returned from 姿勢 弾性防御 to 姿勢 固守 with 通常射撃.",
+    "Reset QA campaign after verification."
+  ],
+  "observations": [
+    "Plan set description was 7旅団 / 5戦線 / 0指定予備。出撃配置で保存した一括戦線計画。",
+    "The 戦線計画セット panel showed 合致 7/7旅団 and enabled 一括適用.",
+    "A plan set stores frontline geometry, reserve doctrine, designated reserves, and all selected units' StandingOrders.",
+    "Applying a plan set updates the Deployment draft and deployment plan; individual per-brigade templates are not overwritten until the player explicitly saves them."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

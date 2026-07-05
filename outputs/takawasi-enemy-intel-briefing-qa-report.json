@@ -1,0 +1,50 @@
+{
+  "slice": "enemy-intel-briefing",
+  "date": "2026-07-03",
+  "scope": {
+    "summary": "Shared enemy composition forecast is now shown in Theater and Deployment briefings, using existing operation intel confidence/recon-effect labels.",
+    "mobileQa": "skipped: mobile is no longer a current target"
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "flow": [
+      "reload",
+      "Strategic Map",
+      "inspect main battle briefing",
+      "inspect side operations",
+      "Camp",
+      "Deployment"
+    ],
+    "observed": {
+      "theaterMainBrief": "敵編成 群集+銃兵+突破体 / 敵情信頼中",
+      "sideOperationBriefExamples": [
+        "敵情 群集+銃兵+突破体 / 敵情信頼低",
+        "敵情 銃兵+群集+突破体 / 敵情信頼高",
+        "敵情 突破体+群集 / 敵情信頼高"
+      ],
+      "deploymentBrief": "敵編成 群集+銃兵+突破体 / 敵情信頼中",
+      "deploymentSpoilsStillVisible": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Added shared src/game/theater/enemyIntel.ts for enemy composition forecasts and confidence labels.",
+    "Army command recommendations now import the shared enemy-intel forecast instead of owning it in politicalCost.ts.",
+    "Theater main-battle briefing shows enemy composition and intel confidence.",
+    "Theater side-operation cards show enemy composition and intel confidence per operation.",
+    "Deployment briefing ledger shows enemy composition and intel confidence before battle start."
+  ],
+  "deferred": [
+    "Persisted enemyCompositionIntel field on StrategicOperation.",
+    "Recon-quality-specific uncertainty ranges for each enemy type.",
+    "Theater/Deployment display of likely wave timing and command-wave probability.",
+    "Explicit comparison between enemy intel and selected reserve doctrine."
+  ]
+}

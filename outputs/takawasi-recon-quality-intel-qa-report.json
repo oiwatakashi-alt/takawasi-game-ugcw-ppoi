@@ -1,0 +1,62 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "recon-quality-driven-intel",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "initialTheater": {
+      "hasInitialConfidence": true,
+      "hasInitialRanges": true,
+      "sideOperationButtons": 4,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "afterRecon": {
+      "operation": "黒沼の敵前進巣偵察",
+      "outcome": "success",
+      "qualityMessage": "精密偵察90",
+      "hasReconScoreChip": true,
+      "hasEffectChip": true,
+      "effect": "精密照合",
+      "recoveryMultiplier": "回収効率 x1.16",
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "afterRevisedRaid": {
+      "operation": "黒沼の敵前進巣襲撃",
+      "outcome": "success",
+      "rewardLine": "戦利品 改良針撃銃+35 / 針撃銃+59。",
+      "hasBoostedReward": true
+    },
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasReconQuality": true,
+      "hasPreciseEffect": true,
+      "hasRecoveryMultiplier": true,
+      "excerpt": "信頼高 / 針撃銃 34-44 / 猟兵銃 10-14 / 工兵器材 6-8 / 偵察90 / 精密照合 / 回収効率 x1.16",
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  },
+  "mobile390": {
+    "deployment": {
+      "hasSpoilsForecast": true,
+      "hasReconQuality": true,
+      "hasPreciseEffect": true,
+      "hasRecoveryMultiplier": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "theater": {
+      "hasReconQualityOrInitialConfidence": true,
+      "hasRange": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-07-03",
+  "scope": "Battle Command enemy intent inspection desktop QA",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "route": [
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "result": {
+    "hasBattle": true,
+    "enemyCount": 24,
+    "spottedEnemyCount": 16,
+    "hasEnemyIntentPanel": true,
+    "inspectedEnemyCount": 1,
+    "focusedEnemyCountAfterPanelAction": 1,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "unexpectedOverflowOutsideMapScroll": 0
+  },
+  "observedPanelText": "アンデッド群集 群集 低脅威 / 意図 圧迫 / 目標 集団圧迫:塹壕線 / 東進/正面 / 幅25 深さ15 / 凝集41% / 指揮 指揮崩壊 / 士気 潰走 / 戦力16 / 射程4 / 圧力14",
+  "notes": [
+    "Spotted enemy tokens open the enemy intent panel in normal map mode.",
+    "The selected enemy token receives the inspected state on the tactical map.",
+    "The panel action assigns the inspected spotted enemy as the selected brigade focus target.",
+    "Mobile-specific QA remains deferred by current project direction."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "slice": "command-fatigue",
+  "date": "2026-07-03",
+  "target": "desktop 1440px only; mobile QA intentionally skipped",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "implemented": [
+    "Officer now stores commandFatigue as a persistent campaign stat.",
+    "Save migration/current normalization upgrades local saves to v5 and backfills commandFatigue: 0.",
+    "recoverOfficers reduces command fatigue each campaign recovery pass.",
+    "officerCommandProfile applies command-fatigue penalties to morale, condition, control radius, reserve readiness, and fallback timing.",
+    "applyBattleResult adds fatigue from brigade command, division command, battle outcome pressure, risk, and staff/division duty load.",
+    "Army Camp and Officers screens display command fatigue, and Officers shows multiple recent history lines so fatigue entries do not hide division-command history."
+  ],
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "flow": [
+      "reset campaign",
+      "open Army Camp and verify save v5 plus initial fatigue 0",
+      "open Deployment",
+      "start Battle",
+      "run 3x tick briefly",
+      "withdraw",
+      "open After Action",
+      "apply result",
+      "open Officers",
+      "return to Army Camp"
+    ],
+    "observed": {
+      "saveVersionVisible": true,
+      "fatigueValuesAfterBattle": [15, 6, 10, 9, 6, 6, 2, 0, 15, 0],
+      "hasFatigueHistory": true,
+      "hasDivisionHistoryVisible": true,
+      "armySelectedCommanderShowsFatigue": true,
+      "snippets": [
+        "東方辺境防衛線防衛戦: 指揮疲労+15（累積15）",
+        "東方辺境防衛線防衛戦: 第1師団師団指揮、経験+6、危険度12",
+        "東方辺境防衛線防衛戦: 第2師団師団指揮、経験+3、危険度12"
+      ]
+    },
+    "checks": {
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "deferred": [
+    "Political cost for keeping the same officers in staff/division posts remains unimplemented.",
+    "Dedicated fatigue-rest assignment and staff rotation workflow remains future work."
+  ]
+}

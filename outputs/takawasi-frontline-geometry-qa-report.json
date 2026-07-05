@@ -1,0 +1,82 @@
+{
+  "date": "2026-07-02",
+  "feature": "deployment-frontline-geometry-presets",
+  "target": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Select 縦深防御",
+      "Start Battle",
+      "3x Tick"
+    ],
+    "deployment": {
+      "geometryButtonCount": 7,
+      "selectedGeometry": "縦深防御",
+      "previewPill": "縦深防御",
+      "footerSave": "保存 v4 / ローカル保存",
+      "segmentAnchorsAfterPreset": [
+        "森林左翼線 基準 29:24",
+        "中央塹壕線 基準 33:47",
+        "右翼泥濘線 基準 30:71",
+        "後方砲兵線 基準 17:56",
+        "塹壕補修線 基準 38:55"
+      ],
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "battle": {
+      "geometryLabelVisible": true,
+      "geometryBadge": "縦深防御 主線をやや下げ、後退先との距離を広げて消耗戦に備える。",
+      "battleMapCount": 1,
+      "assignmentLayerCount": 1,
+      "formationLayerCount": 1,
+      "formationFrontageCount": 6,
+      "after3xTick": {
+        "objective": "防衛時間 9/150秒",
+        "lineIntegrity": "戦線維持 96%",
+        "waves": "敵波 1",
+        "spotted": "発見 1/1",
+        "alerts": ["敵波接近 群集 37体"]
+      },
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "battle": {
+      "geometryLabelVisible": true,
+      "selectedPanelIncludesGeometry": true,
+      "formationFrontageCount": 6,
+      "mapCanScrollX": true,
+      "mapClientWidth": 370,
+      "mapScrollWidth": 1680,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    },
+    "deploymentAfterReload": {
+      "geometryButtonCount": 7,
+      "selectedGeometryStillVisible": true,
+      "previewPill": "縦深防御",
+      "plannerGridColumns": "154px 154px",
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "notes": [
+    "Reload before the mobile Deployment check kept 縦深防御 visible, which verifies the localStorage save v4 path in the rendered app.",
+    "This slice implements preset-based player-editable frontline geometry; direct drag handles and freehand custom lines remain deferred."
+  ]
+}

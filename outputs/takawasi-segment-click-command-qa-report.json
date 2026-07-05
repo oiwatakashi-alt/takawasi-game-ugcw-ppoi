@@ -1,0 +1,64 @@
+{
+  "feature": "battle-segment-click-command",
+  "date": "2026-07-03",
+  "environment": {
+    "url": "http://127.0.0.1:5173/",
+    "browser": "in-app browser",
+    "buildCommand": "npm run build"
+  },
+  "changesVerified": {
+    "selectedCommandPanelHasSegmentClick": true,
+    "selectedCommandSummaryVisible": true,
+    "segmentClickUsesMapCoordinates": true,
+    "segmentDomOverlapFixVerified": true,
+    "unitTokenDoesNotStealSegmentCommand": true,
+    "alertClickRelevantUnitSelectionImplemented": true
+  },
+  "desktop": {
+    "viewport": "default 1280px browser viewport",
+    "battleMapRendered": true,
+    "segmentButtonVisible": true,
+    "selectedSummary": [
+      "基準 X43 Y55 / 半径15",
+      "後退 X18 Y62 / 自動後退あり",
+      "現在行動 基準位置を保持"
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "notes": [
+      "The wide tactical map intentionally exceeds the viewport inside .battle-map-scroll.",
+      "No page-level overflow outside the tactical map scroll was observed in the relevant QA pass."
+    ]
+  },
+  "mobile390": {
+    "viewport": "390x900",
+    "battleMapRendered": true,
+    "selectedPanelStacksVertically": true,
+    "segmentClickFlow": [
+      "戦略キャンペーンマップ",
+      "幕舎",
+      "出撃配置",
+      "戦闘開始",
+      "戦線をクリック",
+      "広域戦術マップを横スクロール",
+      "中央塹壕線の論理座標をクリック"
+    ],
+    "result": {
+      "selectedUnit": "第4戦列歩兵大隊",
+      "assignedSegment": "中央塹壕線",
+      "selectedSummary": [
+        "基準 X38 Y47 / 半径18",
+        "後退 X17 Y49 / 自動後退あり",
+        "現在行動 基準位置を保持"
+      ],
+      "battleLog": "第4戦列歩兵大隊を中央塹壕線へ配置転換。"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": 0
+  },
+  "knownLimitations": [
+    "This is click/tap map-coordinate assignment, not drag placement or freehand line drawing.",
+    "The wide tactical map still requires intentional horizontal scrolling on mobile."
+  ]
+}

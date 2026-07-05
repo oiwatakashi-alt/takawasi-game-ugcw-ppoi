@@ -1,0 +1,42 @@
+{
+  "slice": "enemy-wave-timeline-ui",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle",
+      "3x tick for 16 seconds"
+    ],
+    "observed": {
+      "deploymentTimelineVisible": true,
+      "deploymentTimelineCount": 6,
+      "firstTimelineBlock": "第1波 / 1秒 / 群集+銃兵",
+      "tacticalWaveSummary": "初波1秒 / 間隔12秒 / 指揮波82%",
+      "battleTimelineCount": 4,
+      "battleTimelineText": "第1波 1秒 接近 / 第2波 13秒 接近 / 第3波 25秒 強圧 / 第4波 37秒 強圧",
+      "passedTimelineCountAfterTick": 4,
+      "battleEnemyWaveAfterTick": 4
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "timeline filtering by recon confidence",
+    "richer enemy-intel UI affordances beyond compact text ranges",
+    "doctrine-intent-aware command recommendation weighting"
+  ]
+}

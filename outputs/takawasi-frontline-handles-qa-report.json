@@ -1,0 +1,105 @@
+{
+  "date": "2026-07-02",
+  "feature": "frontline-segment-handle-controls",
+  "target": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "Reset Campaign",
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Adjust Selected Frontline Segment Handles",
+      "Reload",
+      "Deployment",
+      "Battle",
+      "3x Tick"
+    ],
+    "deploymentInitial": {
+      "handleEditorVisible": true,
+      "handleButtonCount": 11,
+      "buttons": [
+        "主線前へ",
+        "主線後ろへ",
+        "北へ",
+        "南へ",
+        "後退線深く",
+        "後退線浅く",
+        "担当幅広げる",
+        "担当幅絞る",
+        "統制+",
+        "統制-",
+        "この線を戻す"
+      ],
+      "initialSummary": "対象 森林左翼線 / 基準 34:24 / 後退 16:28 / 半径 17 / 未調整",
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "handleAdjustments": {
+      "actions": ["主線前へ", "担当幅広げる", "後退線深く"],
+      "geometryLabel": "戦区標準+手動1",
+      "activePreviewText": "森林左翼線 基準 37:24",
+      "customPreviewCount": 1,
+      "summaryAfterAdjust": "対象 森林左翼線 / 基準 37:24 / 後退 16:28 / 半径 18 / 手動調整あり",
+      "footerSave": "保存 v4 / ローカル保存",
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "reloadPersistence": {
+      "geometryLabel": "戦区標準+手動1",
+      "customPreviewCount": 1,
+      "summaryAfterReload": "対象 森林左翼線 / 基準 37:24 / 後退 16:28 / 半径 18 / 手動調整あり",
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false
+    },
+    "battle": {
+      "topbarIncludesManualLabel": true,
+      "selectedPanelIncludesManualLabel": true,
+      "geometryBadge": "戦区標準+手動1 戦区標準の防衛線をそのまま使う。",
+      "assignmentLayerCount": 1,
+      "formationFrontageCount": 6,
+      "after3xTick": {
+        "objective": "防衛時間 9/150秒",
+        "lineIntegrity": "戦線維持 96%",
+        "enemyWaves": "敵波 1",
+        "spotted": "発見 1/1",
+        "alerts": ["敵波接近 群集 37体"]
+      },
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "battle": {
+      "manualLabelStillVisible": true,
+      "mapCanScrollX": true,
+      "mapClientWidth": 370,
+      "mapScrollWidth": 1680,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    },
+    "deployment": {
+      "geometryLabel": "戦区標準+手動1",
+      "customPreviewCount": 1,
+      "handleButtonCount": 11,
+      "handleGridColumns": "154px 154px",
+      "handleSummaryColumns": "314px",
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "notes": [
+    "This slice implements button-based point-by-point frontline handle controls for mobile-safe operation.",
+    "Direct drag placement and freehand line drawing remain deferred."
+  ]
+}

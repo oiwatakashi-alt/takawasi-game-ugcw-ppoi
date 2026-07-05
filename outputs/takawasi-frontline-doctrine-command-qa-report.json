@@ -1,0 +1,49 @@
+{
+  "slice": "frontline-doctrine-command",
+  "date": "2026-07-04",
+  "scope": "desktop-only tactical command QA",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 950
+    },
+    "path": [
+      "Theater",
+      "Army Camp",
+      "Deployment",
+      "Battle Command"
+    ],
+    "verified": {
+      "frontlineDoctrineBoardCount": 1,
+      "frontlineDoctrineButtonCount": 5,
+      "buttons": [
+        "戦線固守",
+        "弾性拒止",
+        "殺傷地帯",
+        "遅滞節約",
+        "工兵修理線"
+      ],
+      "killZoneApplied": true,
+      "battleLogContainsKillZone": true,
+      "selectedUnitShowsLargestMassPriority": true,
+      "selectedUnitShowsIntenseAmmo": true,
+      "selectedUnitShowsAggressiveScreenPosture": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "mobile is no longer a current target"
+  },
+  "notes": [
+    "The selected frontline panel now exposes a command board with state preview: pressure level, average morale, average ammo, local facilities, damaged facilities, and lead threat.",
+    "Applying the Kill Zone doctrine changed the selected frontline defenders to aggressive screening behavior with largest-mass priority and intense ammo policy."
+  ]
+}

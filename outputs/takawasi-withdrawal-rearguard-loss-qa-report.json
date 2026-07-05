@@ -1,0 +1,54 @@
+{
+  "id": "takawasi-withdrawal-rearguard-loss",
+  "date": "2026-07-04",
+  "target": "Withdrawal rear-guard casualties, risk labels, After Action display, and campaign carryover",
+  "environment": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "desktop app viewport",
+    "mobile": "skipped; mobile/cellphone is outside the current target"
+  },
+  "route": [
+    "reload local app",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "select default 第1戦列歩兵大隊",
+    "撤退後衛にする",
+    "選抜部隊で戦闘開始",
+    "撤退実行",
+    "戦果報告へ",
+    "結果を反映して幕舎へ",
+    "戦役をリセット"
+  ],
+  "observations": {
+    "deployment": [
+      "Deployment showed 撤退後衛 1/3 after assigning 第1戦列歩兵大隊.",
+      "The assigned card text included 撤退後衛計画."
+    ],
+    "battle": [
+      "Battle log included 撤退後衛計画: 1旅団を離脱援護に指定。",
+      "第1戦列歩兵大隊 entered battle on 後方砲兵線 with 後退守備 and 弾薬節約.",
+      "撤退実行 enabled 戦果報告へ."
+    ],
+    "afterAction": [
+      "After Action showed 撤退後衛.",
+      "Summary showed 後衛3部隊が追撃被害39相当を抑止、後衛損耗38。追撃圧18。",
+      "第1戦列歩兵大隊 showed 追撃被害12抑止 / 後衛損耗17 / 消耗.",
+      "第1戦列歩兵大隊 casualty line showed 戦闘損耗 17 / 収容 0 / 永久損耗 17.",
+      "第3野戦砲兵中隊 showed 追撃被害15抑止 / 後衛損耗7 / 危険.",
+      "衛戍予備歩兵大隊 showed 追撃被害12抑止 / 後衛損耗14 / 消耗."
+    ],
+    "campaignCarryover": [
+      "Army Camp last message carried 後衛3部隊が追撃被害39相当を抑止、後衛損耗38。追撃圧18。",
+      "Unit history carried 撤退後衛 後衛援護/追撃被害12抑止/後衛損耗17/消耗."
+    ],
+    "quality": [
+      "console errors/warnings: 0",
+      "broken images: 0",
+      "horizontal overflow: false",
+      "NaN text: false",
+      "QA campaign reset afterward"
+    ]
+  },
+  "result": "pass"
+}

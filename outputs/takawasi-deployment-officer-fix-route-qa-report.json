@@ -1,0 +1,42 @@
+{
+  "name": "takawasi deployment officer fix route QA",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x1000",
+  "mobileQa": "skipped intentionally; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "load app",
+    "reset campaign",
+    "open Camp",
+    "open Deployment",
+    "verify command-overload warning",
+    "click 将校調整へ",
+    "verify Camp Officers tab is active",
+    "verify promotion/reassignment actions are available",
+    "return to Deployment",
+    "verify capacity summary is still visible"
+  ],
+  "checks": {
+    "warningPresent": true,
+    "warningButtonCount": 1,
+    "activeOfficerTab": "将校",
+    "reachedOfficers": true,
+    "officersHasPromotion": true,
+    "returnedToDeployment": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "observedText": {
+    "deployment": "指揮過負荷警告 / 第6塹壕歩兵大隊: 640/530 過負荷110 / 将校調整へ",
+    "officers": "幕舎: 将校 / 指揮容量と負傷リスク / 次部隊へ配属 / 大佐へ昇進"
+  },
+  "notes": [
+    "Deployment overload warning now links directly to the Camp Officers tab.",
+    "This creates a loop from pre-battle problem detection to officer promotion/reassignment actions, then back to Deployment."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "takawasi-objective-staff-recommendation-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command objective staff recommendation cards",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "mobile": "skipped - outside current target",
+    "flow": [
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle Command",
+      "Objective staff recommendation",
+      "Withdraw",
+      "After Action",
+      "Reset campaign"
+    ],
+    "verified": [
+      "Battle Command displayed 目標参謀判断 with three cards for 視界点, 補給点, and 勝利地点.",
+      "The 視界点 card was prioritized and showed 視界点制圧 / 争奪 48%, 推奨 中央塹壕線, 守備2旅団, 支援可, and 評価723.",
+      "Clicking 戦線を寄せる logged 戦線目標連携: 中央塹壕線の2旅団を視界点確保へ寄せる。",
+      "Central-line units changed to 弾性防御 and objective-support behavior.",
+      "After Action showed 第4戦列歩兵大隊 and 第6塹壕歩兵大隊 as 任務 視界点確保 / 観測線を確保、敵指揮を制圧.",
+      "Officer and division result text included 視界点確保.",
+      "Console errors were 0.",
+      "Broken images were 0.",
+      "Horizontal overflow was false at 1440px.",
+      "Campaign reset was confirmed after QA."
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-objective-scenario-roles",
+  "date": "2026-07-04",
+  "target": "desktop 1440x900",
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "3x tick progression",
+      "Withdraw",
+      "After Action"
+    ],
+    "signals": {
+      "objectiveScenarioMentions": [
+        "指揮小丘",
+        "荷車補給点",
+        "林縁観測丘"
+      ],
+      "objectiveStaffTextIncludes": [
+        "保持で士気線が持ち、喪失で全線後退が早まる",
+        "保持で休息補給が効き、喪失で補給回復が鈍る",
+        "保持で発見距離が伸び、喪失で敵波判読が不明瞭になる"
+      ],
+      "tickedObjectiveEffect": "目標効果 勝利点+4戦線 / 補給+0.16弾薬 / 斉射弾薬x0.86 / 視界-8 / 制圧+0.00 / 敵波推定",
+      "afterActionObjectiveOutcome": "勝利点保持 71% / 補給点保持 100% / 視界点喪失 8%"
+    },
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "hasNaN": false
+  },
+  "notes": [
+    "BattleObjectiveNode now carries a scenario role with label, effect summary, and control/pressure multipliers.",
+    "Battle Command objective staff and frontline objective-support cards show objective scenario labels and effect summaries.",
+    "Objective control and After Action remain stable after scenario modifiers are applied."
+  ]
+}

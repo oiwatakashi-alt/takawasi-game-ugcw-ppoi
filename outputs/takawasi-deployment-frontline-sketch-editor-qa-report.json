@@ -1,0 +1,50 @@
+{
+  "id": "takawasi-deployment-frontline-sketch-editor",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Add Deployment-side controls for creating segment-scoped sketch lines without entering Battle Command",
+    "Render Deployment sketch-line overlay on the tactical frontage preview",
+    "Carry the Deployment-created sketch line into StandingOrderPlanSet.frontlineGeometry.sketchLines",
+    "Verify plan-set preview and clear behavior",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Reset campaign and opened Theater -> Army Camp -> Deployment.",
+    "Verified the selected frontline handle editor exposed 現線を形状化 / 北寄せ形状 / 南寄せ形状 / 形状解除.",
+    "Clicked 現線を形状化 for the selected Forest Left Line.",
+    "Verified Deployment showed 形状3点, rendered one .deployment-sketch-overlay polyline, and showed 計画セット保存時に戦線形状 1線を含める。",
+    "Clicked 計画セット保存.",
+    "Verified the plan-set row included 形状1線.",
+    "Opened 内容確認 and verified 保存戦線形状 森林左翼線 3点.",
+    "Clicked 形状解除.",
+    "Verified the editor returned to 形状未保存 / 計画セット用の形状線なし, removed the overlay polyline, and removed the plan-save shape note."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "This is a button-driven Deployment sketch editor using the existing segment-scoped sketchLines model. It is not yet drag/freehand drawing on the map.",
+    "The plan set saved before clearing retains its saved shape preview, as expected.",
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

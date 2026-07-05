@@ -1,0 +1,52 @@
+{
+  "slice": "staff-division-replacement-recommendation",
+  "date": "2026-07-03",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "mobileQa": "skipped: mobile is not a current target",
+    "flow": [
+      "reload",
+      "reset campaign",
+      "open Army Camp",
+      "verify initial staff/division recommendation panel",
+      "manually degrade chief-of-staff assignment to Keller",
+      "verify staff replacement recommendations appear",
+      "apply first recommended appointment",
+      "verify reputation spend and command assignment state"
+    ],
+    "observed": {
+      "initialReputation": "威信 52",
+      "initialRecommendationButtons": ["推奨師団長", "推奨師団長"],
+      "degradedReputation": "威信 47",
+      "degradedRecommendationCount": 5,
+      "degradedRecommendationExamples": [
+        "参謀長をアルンハイムへ変更 改善+27 / 威信-5",
+        "砲兵主任をアルンハイムへ変更 改善+21 / 威信-4",
+        "第1師団師団長をアルンハイムへ変更 改善+42 / 威信-5"
+      ],
+      "finalReputation": "威信 42",
+      "finalPoliticalPanel": "政治余力\n威信 42",
+      "firstStaffSlotAfterRecommendation": "大佐 アルンハイム / 威信0",
+      "projectedSummaryVisible": true,
+      "improvementVisible": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Staff recommendations score projected headquarters improvement against political cost.",
+    "Division commander recommendations score projected division command improvement against political cost.",
+    "Army Camp shows recommendation cards with improvement, cost, projected summary, and apply buttons.",
+    "Recommendation buttons reuse the existing political-cost assignment paths, so reputation spend and duplicate-slot cleanup remain centralized."
+  ],
+  "deferred": [
+    "Loyalty, backlash, cabinet politics, and event chains remain later work.",
+    "Recommendations do not yet account for upcoming enemy composition, current battle terrain, or player doctrine intent."
+  ]
+}

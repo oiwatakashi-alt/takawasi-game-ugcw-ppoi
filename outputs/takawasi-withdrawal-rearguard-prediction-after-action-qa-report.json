@@ -1,0 +1,34 @@
+{
+  "id": "takawasi-withdrawal-rearguard-prediction-after-action",
+  "date": "2026-07-04",
+  "target": "desktop",
+  "mobileQa": "skipped: mobile/cellphone is currently outside the target",
+  "flow": [
+    "reset campaign",
+    "theater -> army camp",
+    "army camp -> deployment",
+    "click recommended rear-guard assignment",
+    "start battle",
+    "confirm battle log contains rear-guard forecast",
+    "withdraw",
+    "open after action",
+    "apply result to army camp",
+    "inspect rear-guard unit history",
+    "reset campaign"
+  ],
+  "observed": {
+    "deploymentAdvisor": "第3野戦砲兵中隊 became planned rear guard with predicted loss, officer risk, pursuit cover, preservation, and tradeoff label.",
+    "battleLog": "後衛予測: 第3野戦砲兵中隊 損耗8/将校危険54/抑止85。",
+    "afterAction": "撤退後衛照合 showed 予測損耗8 -> 実損耗7, 予測将校危険54, 追撃抑止85, 温存37, and 損耗予測内.",
+    "campaignCarryover": "Army Camp text for the rear-guard unit retained 予測損耗 and ->実 after result application."
+  },
+  "checks": {
+    "npmRunBuild": "pass",
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false,
+    "visibleSaveVersion": "v8",
+    "campaignResetAfterQa": true
+  }
+}

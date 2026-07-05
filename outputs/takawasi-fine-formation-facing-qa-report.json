@@ -1,0 +1,77 @@
+{
+  "id": "takawasi-fine-formation-facing-qa",
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "Deployment and Battle fine formation-facing adjustment",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "reload app",
+      "Strategic Map -> Camp -> Deployment",
+      "verify Deployment shows 北へ15度, 正面0度, 南へ15度",
+      "click 北へ15度 in Deployment",
+      "save StandingOrder template",
+      "start Battle",
+      "verify saved fine facing appears in Battle",
+      "click 北へ15度 during Battle",
+      "run 1x tick for 3 seconds"
+    ],
+    "evidence": {
+      "deployment_initial_summary": [
+        "射界 南東斜行 +24度"
+      ],
+      "deployment_after_adjust": [
+        "射界 南東斜行 +9度",
+        "現在 南東斜行 +9度"
+      ],
+      "battle_initial_saved_facing": [
+        "戦列 幅20 / 南東斜行 +9度 / 密0.9 / 重0%"
+      ],
+      "battle_after_adjust": [
+        "戦列 幅20 / 正面 -6度 / 密0.9 / 重0%",
+        "第1戦列歩兵大隊の射界を正面 -6度へ変更。"
+      ],
+      "tick_persistence": {
+        "battle_time": "防衛時間 3/150秒",
+        "inline_status": "正面 -6度"
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "flow": [
+      "set mobile viewport while in Battle",
+      "verify fine-facing controls visible",
+      "click 南へ15度",
+      "verify selected panel and log update",
+      "reset viewport"
+    ],
+    "evidence": {
+      "initial_layout": {
+        "width": 390,
+        "has_fine_facing_controls": true,
+        "selected_panel_visible": true,
+        "battle_map_visible": true,
+        "map_scroll_overflow": true
+      },
+      "after_adjust": [
+        "戦列 幅20 / 南東斜行 +9度 / 密0.9 / 重0%",
+        "第1戦列歩兵大隊の射界を南東斜行 +9度へ変更。"
+      ],
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "notes": [
+    "Fine facing reuses StandingOrder.facingDeg and therefore persists through existing StandingOrderTemplate saves.",
+    "Formation fire-arc and distance logic already read facingDeg, so this is a gameplay-facing control rather than text-only state.",
+    "Mobile keeps page horizontal overflow false; the battle map itself intentionally remains horizontally scrollable."
+  ]
+}

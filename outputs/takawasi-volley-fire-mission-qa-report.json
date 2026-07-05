@@ -1,0 +1,83 @@
+{
+  "id": "takawasi-volley-fire-mission-qa",
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "Battle Command volley fire missions",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "viewport": "default desktop browser viewport",
+    "flow": [
+      "reload app",
+      "reset campaign",
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "verify 火力管制, 旅団斉射, 戦線斉射 visible",
+      "3x enemy spawn then switch to 1x",
+      "click 敵を指名 and a spotted enemy group",
+      "click 戦線斉射",
+      "verify fire mission strip, selected panel/card fire status, log, volleying unit styling"
+    ],
+    "evidence": {
+      "pre_focus": {
+        "volley_buttons_disabled_before_focus": true
+      },
+      "line_volley": {
+        "battle_time": "防衛時間 39/150秒",
+        "status": "戦闘中",
+        "fire_mission_strip": [
+          "戦線斉射アンデッド群集 / 4旅団 / 残り4秒"
+        ],
+        "selected_panel_contains": "火力 戦線斉射 4秒",
+        "selected_card_contains": "火力 戦線斉射 4秒",
+        "log_contains": "戦線斉射: 4旅団がアンデッド群集 27体へ7秒斉射。",
+        "volleying_map_tokens_observed": 3
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "flow": [
+      "set mobile viewport",
+      "verify fire-control controls visible",
+      "reset campaign in mobile viewport",
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "3x enemy spawn then switch to 1x",
+      "focus spotted enemy",
+      "click 戦線斉射",
+      "verify mission strip and selected panel fire status"
+    ],
+    "evidence": {
+      "initial_layout": {
+        "width": 390,
+        "has_fire_control": true,
+        "has_brigade_volley": true,
+        "has_line_volley": true,
+        "selected_panel_visible": true,
+        "battle_map_visible": true,
+        "map_scroll_overflow": true
+      },
+      "line_volley": {
+        "battle_time": "防衛時間 39/150秒",
+        "fire_mission_strip": [
+          "戦線斉射アンデッド群集 / 4旅団 / 残り4秒"
+        ],
+        "selected_panel_contains": "火力 戦線斉射 4秒",
+        "log_contains": "戦線斉射: 4旅団がアンデッド群集 27体へ7秒斉射。",
+        "volleying_map_tokens_observed": 3
+      },
+      "broken_images": 0,
+      "console_errors": 0,
+      "page_horizontal_overflow": false
+    }
+  },
+  "notes": [
+    "BattleFireMission is battle-only and is not persisted into StandingOrderTemplate",
+    "Line volley uses same frontline segment plus same assigned facility defenders",
+    "Visible volleying map-token count can be lower than mission unit count when map extraction only sees currently rendered/visible token text"
+  ]
+}

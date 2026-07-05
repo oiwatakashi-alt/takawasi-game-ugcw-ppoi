@@ -1,0 +1,36 @@
+{
+  "id": "takawasi-frontline-objective-support-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command selected-frontline objective support",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "mobile": "skipped - outside current target",
+    "flow": [
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle Command",
+      "Selected-frontline objective support",
+      "Withdraw",
+      "After Action",
+      "Reset campaign"
+    ],
+    "verified": [
+      "Selected-frontline panel displayed 目標連携 with 勝利地点, 補給点, and 視界点 cards.",
+      "The 視界点 card showed contested state: 視界点制圧 / 争奪 48%.",
+      "Clicking the contested 視界点 card logged 戦線目標連携: 森林左翼線の2旅団を視界点確保へ寄せる。",
+      "Selected unit standing order changed to anchor X70 Y40, 弾性防御, target priority 敵指揮, and returning-anchor behavior.",
+      "After Action showed 第1戦列歩兵大隊 and 衛戍予備歩兵大隊 as 任務 視界点確保 / 観測線を確保、敵指揮を制圧.",
+      "Officer and division command result text included 視界点確保.",
+      "Console errors were 0.",
+      "Broken images were 0.",
+      "Horizontal overflow was false at 1440px.",
+      "Campaign reset was confirmed after QA."
+    ]
+  }
+}

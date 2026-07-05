@@ -1,0 +1,47 @@
+{
+  "feature": "enemy-breakthrough-and-flanking-pressure",
+  "date": "2026-07-03",
+  "scope": "desktop-only",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command"
+    ],
+    "battleRun": {
+      "speed": "3x",
+      "sampleDurationMs": 24000,
+      "phaseCounts": {
+        "approach": 9,
+        "engaged": 2,
+        "flanking": 1
+      },
+      "visiblePhaseEvidence": [
+        "群集37 / 側面圧 / 維持",
+        "深0 側153",
+        "側面圧上昇 群集 側面圧153",
+        "アンデッド群集が森林左翼線で側面圧。深度0 / 側面圧121。"
+      ],
+      "frontlinePressureEvidence": [
+        "森林左翼線 危険 / 敵圧 1549",
+        "中央塹壕線 危険 / 敵圧 2607",
+        "右翼泥濘線 危険 / 敵圧 1364",
+        "塹壕補修線 危険 / 敵圧 1909"
+      ],
+      "lineIntegrity": "戦線維持 64%"
+    },
+    "brokenImages": [],
+    "consoleErrors": [],
+    "pageOverflow": false,
+    "mobileQa": "skipped by current product direction; mobile is no longer a current gate"
+  }
+}

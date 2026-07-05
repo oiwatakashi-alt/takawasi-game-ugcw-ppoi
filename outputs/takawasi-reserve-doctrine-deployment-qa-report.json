@@ -1,0 +1,47 @@
+{
+  "feature": "deployment-reserve-doctrine",
+  "date": "2026-07-03",
+  "scope": "desktop 1440px browser QA only; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "route": [
+    "Strategic Map",
+    "Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "checks": {
+    "deploymentUi": {
+      "visible": true,
+      "modes": ["標準予備", "反撃準備", "弾性予備", "火力予備"],
+      "selectedMode": "反撃準備",
+      "displayedEffects": "温存圧 760 / 反撃閾値 46",
+      "pageOverflow": false
+    },
+    "battleStart": {
+      "battleHudShowsDoctrine": true,
+      "hudText": "予備運用 反撃準備 / 温存圧 760 / 反撃閾値 46",
+      "battleLogIncludesDoctrine": true,
+      "initialPressureCardSample": "森林左翼線 平常 / 予備 1 / 即応 74(1)",
+      "selectedUnitSample": "第1戦列歩兵大隊 / 予備即応 24"
+    },
+    "tick": {
+      "elapsedText": "防衛時間 66/150秒",
+      "pressureCardsStillFunctional": true,
+      "sampleActions": ["弾性防御", "予備投入", "固守監視"],
+      "readinessStillVisible": true,
+      "selectedUnitReadinessSample": "予備即応 42"
+    },
+    "visualHealth": {
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": false
+    }
+  },
+  "knownGaps": [
+    "予備運用方針はDeploymentPlanに保存され、BattleStateへ反映されるが、まだ戦果報告や長期ドクトリン成長には接続していない。",
+    "次は専用予備プール UI、予備指定スロット、または将校/参謀方針による予備運用強化へ広げる余地がある。"
+  ]
+}

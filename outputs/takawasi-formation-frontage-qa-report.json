@@ -1,0 +1,93 @@
+{
+  "date": "2026-07-02",
+  "feature": "formation-frontage-fire-arc-overlap",
+  "target": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "logicSmoke": {
+    "method": "temporary esbuild source-module bundle executed from command line",
+    "initialFormations": {
+      "infantryFrontageApprox": [20, 19, 20],
+      "jaegerFrontageApprox": 24,
+      "artilleryFrontageApprox": 7,
+      "engineerFrontageApprox": 8,
+      "fireArcDegExamples": [64, 86, 38, 56],
+      "initialOverlapPressure": "mostly 0, with nearby formations around 0.15-0.24"
+    },
+    "afterTicks": {
+      "elapsedSeconds": 36,
+      "wavesSpawned": 3,
+      "enemies": 5,
+      "engagements": 7,
+      "firingUnits": 6,
+      "overlapPressureExample": {
+        "unit-infantry-2": 0.44,
+        "unit-infantry-3": 0.44
+      }
+    }
+  },
+  "browserQa": {
+    "desktop1440": {
+      "flow": "Strategic Map -> Camp -> Deployment -> Battle -> 3x tick",
+      "battleStart": {
+        "brokenImages": 0,
+        "consoleErrors": 0,
+        "pageHorizontalOverflow": false,
+        "formationLayerCount": 1,
+        "formationFrontageCount": 6,
+        "selectedFormationArcCount": 1,
+        "playerUnitCount": 6,
+        "selectedPanelText": "戦列 幅20 / 密0.9 / 重0%"
+      },
+      "after3xTick": {
+        "elapsedObjectiveText": "86/150",
+        "lineIntegrity": "75%",
+        "suppression": "19%",
+        "waves": 5,
+        "spottedEnemies": "8/10",
+        "enemies": 10,
+        "engagementLines": 8,
+        "targetingUnits": 5,
+        "crowdedFormationCount": 2,
+        "alerts": [
+          "第4歩兵 戦列過密 幅19 / 密0.9 / 重44%",
+          "第6塹壕 戦列過密 幅20 / 密0.8 / 重44%"
+        ],
+        "firstUnitCard": {
+          "target": "アンデッド群集",
+          "damage": "0.5",
+          "action": "射程内目標へ射撃",
+          "formation": "幅20 / 密0.9 / 重0%"
+        }
+      }
+    },
+    "mobile390": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentScrollWidth": 390,
+      "pageHorizontalOverflow": false,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "formationLayerCount": 1,
+      "formationFrontageCount": 6,
+      "selectedFormationArcCount": 1,
+      "selectedPanelIncludesFormationLine": true,
+      "notes": "Horizontal tactical map remained scrollable while the page itself did not overflow."
+    },
+    "cleanup": {
+      "viewportReset": true,
+      "browserReloadedToStrategicMap": true
+    }
+  },
+  "docs": {
+    "filemapUpdated": true,
+    "contextSpineUpdated": true,
+    "systemSpecUpdated": true,
+    "frontlineAutonomySpecUpdated": true,
+    "staleNotImplementedSearch": "no current true-formation-frontage not-implemented references found"
+  }
+}

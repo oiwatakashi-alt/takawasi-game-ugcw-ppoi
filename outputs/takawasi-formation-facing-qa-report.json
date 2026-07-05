@@ -1,0 +1,59 @@
+{
+  "id": "takawasi-formation-facing-2026-07-02",
+  "date": "2026-07-02",
+  "targetUrl": "http://127.0.0.1:5173/",
+  "summary": "Formation facing and oblique fire-arc slice browser QA.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop1440": {
+    "flow": [
+      "reload",
+      "reset campaign",
+      "open camp",
+      "open deployment",
+      "set selected brigade facing to 北東拒止",
+      "save standing order",
+      "start mandatory battle",
+      "verify saved facing in selected panel and brigade card",
+      "change battle-time facing to 射界南東",
+      "run battle at 3x"
+    ],
+    "verified": {
+      "deploymentSummaryContains": "射界 北東拒止",
+      "firstDeploymentSlotContains": "方針 保存済",
+      "battleInitialSelectedContains": "戦列 幅20 / 北東拒止",
+      "battleFacingButtonsInitialActive": "射界北東拒止",
+      "battleRuntimeSelectedContains": "戦列 幅20 / 南東斜行",
+      "formationFrontageLines": 6,
+      "selectedFormationArc": 1,
+      "enemyUnitsAfterTick": 3,
+      "engagementLinesAfterTick": 2,
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false,
+      "mapHorizontalOverflow": true
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "verified": {
+      "selectedPanelContains": "戦列 幅20 / 南東斜行",
+      "battleFacingButtonsActive": "射界南東",
+      "formationFrontageLines": 6,
+      "selectedFormationArc": 1,
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false,
+      "mapHorizontalOverflow": true
+    }
+  },
+  "consoleErrorsSinceRunStart": 0,
+  "notes": [
+    "Viewport override was reset after mobile verification.",
+    "Battle map horizontal overflow is expected because the tactical field is intentionally scrollable.",
+    "A duplicate React key warning from repeated battle-log text was fixed during this pass by keying log rows with index plus entry text."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "takawasi-army-camp-standing-order-ledger",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop/default in-app browser",
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "reset campaign",
+    "open Army Camp",
+    "verify empty standard-order ledger",
+    "open Deployment",
+    "start mandatory battle",
+    "run at 3x until staff advisory appears",
+    "apply one staff advisory",
+    "withdraw battle",
+    "open After Action",
+    "apply result to campaign",
+    "open next-turn Deployment",
+    "select 東方辺境猟兵隊",
+    "save lesson-derived standing order",
+    "return to Army Camp",
+    "verify standard-order ledger row",
+    "click ledger row",
+    "verify selected-unit inspector switches to 東方辺境猟兵隊",
+    "clear standard order",
+    "verify ledger returns to empty state",
+    "reset QA campaign"
+  ],
+  "verified": {
+    "emptyLedger": "保存済み標準方針なし。出撃配置または戦闘中に方針保存するとここへ並ぶ。",
+    "savedLedgerRow": "東方辺境猟兵隊 / 猟兵 / 阻止射撃 / 最大集団 / 集中射撃",
+    "ledgerClick": {
+      "selectedUnit": "東方辺境猟兵隊",
+      "lessonSummary": "戦術教訓 参謀警告1件 / 得意殺傷地帯 / 即応+4 / 統制+1 / 後退判断+2",
+      "standardOrderDescription": "殺傷地帯教訓から保存した自律指揮方針。次回主戦場の初期配置へ適用する。"
+    },
+    "afterClear": {
+      "ledgerEmpty": true,
+      "lessonStillVisible": true,
+      "savedOrderRemoved": true
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": 0,
+    "qaCampaignReset": true
+  }
+}

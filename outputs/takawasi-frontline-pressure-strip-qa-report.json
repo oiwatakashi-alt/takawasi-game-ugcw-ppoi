@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-07-03",
+  "scope": "Battle Command frontline pressure strip desktop QA",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "route": [
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command"
+  ],
+  "result": {
+    "hasBattle": true,
+    "pressureCardCount": 5,
+    "activePressureCardCountAfterEnemyWaves": 4,
+    "focusedEnemyCountAfterResponse": 1,
+    "inspectedEnemyCountAfterResponse": 1,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "unexpectedOverflowOutsideMapAndPressureScroll": 0
+  },
+  "observedPressureTexts": [
+    "森林左翼線 圧迫 / 敵圧 818 / 敵 2群 / 守備 1旅団 / 弾性防御",
+    "中央塹壕線 接敵 / 敵圧 470 / 敵 2群 / 守備 1旅団 / 固守監視",
+    "右翼泥濘線 圧迫 / 敵圧 900 / 敵 2群 / 守備 2旅団 / 弾性防御",
+    "後方砲兵線 平常 / 敵圧 0 / 敵 0群 / 守備 1旅団 / 維持",
+    "塹壕補修線 圧迫 / 敵圧 900 / 敵 2群 / 守備 1旅団 / 弾性防御"
+  ],
+  "observedLog": "戦線圧力対応: 中央塹壕線の1旅団を固守監視へ移行。衛戍予備歩兵大隊の集中射撃目標をアンデッド群集 36体へ指定。",
+  "notes": [
+    "Frontline pressure strip renders all five frontline segments before enemy contact.",
+    "After enemy waves spawn, the strip updates pressure levels, enemy counts, defenders, main threat, and recommended response.",
+    "A pressure-card response applies the recommended standing order and focus target to the responsible frontline defender.",
+    "Mobile-specific QA remains deferred by current project direction."
+  ]
+}

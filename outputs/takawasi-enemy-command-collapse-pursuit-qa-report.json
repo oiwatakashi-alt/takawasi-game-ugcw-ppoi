@@ -1,0 +1,40 @@
+{
+  "id": "takawasi-enemy-command-collapse-pursuit-qa",
+  "date": "2026-07-04",
+  "feature": "enemy-command-collapse-pursuit-usability",
+  "scope": [
+    "Battle Command enemy command-network cards show collapse-pursuit target candidates and readable reasons.",
+    "Collapse pursuit can be issued from a live battle when the target is a small group, flanking, breakthrough, overextended, disrupted, wavering, routing, regrouping, or low cohesion.",
+    "Issued collapse-pursuit duty survives into After Action as enemy-collapse-pursuit battle roles and then into next-battle tactical lessons."
+  ],
+  "codeChanges": [
+    "EnemyCommandGroupReport now carries pursuitTarget, pursuitReason, and pursuitOpportunityScore.",
+    "Battle Command derives pursuit candidates from units in the command group plus related same-label/same-target-segment enemies.",
+    "Pursuit reasons now include command collapse, routing, regrouping, wavering, breakthrough, flanking, overextension, low cohesion, and small-group cleanup.",
+    "Collapse-pursuit queue/detail text uses the same reason helper as the visible card."
+  ],
+  "verification": {
+    "build": "npm run build passed",
+    "browser": "http://127.0.0.1:5173/",
+    "viewport": "1440x900 desktop",
+    "mobileQa": "skipped; mobile is outside the current target",
+    "flow": [
+      "Reloaded app and reset campaign.",
+      "Theater -> Army Camp -> Deployment -> Battle.",
+      "Ran battle at 3x until enemy command-network cards appeared.",
+      "Stopped battle and inspected collapse-pursuit candidates.",
+      "Observed pursuit candidates such as '追撃候補 銃兵 / 小集団 / 凝集100%' and '追撃候補 群集 / 側撃 / 凝集100%'.",
+      "Clicked an enabled '崩壊追撃' command.",
+      "Observed battle log '敵指揮網対応: 第4波指揮核へ崩壊追撃。2旅団が弱敵掃討へ移行。'",
+      "Withdrew to After Action.",
+      "Observed unit result lines '任務 敵崩壊追撃 / 崩れた敵群を追撃、弱敵掃討を担当'.",
+      "Applied result and moved to next Deployment.",
+      "Selected 第4戦列歩兵大隊 and observed '戦術教訓 敵崩壊追撃1件 / 得意殺傷地帯 / 即応+1 / 統制+1'.",
+      "Pressed '教訓方針を適用' and observed '姿勢 阻止射撃 / 優先 最大集団 / 弾薬 集中射撃'."
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": "attempted after verification; Playwright click timed out on the visible reset button, so final reset state was not confirmed"
+  }
+}

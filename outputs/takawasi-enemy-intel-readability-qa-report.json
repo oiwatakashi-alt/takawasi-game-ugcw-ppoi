@@ -1,0 +1,63 @@
+{
+  "id": "takawasi-enemy-intel-readability-qa",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "scope": "Theater and Deployment enemy-intel summary cards",
+  "mobileQa": "skipped: mobile is no longer a current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopBrowserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 950
+    },
+    "steps": [
+      "Reload local app at the strategic map.",
+      "Verify Theater enemy-intel cards for the mandatory main battle and side operations.",
+      "Open camp, enter Deployment, and verify the Deployment enemy-intel card beside the wave timeline.",
+      "Check broken images, console errors, and page horizontal overflow."
+    ],
+    "observedSignals": {
+      "theater": {
+        "enemyIntelPanelCount": 5,
+        "hasMainBattleIntel": true,
+        "hasSideOperationIntel": true,
+        "samplePanels": [
+          "主戦場敵情 / 敵情信頼中 / 群集+銃兵+突破体 / 主脅威: 群集 / 数量圧 / 中",
+          "小任務敵情 / 敵情信頼低 / 群集+銃兵+突破体 / 主脅威: 群集 / 数量圧 / 大",
+          "小任務敵情 / 敵情信頼高 / 銃兵+群集+突破体 / 主脅威: 銃兵 / 射撃圧 / 中",
+          "小任務敵情 / 敵情信頼高 / 突破体+群集 / 主脅威: 突破体 / 突破圧 / 小"
+        ]
+      },
+      "deployment": {
+        "enemyIntelPanelCount": 1,
+        "hasDeploymentIntel": true,
+        "hasThreatBars": 4,
+        "hasWaveTimeline": true,
+        "samplePanel": "出撃前敵情 / 敵情信頼中 / 群集+銃兵+突破体 / 主脅威: 群集 / 数量圧 / 中"
+      }
+    },
+    "quality": {
+      "brokenImageCount": 0,
+      "consoleErrorCount": 0,
+      "pageOverflowX": false
+    }
+  },
+  "cleanup": {
+    "browserCampaignState": "reset after QA",
+    "devServer": "stopped after QA"
+  },
+  "filesCovered": [
+    "src/components/shared/EnemyIntelPanel.tsx",
+    "src/components/screens/TheaterCommandScreen.tsx",
+    "src/components/screens/DeploymentScreen.tsx",
+    "src/game/theater/enemyIntel.ts",
+    "src/styles/app.css",
+    "FILEMAP.md",
+    "docs/00_CONTEXT_SPINE.md",
+    "docs/02_GAME_SYSTEM_SPEC.md",
+    "docs/10_TACTICAL_AUTONOMY_AND_FRONTLINE.md"
+  ]
+}

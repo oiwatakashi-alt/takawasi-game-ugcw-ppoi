@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-deployment-map-click-sketch-editor",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Add Deployment tactical-preview click drawing mode for segment-scoped sketch lines",
+    "Create a 3-point sketch line from map clicks without entering Battle Command",
+    "Save the clicked sketch line into StandingOrderPlanSet.frontlineGeometry.sketchLines",
+    "Verify plan-set preview and desktop presentation quality",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Reset campaign and opened Theater -> Army Camp -> Deployment.",
+    "Clicked 地図で描画 in the selected frontline sketch editor.",
+    "Verified Deployment preview entered sketch drawing mode and showed 戦線描画 0/3.",
+    "Clicked the Deployment frontage preview at logical points X78 Y10, X28 Y88, and X96 Y48.",
+    "Verified the third click auto-confirmed the sketch line, exited drawing mode, showed 形状3点, rendered one saved overlay polyline, and showed 計画セット保存時に戦線形状 1線を含める。",
+    "Clicked 計画セット保存.",
+    "Verified the saved plan-set row included 形状1線.",
+    "Opened 内容確認 and verified 保存戦線形状 森林左翼線 3点 plus the clicked coordinate preview X78 Y10 -> X28 Y88 -> X96 Y48."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "This is click-to-place 3-point drawing on the Deployment tactical preview. It is not yet drag/freehand curve editing.",
+    "The existing button presets remain available as quick shape commands.",
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

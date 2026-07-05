@@ -1,0 +1,44 @@
+{
+  "id": "takawasi-field-hospital-evacuation-line",
+  "date": "2026-07-05",
+  "target": "desktop browser QA only",
+  "mobileQa": "skipped because cellphone/mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reset campaign",
+    "open camp",
+    "open engineering tab",
+    "build field hospital",
+    "open deployment",
+    "start selected-unit battle",
+    "run battle briefly at 3x",
+    "withdraw",
+    "open after action",
+    "apply result to camp",
+    "select 第2工兵中隊",
+    "reset campaign"
+  ],
+  "observed": {
+    "fieldHospitalBuilt": true,
+    "afterActionRescueLine": true,
+    "afterActionBonusExamples": [
+      "第2工兵中隊: 追加収容+2 / 実効収容率22% / 野戦病院支援圏 / 後退点20 / 現位置45",
+      "衛戍予備歩兵大隊: 追加収容+1 / 実効収容率18% / 野戦病院支援圏 / 後退点54 / 現位置58"
+    ],
+    "unitHistoryCarryover": "第2工兵中隊 history retained 救護線 追加収容+2/野戦病院支援圏 / 後退点20 / 現位置45",
+    "campaignResetAfterQa": true
+  },
+  "checks": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1280x720 desktop default",
+    "consoleIssues": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false,
+    "visibleSave": "save v8 visible"
+  }
+}

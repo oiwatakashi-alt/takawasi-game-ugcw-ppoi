@@ -1,0 +1,56 @@
+{
+  "feature": "Frontline mitigation after-action carryover",
+  "date": "2026-07-04",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "select 広域警戒線",
+    "click 是正方針を保存",
+    "start battle",
+    "verify mitigated orders are present in Battle",
+    "withdraw",
+    "open After Action",
+    "verify weak-line roles and commendations",
+    "apply result",
+    "select 東方辺境猟兵隊 in Army Camp",
+    "verify unit history",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "battleStart": {
+      "hasMitigatedJaeger": true,
+      "hasReserveInfantry": true
+    },
+    "afterAction": {
+      "weakLineRole": "任務 弱線是正",
+      "weakLineCommendations": [
+        "弱線を受け持つ",
+        "施設支援を活用"
+      ],
+      "supportReserveRole": "任務 弱線支援予備",
+      "supportReserveCommendation": "弱線支援予備を維持",
+      "weakLineArticle": "東方辺境猟兵隊 / 任務 弱線是正 / 弱線を受け持つ、施設支援を活用",
+      "supportReserveArticle": "第1戦列歩兵大隊 / 任務 弱線支援予備 / 弱線支援予備を維持"
+    },
+    "armyCampHistory": {
+      "selectedUnit": "東方辺境猟兵隊",
+      "standardOrderDescription": "右翼泥濘線の弱線是正から保存。地形評価59を受け、後退条件と施設/火力方針を調整した。",
+      "historyEntry": "東方辺境防衛線防衛戦: 戦闘撤退、弱線是正、永久損耗0、収容0、経験+2、装備摩耗-0.01、弱線を受け持つ・施設支援を活用"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "BattleUnit now carries deploymentMitigationRole derived from saved StandingOrderTemplate descriptions.",
+    "After Action and campaign history use the existing battleRoleByUnit and commendationsByUnit path, so the mitigation loop connects to the same growth/history system as other roles."
+  ]
+}

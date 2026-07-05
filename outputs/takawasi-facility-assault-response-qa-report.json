@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-facility-assault-response-qa",
+  "date": "2026-07-05",
+  "target": "Facility assault alert and response slice",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "3x wave observation",
+      "facility alert group response"
+    ],
+    "observed": {
+      "facilityAlertText": "塹壕線安定耐久 91/100 / 脅威0 / 襲撃3 / 修理0.2 / 担当5施設即応施設即応6部隊",
+      "facilityButtonCount": 2,
+      "raiderCount": 7,
+      "structureTargetingCount": 1,
+      "facilityAssignedUnits": 6,
+      "facilityResponseVisible": true,
+      "engineerRepairVisible": true,
+      "responseLogs": [
+        "警報一括対応: 6部隊へ施設即応を適用。",
+        "施設即応: 塹壕線へ6部隊を投入。アンデッド群集を指名。"
+      ]
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false
+    },
+    "note": "Battle collapsed under high 3x QA pressure after response verification, then campaign was reset."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

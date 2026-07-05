@@ -1,0 +1,42 @@
+{
+  "id": "takawasi-withdrawal-rearguard-officer-risk",
+  "date": "2026-07-04",
+  "target": "Withdrawal rear-guard casualties affect brigade officer risk, wound outcomes, After Action text, and officer history",
+  "environment": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "desktop app viewport",
+    "mobile": "skipped; mobile/cellphone is outside the current target"
+  },
+  "route": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "撤退後衛にする",
+    "選抜部隊で戦闘開始",
+    "撤退実行",
+    "戦果報告へ",
+    "結果を反映して幕舎へ",
+    "将校",
+    "戦役をリセット"
+  ],
+  "observations": {
+    "afterAction": [
+      "将校戦果 showed 第1戦列歩兵大隊指揮官: 後衛援護、指揮経験+3、危険度41、撤退後衛消耗、後衛損耗17、負傷なし.",
+      "将校戦果 showed 第3野戦砲兵中隊指揮官: 火力支援、指揮経験+4、危険度60、撤退後衛危険、後衛損耗7、負傷、復帰まで2ターン.",
+      "将校戦果 showed 衛戍予備歩兵大隊指揮官: 予備保持、指揮経験+4、危険度40、撤退後衛消耗、後衛損耗14、負傷なし.",
+      "After Action showed 負傷将校 1名."
+    ],
+    "officerHistory": [
+      "Officers tab history carried 指揮、経験+3、危険度41、撤退後衛消耗、後衛損耗17.",
+      "Officers tab history carried 指揮、経験+4、危険度60、撤退後衛危険、後衛損耗7、負傷."
+    ],
+    "quality": [
+      "console errors/warnings: 0",
+      "broken images: 0",
+      "horizontal overflow: false",
+      "NaN text: false",
+      "QA campaign reset afterward"
+    ]
+  },
+  "result": "pass"
+}

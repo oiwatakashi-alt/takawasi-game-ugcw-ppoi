@@ -1,0 +1,52 @@
+{
+  "id": "takawasi-standing-order-plan-set-management",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "StandingOrder plan-set management in Deployment",
+    "Preview, rename, overwrite, apply, and delete for named multi-brigade battle plans",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900 and reset the campaign.",
+    "Strategic map -> Camp -> Deployment.",
+    "Clicked 計画セット保存 and verified 戦線計画 1 appeared with 内容確認, 一括適用, 上書き, 名前編集, and 削除.",
+    "Clicked 内容確認 and verified preview details for current battlefield, frontline geometry, reserve doctrine, designated reserves, and missing units.",
+    "Renamed 戦線計画 1 to 東方標準防衛線 and verified the old name disappeared from the list.",
+    "Changed selected brigade posture to 弾性防御 and verified the plan-set preview showed 差分 1.",
+    "Clicked 上書き and verified the preview returned to 差分 0 while preserving the custom name.",
+    "Changed selected brigade back to 固守, clicked 一括適用, and verified the selected summary restored 姿勢 弾性防御.",
+    "Clicked 削除 and verified the empty plan-set copy returned.",
+    "Verified localStorage via CDP reported planSetCount 0 after deletion."
+  ],
+  "observations": [
+    "The plan-set preview showed 戦場 現主戦場, 戦線 戦区標準, 予備 標準予備, 指定予備 0保存・現行0, and 未投入なし.",
+    "Overwrite updates the stored StandingOrders from the current Deployment draft without losing the custom plan-set name.",
+    "Delete removes the plan set from persisted storage; the deleted name can still appear temporarily in the campaign message, so storage count is the authoritative deletion check."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

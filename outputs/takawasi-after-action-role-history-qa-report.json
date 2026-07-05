@@ -1,0 +1,46 @@
+{
+  "date": "2026-07-03",
+  "target": "After Action battle role and unit-history carryover / desktop 1440px",
+  "commands": [
+    "npm run build"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "flow": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "反撃準備を選択",
+    "第1戦列歩兵大隊を指定予備にする",
+    "選抜部隊で戦闘開始",
+    "3倍で27秒までtick進行",
+    "撤退",
+    "戦果報告へ",
+    "結果を反映して幕舎へ"
+  ],
+  "verified": {
+    "afterAction": {
+      "hasAfterAction": true,
+      "hasRoleRows": true,
+      "examples": [
+        "第1戦列歩兵大隊: 任務 予備保持 / 即応予備を維持",
+        "第3野戦砲兵中隊: 任務 火力支援",
+        "第2工兵中隊: 任務 工兵支援 / 陣地勤務を遂行"
+      ]
+    },
+    "campaignApplication": {
+      "isCamp": true,
+      "unitHistoryIncludesRole": true,
+      "unitHistoryExample": "東方辺境防衛線防衛戦: 戦闘撤退、予備保持、永久損耗0、収容0、経験+2、装備摩耗-0.01、即応予備を維持"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobile": "skipped by current product target"
+}

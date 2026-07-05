@@ -1,0 +1,61 @@
+{
+  "name": "takawasi enemy intelligence doctrine QA",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": "browser default"
+  },
+  "scope": "Desktop QA only. Mobile QA is outside the active target.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "scenario": {
+    "steps": [
+      "Reset campaign from the Theater UI.",
+      "Opened Camp Doctrine and verified the new 敵情分析 row.",
+      "Invested the starting doctrine point into 敵情分析.",
+      "Returned to Theater and assigned 東方辺境猟兵隊 plus ケラー to the recon side operation.",
+      "Opened Camp and Deployment, started the mandatory battle, withdrew, opened After Action, and applied the result.",
+      "Returned to Theater and inspected turn 2 initial enemy intel."
+    ],
+    "beforeInvestment": {
+      "doctrineEffectLine": "敵情分析 +0 / 教訓値+0",
+      "availablePoints": 1
+    },
+    "afterInvestment": {
+      "strategicDoctrineLabel": "敵情分析運用",
+      "strategicDoctrineSummary": "小任務判断+6、敵情分析+1/偵察教訓+6/偵察任務+4",
+      "autoResolveQuality": "小任務+10",
+      "doctrineEffectLine": "敵情分析 +1 / 教訓値+6",
+      "availablePoints": 0
+    },
+    "reconPreview": {
+      "assignedUnit": "東方辺境猟兵隊",
+      "assignedOfficer": "ケラー",
+      "preview": "精密偵察94",
+      "doctrineChip": "参謀支援+10"
+    },
+    "nextTurn": {
+      "turn": "第2戦略ターン",
+      "preparationMessage": "敵情分析班が戦区情報を整理。初期敵情+2、教訓値6。",
+      "mainEnemyLabel": "敵編成 群集+銃兵+突破体 / 偵察照合済み / 群集3-5 / 銃兵2-4 / 突破体1-3",
+      "mainSpoilsSummary": "主戦場後の敵遺棄装備を回収可能 / 参謀偵察教訓を反映"
+    }
+  },
+  "assertions": {
+    "enemyIntelligenceDoctrineVisible": true,
+    "enemyIntelligenceDoctrineInvestable": true,
+    "reconDoctrineBonusVisible": true,
+    "nextTurnInitialIntelImprovedByDoctrine": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflowX": false
+  },
+  "cleanup": {
+    "campaignResetAfterQa": true,
+    "postResetDoctrineMessageVisible": false,
+    "postResetIntelligenceDoctrineAdopted": false
+  }
+}

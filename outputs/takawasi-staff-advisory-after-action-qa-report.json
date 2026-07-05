@@ -1,0 +1,43 @@
+{
+  "date": "2026-07-04",
+  "target": "Staff advisory after-action carryover",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped: mobile is currently outside the active target",
+  "build": "npm run build passed",
+  "flow": [
+    "Theater Command",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "3x tick until frontline pressure advisories appear",
+    "Apply top staff advisory",
+    "Battle end",
+    "After Action",
+    "Apply result back to campaign"
+  ],
+  "verified": {
+    "staffAdvisoryPanelAppeared": true,
+    "exampleAdvisory": "右翼泥濘線: 殺傷地帯 / 敵圧1522 / 群集を突破前に削る",
+    "applyChangedUnitOrder": true,
+    "applyChangedTargetPriority": "優先 最大集団",
+    "applyChangedAmmoPolicy": "弾薬 集中射撃",
+    "battleLogRecorded": "参謀警告対応",
+    "afterActionStaffOutcomeShown": "右翼泥濘線で殺傷地帯を採用。群集を突破前に削る / 対応及ばず / 敵圧1522 / 戦線7%",
+    "afterActionUnitOutcomeShown": "参謀警告 右翼泥濘線 / 殺傷地帯 / 対応及ばず",
+    "xpIncludedStaffAdvisoryBonus": "東方辺境猟兵隊 経験 +3",
+    "campaignMessageIncludedStaffAdvisorySummary": true,
+    "campaignUnitHistoryPath": "src/game/campaign/applyCampaignDelta.ts records staffAdvisoryOutcomes into involved unit battleHistory"
+  },
+  "visualQa": {
+    "brokenImages": 0,
+    "desktopPageOverflow": false
+  },
+  "consoleErrors": [],
+  "notes": [
+    "Specific post-reflection unit-history browser selection was interrupted after returning to the initial campaign state, so the final unit-history assertion was confirmed by code path rather than browser text.",
+    "The gameplay result used for QA collapsed the line, so the advisory outcome label verified was 対応及ばず."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "slice": "deployment-rearguard-advisor",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "result": "passed"
+  },
+  "qa_scope": {
+    "desktop": "verified",
+    "mobile": "skipped-current-target-excludes-cellphone"
+  },
+  "flow": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "撤退後衛判断 advisor visible",
+    "advisor candidate selected",
+    "撤退後衛にする",
+    "選抜部隊で戦闘開始",
+    "戦役をリセット"
+  ],
+  "observations": {
+    "initial_advisor": {
+      "panel": "撤退後衛判断",
+      "tone": "危険",
+      "selected_unit_line": "第1戦列歩兵大隊: 適性65 / 予測損耗32 / 将校危険48",
+      "reason": "通常戦線から抽出",
+      "candidate_count": 4,
+      "candidates": [
+        "第3野戦砲兵中隊 危険 / 適性88 / 損耗8 / 将校危険54",
+        "衛戍予備歩兵大隊 危険 / 適性74 / 損耗30 / 将校危険50",
+        "第1戦列歩兵大隊 危険 / 適性65 / 損耗32 / 将校危険48",
+        "第4戦列歩兵大隊 危険 / 適性64 / 損耗31 / 将校危険49"
+      ]
+    },
+    "after_candidate_click": {
+      "selected_unit_line": "衛戍予備歩兵大隊: 適性74 / 予測損耗30 / 将校危険50",
+      "planner_changed": true
+    },
+    "after_rear_guard_assign": {
+      "deployment_count": "撤退後衛 1/3",
+      "selected_unit_line": "衛戍予備歩兵大隊: 適性96 / 予測損耗32 / 将校危険51",
+      "reason": "後衛指定済み"
+    },
+    "battle_start": {
+      "battle_log": "撤退後衛計画: 1旅団を離脱援護に指定。",
+      "rear_guard_unit": "衛戍予備歩兵大隊",
+      "battle_role": "後衛",
+      "posture": "後退守備",
+      "target_priority": "敵指揮",
+      "ammo_policy": "弾薬節約"
+    }
+  },
+  "quality": {
+    "console_errors": 0,
+    "console_warnings": 0,
+    "broken_images": 0,
+    "horizontal_overflow": false,
+    "contains_nan": false
+  }
+}

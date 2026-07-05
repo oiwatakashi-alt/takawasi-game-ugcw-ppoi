@@ -1,0 +1,57 @@
+{
+  "date": "2026-07-02",
+  "feature": "bridge-choke-pathing",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "logicSmoke": {
+    "method": "temporary esbuild source-module bundle executed from command line",
+    "sector": "アイゼンブルック鉄道集積地",
+    "terrainTags": ["bridge", "village", "trench"],
+    "frontlineProfile": ["北岸遮蔽線", "橋梁中央防衛", "南岸湿地線", "鉄道砲兵線", "架橋工兵線"],
+    "initialChokePoints": [
+      {
+        "id": "bridge-rail-crossing",
+        "name": "鉄道橋隘路",
+        "position": { "x": 63, "y": 48 },
+        "radius": 23,
+        "laneWidth": 11,
+        "flowLimit": 760,
+        "slowMultiplier": 0.62
+      }
+    ],
+    "afterTicks": {
+      "elapsedSeconds": 54,
+      "wavesSpawned": 4,
+      "chokePressure": 1763,
+      "delayPercent": 73,
+      "lineIntegrity": 76,
+      "evidence": "Enemy groups converged toward the bridge lane around y=48 before crossing westward."
+    }
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "desktop": {
+      "flow": "Strategic Map -> Camp -> Deployment -> Battle -> 3x tick",
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false,
+      "battleMapCount": 1,
+      "normalActiveFrontChokeCount": 0,
+      "notes": "Initial Active Front correctly displays 隘路 なし; existing terrain, visibility, facility, and StandingOrder UI remained stable."
+    },
+    "mobile390": {
+      "viewport": { "width": 390, "height": 844 },
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false,
+      "battleMapScrollCount": 1,
+      "overflowCandidates": []
+    },
+    "cleanup": {
+      "viewportReset": true,
+      "browserReloadedToStrategicMap": true
+    }
+  }
+}

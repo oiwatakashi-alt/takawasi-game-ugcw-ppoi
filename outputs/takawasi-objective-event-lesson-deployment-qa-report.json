@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-objective-event-lesson-deployment",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Objective-event response history into TacticalLessonProfile",
+    "Deployment tactical-lesson recommendation from objective-event-only history",
+    "Apply and save learned StandingOrder from objective-event preferred doctrine",
+    "Desktop QA only; mobile is outside current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Existing post-assessment save at 第2戦略ターン",
+    "Camp",
+    "Deployment",
+    "Select 第4戦列歩兵大隊",
+    "Apply objective-event lesson",
+    "Save objective-event lesson order",
+    "Reset QA campaign"
+  ],
+  "observations": [
+    "Deployment showed 戦術教訓 目標イベント対応1件 / 得意遅滞節約 / 即応+2 / 統制+0 / 後退判断+2.",
+    "戦術教訓推奨 showed 次戦初動は遅滞節約を推奨 with 教訓方針を適用 and 教訓方針を保存.",
+    "Applying the lesson changed the planner to 姿勢 後退守備 / 優先 敵指揮 / 弾薬 弾薬節約 / 後退 士気54.",
+    "Saving the lesson changed the slot to 方針 保存済 and listed 遅滞節約教訓から保存した自律指揮方針.",
+    "QA campaign was reset to 第1戦略ターン afterward."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed"
+}

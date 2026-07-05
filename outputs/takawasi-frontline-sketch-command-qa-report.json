@@ -1,0 +1,52 @@
+{
+  "id": "takawasi-frontline-sketch-command",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Battle Command frontline sketch mode",
+    "Two-point selected-frontline anchor/fallback reassignment",
+    "Desktop QA only; mobile is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900.",
+    "Reset campaign.",
+    "Camp -> Deployment -> Battle.",
+    "Clicked 戦線スケッチ on the selected frontline command panel.",
+    "Clicked map point X50 Y42 as the new frontline anchor.",
+    "Clicked map point X24 Y46 as the new fallback point.",
+    "Verified selected frontline coordinates, battle log, and selected unit autonomous return reason.",
+    "Reset QA campaign."
+  ],
+  "observations": [
+    "Battle log showed 森林左翼線をスケッチ更新。基準X50 Y42 / 後退X24 Y46。所属旅団は新線へ再整列。",
+    "Frontline command panel showed 基準 X50 Y42 and 後退 X24 Y46.",
+    "Selected unit summary showed the unit returning to the new frontline anchor.",
+    "Sketch mode makes map tokens, structures, and objective nodes pointer-transparent so two-point command clicks are not swallowed by tactical icons."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "This is a first two-point frontline sketch slice, not full freehand curved-line drawing.",
+    "Mobile QA skipped because current target excludes cellphone/mobile."
+  ]
+}

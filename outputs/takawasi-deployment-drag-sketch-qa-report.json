@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-deployment-drag-sketch-qa",
+  "date": "2026-07-05",
+  "target": "Deployment desktop drag freehand sketch into saved frontline geometry",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "戦役をリセット",
+      "幕舎で準備する",
+      "出撃配置へ",
+      "地図で描画",
+      "drag on deployment preview",
+      "描画確定",
+      "選抜部隊で戦闘開始",
+      "Battle Command",
+      "戦役をリセット"
+    ],
+    "observed": {
+      "draftInstruction": "クリック/ドラッグ 5/5",
+      "draftPointCount": 5,
+      "savedShapeText": "形状5点",
+      "planSetNote": "計画セット保存時に戦線形状",
+      "battleDeploymentLabel": "展開 戦区標準+手動1",
+      "battlePolylinePresent": true
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true,
+      "viewportResetAfterQa": true
+    },
+    "note": "The drag path is simplified into the existing 2-5 point FrontlineGeometryAdjustment.sketchLines format, so no save migration was needed."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

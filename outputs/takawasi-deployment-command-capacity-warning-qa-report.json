@@ -1,0 +1,46 @@
+{
+  "name": "takawasi deployment command capacity warning QA",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x1000",
+  "mobileQa": "skipped intentionally; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "load app",
+    "reset campaign",
+    "open Camp",
+    "open Deployment",
+    "verify command-capacity ledger summary",
+    "verify selected deployment slots show command capacity",
+    "verify overload warning box",
+    "start mandatory battle",
+    "verify Battle Command still displays applied capacity summary"
+  ],
+  "checks": {
+    "deploymentHasLedgerCapacity": true,
+    "deploymentHasWarning": true,
+    "capacitySlotCount": 6,
+    "deploymentHasPlannerOfficerSummary": true,
+    "battleStillHasCapacity": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "observedText": {
+    "ledger": "指揮容量 / 過負荷 1旅団 / 最大110",
+    "slots": [
+      "第1戦列歩兵大隊 / 指揮容量 760/810",
+      "第4戦列歩兵大隊 / 指揮容量 690/840",
+      "東方辺境猟兵隊 / 指揮容量 280/490"
+    ],
+    "warning": "指揮過負荷警告 / 第6塹壕歩兵大隊: 640/530 過負荷110"
+  },
+  "notes": [
+    "Deployment now previews the same officer command profile used by battle creation.",
+    "The warning is advisory. Starting battle remains possible so QA and player experimentation are not blocked.",
+    "The warning explains that overload affects morale, condition, control radius, reserve readiness, and fallback timing."
+  ]
+}

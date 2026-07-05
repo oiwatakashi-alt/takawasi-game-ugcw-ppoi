@@ -1,0 +1,89 @@
+{
+  "feature": "Battle Command tactical map layer controls",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped: mobile is not a current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "reset campaign from UI",
+    "Theater -> Army Camp -> Deployment -> Battle",
+    "verify tactical map layer control panel",
+    "toggle frontlines, orders, terrain/objectives, and facilities off",
+    "verify facility command mode forces structures visible even when facility layer is off",
+    "restore all layers, run battle at 1x, and verify live target-audit/enemy-assault layers",
+    "toggle target-audit layer off",
+    "reset QA campaign from UI"
+  ],
+  "verified": {
+    "layerControlPanelVisible": true,
+    "initialLayerButtons": [
+      "戦線",
+      "指揮圏",
+      "射撃判断",
+      "隊形",
+      "敵突撃",
+      "交戦線",
+      "地形/目標",
+      "施設"
+    ],
+    "legendLabels": [
+      "射撃可",
+      "遮断",
+      "射程外",
+      "交戦",
+      "突撃軸"
+    ],
+    "toggleOffState": {
+      "summary": "戦術表示4/8 表示",
+      "inactiveButtons": [
+        "戦線",
+        "指揮圏",
+        "地形/目標",
+        "施設"
+      ],
+      "frontlineSegments": 0,
+      "assignmentLayer": 0,
+      "mapStructures": 0,
+      "terrainCallouts": 0,
+      "objectiveNodes": 0,
+      "formationLayerStillVisible": 1,
+      "engagementLayerStillVisible": 1
+    },
+    "facilityCommandForcesStructureVisibility": {
+      "facilityLayerButtonActive": false,
+      "structuresVisible": 1,
+      "commandHint": "第1戦列歩兵大隊に担当させる施設をクリック"
+    },
+    "allLayersRestored": {
+      "summary": "戦術表示8/8 表示",
+      "activeButtonCount": 8
+    },
+    "runningBattleLayers": {
+      "targetAuditLayer": 1,
+      "targetAuditLines": 1,
+      "targetAuditLabels": [
+        "射界外/遠距離"
+      ],
+      "enemyAssaultSets": 5,
+      "structures": 1,
+      "terrainCallouts": 3
+    },
+    "targetAuditToggleOff": {
+      "targetAuditButtonActive": false,
+      "targetAuditLayer": 0,
+      "targetAuditLines": 0,
+      "battleStillVisible": true
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  }
+}

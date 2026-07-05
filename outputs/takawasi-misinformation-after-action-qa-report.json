@@ -1,0 +1,48 @@
+{
+  "slice": "misinformation-after-action-lesson-loop",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "force mandatoryBattle enemyCompositionIntel.reconEffect=misleading in localStorage",
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle",
+      "run around 34 battle seconds",
+      "Withdraw",
+      "After Action",
+      "Apply result to Camp",
+      "Officers"
+    ],
+    "observed": {
+      "beforeWithdrawObjective": "防衛時間 34/150秒 / 戦線維持 43% / 敵制圧 1% / 敵波 5 / 波計画 敵波情報に誤情報疑い / 実波要警戒 / 実波警戒 誤情報補正: 実波間隔8秒 / 指揮波95%へ悪化 / 視界 76 / 発見 10/17",
+      "afterActionIntelReview": [
+        "敵情評価",
+        "敵情誤認: 誤情報補正: 実波間隔8秒 / 指揮波95%へ悪化",
+        "予測波3に対して実波5、追加圧力2波。",
+        "教訓記録 1名"
+      ],
+      "campaignMessageIncludesIntelFailure": true,
+      "officerLessonHistory": "東方辺境防衛線防衛戦: 敵情誤認対応、偵察教訓を記録"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "per-staff-slot blame attribution",
+    "doctrine or staff upgrades unlocked by repeated misinformation lessons",
+    "richer enemy-intel UI affordances beyond compact text ranges"
+  ]
+}

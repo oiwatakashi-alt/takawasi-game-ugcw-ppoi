@@ -1,0 +1,43 @@
+{
+  "feature": "Battle Command target audit map lines",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "flow": [
+    "open app at http://127.0.0.1:5173/",
+    "Theater Command -> Army Camp -> Deployment -> Battle",
+    "select East Border Jaeger brigade on the tactical map",
+    "run battle at 1x until spotted enemies enter or approach Jaeger range",
+    "verify target-audit-map-layer renders selected-brigade candidate lines",
+    "click enabled fireable candidate in target audit panel",
+    "verify the candidate becomes 指名目標 and the map line receives focused styling",
+    "pause and reset QA campaign"
+  ],
+  "verified": {
+    "targetAuditMapLayerVisible": true,
+    "lineCount": 5,
+    "acceptedLineCount": 1,
+    "focusedLineCountAfterCandidateClick": 1,
+    "outOfRangeLineCount": 2,
+    "labelTexts": [
+      "指名目標",
+      "射撃可能",
+      "射撃可能",
+      "射界外/遠距離",
+      "射界外/遠距離"
+    ],
+    "focusTargetVisible": "集中 アンデッド群集",
+    "battleStillRunningAfterCandidateClick": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  }
+}

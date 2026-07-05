@@ -1,0 +1,72 @@
+{
+  "id": "takawasi-staff-intelligence-directive-qa",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "scope": "Doctrine screen per-turn staff intelligence directive, recon preview, and next strategic-turn intel preparation",
+  "mobileQa": "skipped: mobile is no longer a current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopBrowserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 950
+    },
+    "steps": [
+      "Reset campaign and open Camp -> Doctrine.",
+      "Verify initial staff directive board shows 標準参謀整理 and all directive choices.",
+      "Select 敵情分析 directive.",
+      "Verify Doctrine support summary changes to 小任務+8 and 敵情分析 +1 / 教訓値+4.",
+      "Assign 東方辺境猟兵隊 and ケラー to the recon side operation.",
+      "Verify recon preview shows 精密偵察92 and 参謀支援+8.",
+      "Enter Deployment, start the mandatory battle, withdraw, apply After Action, and return to the strategic map.",
+      "Verify turn 2 strategic generation uses the selected directive."
+    ],
+    "observedSignals": {
+      "initialDirectiveBoard": [
+        "ターン参謀任務",
+        "標準参謀整理",
+        "敵情分析",
+        "防諜警戒",
+        "兵站偵察",
+        "工兵測量"
+      ],
+      "selectedDirective": "敵情分析",
+      "doctrineSummary": [
+        "小任務+8",
+        "敵情分析 +1 / 教訓値+4"
+      ],
+      "rawModeLeak": false,
+      "reconPreview": [
+        "精密偵察92",
+        "参謀支援+8"
+      ],
+      "nextTurnLine": "第2戦略ターン",
+      "nextTurnPreparationMessage": "敵情分析班が戦区情報を整理。初期敵情+2、教訓値4。",
+      "nextTurnMainEnemyLabel": "敵編成 群集+銃兵+突破体 / 偵察照合済み / 群集3-5 / 銃兵2-4 / 突破体1-3",
+      "hasConfirmedIntel": true
+    },
+    "quality": {
+      "brokenImageCount": 0,
+      "consoleErrorCount": 0,
+      "pageOverflowX": false
+    }
+  },
+  "cleanup": {
+    "browserCampaignState": "reset after QA",
+    "devServer": "stopped after QA"
+  },
+  "filesCovered": [
+    "src/game/doctrine/types.ts",
+    "src/game/doctrine/applyDoctrine.ts",
+    "src/game/campaign/createCampaign.ts",
+    "src/app/App.tsx",
+    "src/components/screens/DoctrineScreen.tsx",
+    "src/styles/app.css",
+    "FILEMAP.md",
+    "docs/00_CONTEXT_SPINE.md",
+    "docs/02_GAME_SYSTEM_SPEC.md",
+    "docs/10_TACTICAL_AUTONOMY_AND_FRONTLINE.md"
+  ]
+}

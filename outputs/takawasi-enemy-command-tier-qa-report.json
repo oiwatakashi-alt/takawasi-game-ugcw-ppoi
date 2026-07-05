@@ -1,0 +1,57 @@
+{
+  "id": "takawasi-enemy-command-tier-qa",
+  "date": "2026-07-05",
+  "target": "Enemy command tiers in Battle Command",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "戦役をリセット",
+      "幕舎で準備する",
+      "出撃配置へ",
+      "選抜部隊で戦闘開始",
+      "3倍",
+      "wait for command waves",
+      "inspect command-network card text",
+      "戦役をリセット"
+    ],
+    "observed": {
+      "elapsed": "防衛時間 61/150秒",
+      "commandPanelVisible": true,
+      "commandCardTierExamples": [
+        "階梯 突撃先導2",
+        "階梯 支援節1",
+        "階梯 前衛群1"
+      ],
+      "enemyLabelTierExamples": [
+        "波指揮核",
+        "突撃先導",
+        "支援節",
+        "前衛群"
+      ],
+      "commandLabels": [
+        "第2波指揮核",
+        "陣地突破"
+      ]
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true,
+      "viewportResetAfterQa": true
+    },
+    "note": "Enemy command tier is battle-runtime state only; no save migration was needed."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

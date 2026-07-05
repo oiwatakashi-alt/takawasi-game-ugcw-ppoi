@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "battle-spoils-and-equipment-wear",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": "camp -> deployment -> battle -> 3x tick -> withdraw -> after action -> apply result -> camp",
+    "afterAction": {
+      "hasReport": true,
+      "hasSpoils": true,
+      "hasEquipmentWear": true,
+      "spoilsText": "戦利品 針撃銃 +7 / 猟兵銃 +2 / 工兵器材 +1"
+    },
+    "campaignApply": {
+      "returnedToCamp": true,
+      "weaponStockUpdated": true,
+      "unitHistoryHasEquipmentWear": true,
+      "sampleUnitQuality": "品質 0.99 -> 1.00 / 在庫 2407"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "mobile": {
+    "viewport": "390x900",
+    "screen": "camp after applying battle result",
+    "hasCamp": true,
+    "hasDreyseStockText": true,
+    "hasEquipmentWearHistory": true,
+    "visibleButtons": 21,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  }
+}

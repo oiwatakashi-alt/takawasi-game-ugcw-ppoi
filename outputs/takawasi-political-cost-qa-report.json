@@ -1,0 +1,49 @@
+{
+  "slice": "staff-division-political-cost",
+  "date": "2026-07-03",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "mobileQa": "skipped: mobile is not a current target",
+    "flow": [
+      "reload",
+      "reset campaign",
+      "open Army Camp",
+      "verify political cost labels on staff/division commander selects",
+      "assign Keller as chief of staff",
+      "assign Arnheim as 1st division commander",
+      "verify reputation spend and UI state"
+    ],
+    "observed": {
+      "initialReputation": "威信 52",
+      "initialPoliticalPanel": "政治余力\n威信 52",
+      "selectCount": 8,
+      "costLabelsVisible": true,
+      "oldNameLabelPresent": false,
+      "finalReputation": "威信 42",
+      "finalPoliticalPanel": "政治余力\n威信 42",
+      "lastCostLine": "アルンハイムを第1師団師団長へ任命。威信-5。",
+      "chiefOfStaffChangedToKeller": true,
+      "firstDivisionCommanderChangedToArnheim": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Staff assignment changes now estimate and spend reputation as political cost.",
+    "Division commander changes now estimate and spend reputation as political cost.",
+    "No-op assignment changes cost 0 reputation.",
+    "UI option labels show candidate-specific political cost.",
+    "App rejects unaffordable political changes with a Japanese feedback message.",
+    "Existing reputation label is kept as 威信 across ResourceBar, Army Camp, and feedback messages."
+  ],
+  "deferred": [
+    "Deeper political-event backlash, officer loyalty, cabinet approval, and long-term promotion politics remain later work.",
+    "Staff/division replacement recommendation scoring remains later work."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "feature": "battle-alert-recommendation-command",
+  "date": "2026-07-03",
+  "environment": {
+    "url": "http://127.0.0.1:5173/",
+    "browser": "in-app browser",
+    "buildCommand": "npm run build"
+  },
+  "changesVerified": {
+    "alertCardsHaveRecommendationButtons": true,
+    "mainAlertClickAndRecommendationClickAreSeparated": true,
+    "recommendationsUseExistingStandingOrderCommands": true,
+    "appliedRecommendationLogUsesActualAppliedCommand": true,
+    "relevantUnitSelectionFromAlert": true
+  },
+  "desktop": {
+    "flow": [
+      "戦略キャンペーンマップ",
+      "幕舎",
+      "出撃配置",
+      "戦闘開始",
+      "3倍で敵波警報を発生",
+      "警報カードの推奨対応をクリック"
+    ],
+    "alertActionsObserved": [
+      "阻止射撃へ",
+      "敵指揮優先"
+    ],
+    "result": {
+      "selectedUnit": "第4戦列歩兵大隊",
+      "activePreset": "阻止射撃",
+      "targetPriority": "大型敵",
+      "ammoPolicy": "集中射撃",
+      "battleLog": "警報対応: 第4戦列歩兵大隊へ阻止射撃を適用。"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": 0
+  },
+  "mobile390": {
+    "viewport": "390x900",
+    "alertActionsObserved": [
+      "阻止射撃へ",
+      "敵指揮優先",
+      "後退守備へ",
+      "弾性防御へ"
+    ],
+    "actionButtonSizeSample": {
+      "widthPx": 73,
+      "heightPx": 34
+    },
+    "selectedPanelStacksVertically": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": 0
+  },
+  "knownLimitations": [
+    "Recommendation shortcuts are preset-based; they do not yet open a deeper command planner.",
+    "The tactical map remains intentionally horizontally scrollable on mobile."
+  ]
+}

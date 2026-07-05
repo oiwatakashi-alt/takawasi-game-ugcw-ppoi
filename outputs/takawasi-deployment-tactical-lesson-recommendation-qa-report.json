@@ -1,0 +1,49 @@
+{
+  "feature": "deployment-tactical-lesson-recommendation",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "warning": "Vite chunk size warning remains for index bundle over 500 kB"
+  },
+  "flow": [
+    "reset campaign from UI",
+    "Theater -> Army Camp -> Deployment -> Battle",
+    "run battle at 3x until staff advisory appears",
+    "apply `中央塹壕線: 殺傷地帯`",
+    "withdraw, open After Action, apply result",
+    "open next-turn Deployment",
+    "select `第4戦列歩兵大隊`",
+    "apply `教訓方針を適用`",
+    "reset campaign from UI after QA"
+  ],
+  "checks": [
+    {
+      "step": "After Action lesson source",
+      "status": "passed",
+      "evidence": "After Action displayed `次戦教訓`, including `第4戦列歩兵大隊: 次戦教訓 参謀警告1件 / 得意殺傷地帯 / 即応+5 / 統制+2`."
+    },
+    {
+      "step": "Deployment lesson recommendation",
+      "status": "passed",
+      "evidence": "Next-turn Deployment selected `第4戦列歩兵大隊` and displayed `戦術教訓推奨`, `戦術教訓 参謀警告1件 / 得意殺傷地帯 / 即応+5 / 統制+2`, and `次戦初動は殺傷地帯を推奨`."
+    },
+    {
+      "step": "Apply lesson doctrine",
+      "status": "passed",
+      "evidence": "`教訓方針を適用` changed the planner summary to `姿勢 阻止射撃`, `優先 最大集団`, `弾薬 集中射撃`, and `後退 士気34`."
+    },
+    {
+      "step": "layout and runtime health",
+      "status": "passed",
+      "evidence": "Broken images 0, console errors 0, document horizontal overflow false."
+    }
+  ],
+  "result": "passed"
+}

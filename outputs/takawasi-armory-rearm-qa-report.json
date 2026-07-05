@@ -1,0 +1,34 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "armory-rearm-and-equipment-quality",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "viewport": "default",
+    "checks": [
+      "Army Camp selected-unit inspector shows rearm estimate and rearm button.",
+      "Armory shows per-unit rearm estimate rows for selected weapon class.",
+      "Rearming 第4戦列歩兵大隊 consumes 28 Dreyse rifles from stock.",
+      "Dreyse stock changes from 2400 to 2372.",
+      "第4戦列歩兵大隊 weapon quality changes from 0.96 to 1.00.",
+      "Campaign top message reports the rearm action in Japanese."
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "mobile": {
+    "viewport": "390x900",
+    "checks": [
+      "Armory shows rearm estimate rows.",
+      "Armory shows rearm buttons without page horizontal overflow.",
+      "Updated stock and quality remain readable after reload."
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "slice": "misinformation-wave-surprise-consequence",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "force mandatoryBattle enemyCompositionIntel.reconEffect=misleading in localStorage",
+      "Strategic Map",
+      "Camp",
+      "Deployment",
+      "Battle",
+      "set speed 3x if available",
+      "wait around 12 real seconds"
+    ],
+    "observed": {
+      "deploymentSummary": "敵波情報に誤情報疑い / 実波要警戒",
+      "initialBattleObjective": "防衛時間 0/150秒 / 戦線維持 100% / 敵制圧 0% / 敵波 0 / 波計画 敵波情報に誤情報疑い / 実波要警戒 / 実波警戒 誤情報補正: 実波間隔8秒 / 指揮波95%へ悪化 / 視界 76 / 発見 0/0",
+      "initialLogHasWarning": true,
+      "afterBattleObjective": "防衛時間 34/150秒 / 戦線維持 43% / 敵制圧 1% / 敵波 5 / 波計画 敵波情報に誤情報疑い / 実波要警戒 / 実波警戒 誤情報補正: 実波間隔8秒 / 指揮波95%へ悪化 / 視界 76 / 発見 10/17",
+      "battleTimelineText": "第1波 時刻不明 接近 誤情報疑い / 第2波 時刻不明 接近 誤情報疑い / 第3波 時刻不明 強圧 誤情報疑い / 第4波 時刻不明 強圧 誤情報疑い",
+      "hasSurpriseLog": true
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "post-battle staff/recon blame and lesson events",
+    "enemy misinformation variants beyond faster and stronger waves",
+    "richer enemy-intel UI affordances beyond compact text ranges"
+  ]
+}

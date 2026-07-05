@@ -1,0 +1,58 @@
+{
+  "id": "takawasi-objective-event-assessment-reasons",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Objective-event response assessment reasons in After Action",
+    "Objective-event lesson tags in After Action",
+    "Objective-event lesson tags carried into unit history and tactical lessons",
+    "Desktop QA only; mobile is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened the app at 1440x900.",
+    "Reset the campaign.",
+    "Clicked 幕舎で準備する.",
+    "Clicked 出撃配置へ.",
+    "Clicked 選抜部隊で戦闘開始.",
+    "Set battle speed to 3倍 and waited for objective-event alerts.",
+    "Clicked 視界点奪回・観測復旧 from the 視界点: 観測点沈黙 alert.",
+    "Opened 戦果報告へ.",
+    "Verified After Action objective-event assessment reason and lesson tag.",
+    "Applied the result to Army Camp.",
+    "Selected 第4戦列歩兵大隊 and verified the carried objective-event lesson.",
+    "Reset the QA campaign."
+  ],
+  "observations": [
+    "After Action included 目標イベント対応.",
+    "After Action included the assessment reason 到着が遅く目標圏外に留まった.",
+    "After Action included 教訓 到着遅延.",
+    "Army Camp selected-unit view showed the carried lesson as 目標イベント対応1件 / 得意遅滞節約.",
+    "The initial Army Camp selection did not show the target history because it selected a different brigade; selecting the responding brigade exposed the expected carried lesson."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Browser DOM snapshot was unavailable in this in-app browser environment in a previous pass, so QA used unique button locators and read-only DOM evaluation through the documented browser API.",
+    "Mobile QA was intentionally skipped because the current goal excludes cellphone/mobile support."
+  ]
+}

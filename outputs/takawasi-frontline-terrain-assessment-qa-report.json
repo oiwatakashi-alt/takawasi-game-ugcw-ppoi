@@ -1,0 +1,52 @@
+{
+  "feature": "Frontline terrain assessment",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped - mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning remains non-blocking and pre-existing."
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "verify Deployment frontline terrain assessment cards",
+    "選抜部隊で戦闘開始",
+    "verify Battle selected-frontline terrain readout",
+    "return to normal URL and reset campaign"
+  ],
+  "deploymentSignals": {
+    "assessmentCardCount": 5,
+    "examples": [
+      "森林左翼線 / 森林遮蔽 / 塹壕防衛 / 施設防衛 / 評価96 / 推奨 戦線固守",
+      "中央塹壕線 / 森林遮蔽 / 塹壕防衛 / 施設防衛 / 評価96 / 推奨 戦線固守",
+      "右翼泥濘線 / 塹壕防衛 / 施設防衛 / 評価82 / 推奨 戦線固守"
+    ],
+    "previewSmallTextsVisible": true,
+    "hasSuggestedDoctrine": true,
+    "hasTerrainScore": true
+  },
+  "battleSignals": {
+    "selectedFrontline": "森林左翼線",
+    "frontlinePanelIncludes": "地形評価 96 / 森林遮蔽 / 塹壕防衛 / 施設防衛 / 評価96",
+    "terrainReadout": "地形判断 火力1 / 遮蔽9 / 機動リスク0 / 施設2",
+    "terrainReason": "森林遮蔽帯で遮蔽端射撃を作れる。塹壕掩体線で主線を保持しやすい",
+    "terrainCallouts": [
+      "森林遮蔽帯 移動72% / 射線遮蔽 / 遮蔽端",
+      "泥濘低地 移動48% / 射線減衰",
+      "塹壕掩体線 移動72% / 射線減衰 / 遮蔽端"
+    ]
+  },
+  "health": {
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  }
+}

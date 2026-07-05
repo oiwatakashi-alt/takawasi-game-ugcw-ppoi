@@ -1,0 +1,53 @@
+{
+  "feature": "deployment_rearguard_plan",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped: cellphone/mobile is outside the current target",
+  "steps": [
+    "reset campaign",
+    "campaign map -> camp -> deployment",
+    "mark selected brigade as withdrawal rear guard",
+    "start selected-unit battle",
+    "verify battle log and battle unit card reflect rear-guard plan",
+    "withdraw immediately",
+    "open after action",
+    "apply result back to camp",
+    "reset campaign after QA"
+  ],
+  "observed": {
+    "deploymentUi": [
+      "Deployment ledger showed withdrawal rear guard count 0/3 before assignment.",
+      "Planner action button showed 撤退後衛にする.",
+      "After assignment, selected brigade card gained rear-guard-planned styling and the button changed to 後衛指定を解除.",
+      "The campaign message displayed 出撃戦線を戦区標準、予備運用を標準予備、指定予備0旅団、撤退後衛1旅団に調整した。"
+    ],
+    "battle": [
+      "Battle log included 撤退後衛計画: 1旅団を離脱援護に指定。",
+      "Selected 第1戦列歩兵大隊 started on 後方砲兵線 with posture 後退守備, target priority 敵指揮, ammo policy 弾薬節約, and reserve readiness 81."
+    ],
+    "afterAction": [
+      "After immediate withdrawal, After Action showed 撤退後衛.",
+      "Summary showed 後衛3部隊が追撃被害39相当を抑止。追撃圧18。",
+      "The planned 第1戦列歩兵大隊 appeared as 後衛援護 / 追撃被害12抑止.",
+      "Per-unit result included 撤退後衛 後衛援護 / 追撃被害12抑止 / 後衛援護 / 即応81 / 弾薬93 / 士気85."
+    ],
+    "campaignCarryover": [
+      "Applying result returned to Army Camp.",
+      "Last message carried 後衛3部隊が追撃被害39相当を抑止。追撃圧18。",
+      "Unit history contained 撤退後衛 and 追撃被害12抑止.",
+      "Visible save version was 保存 v8."
+    ]
+  },
+  "checks": {
+    "npmRunBuild": "passed",
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "containsNaN": false,
+    "campaignResetAfterQa": true
+  }
+}

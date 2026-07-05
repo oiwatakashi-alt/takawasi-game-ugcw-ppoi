@@ -1,0 +1,55 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "side-operation-unit-officer-assignment",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "initialTheater": {
+      "hasAssignmentLabels": true,
+      "hasForcePicker": true,
+      "operationCount": 4,
+      "pickerCount": 4,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "assignRecon": {
+      "unit": "東方辺境猟兵隊",
+      "autoOfficer": "ケラー",
+      "hasReconPreview": true,
+      "preview": "精密偵察90",
+      "selectedButtons": ["東方辺境猟兵隊", "ケラー"]
+    },
+    "autoResolveRecon": {
+      "outcome": "success",
+      "hasQualityMessage": true,
+      "hasRevisedIntel": true,
+      "revisedIntel": "偵察90 / 精密照合 / 回収効率 x1.16"
+    },
+    "assignRaidAndResolve": {
+      "unit": "第1戦列歩兵大隊",
+      "autoOfficer": "フォス",
+      "resolved": true
+    },
+    "deployment": {
+      "hasResolvedSideOperationImpact": true,
+      "excludesReconUnit": true,
+      "excludesRaidUnit": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  },
+  "mobile390": {
+    "theater": {
+      "hasOperationCards": true,
+      "hasForcePickerOrResolved": true,
+      "hasButtons": true,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  }
+}

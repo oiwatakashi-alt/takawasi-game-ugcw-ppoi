@@ -1,0 +1,39 @@
+{
+  "id": "takawasi-enemy-command-group-actions-qa",
+  "date": "2026-07-04",
+  "target": "Enemy command-network group actions through paused command queue",
+  "viewport": "desktop 1440x900",
+  "mobileQa": "skipped intentionally; mobile is outside the current active target",
+  "flow": [
+    "Reset campaign",
+    "Strategic Map -> Camp -> Deployment -> Battle",
+    "Enable queue mode before running the battle",
+    "Run at 3x until enemy command-network summary appears",
+    "Stop battle",
+    "Queue first command group 指揮核射撃",
+    "Queue first command group 予備投入",
+    "Apply queued commands with 一括発令",
+    "Reset campaign after QA"
+  ],
+  "observations": {
+    "panel": "敵指揮網4群, later 5群, with buttons 詳細 / 指揮核射撃 / 崩壊追撃 / 予備投入",
+    "pursuitButton": "崩壊追撃 disabled while the inspected command group had no disrupted/routing/wavering/overextended target",
+    "queuedCommands": [
+      "#1 第4波指揮核 指揮核射撃 / 敵指揮 / 2旅団 / 中央塹壕線",
+      "#2 第4波指揮核 指揮網へ予備投入 / 中央塹壕線 / 予備1旅団 / 群集"
+    ],
+    "applyLog": "予約指揮: 2件を一括発令",
+    "fireMission": "戦線斉射 敵指揮体 / 5旅団 / 残り9秒 / 軍団斉射規律"
+  },
+  "checks": {
+    "npmRunBuild": "passed",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "campaignResetAfterQa": true
+  },
+  "notes": [
+    "The command group panel itself was verified before queueing.",
+    "Battle pressure was high during the test, but the target of this pass was command queue integration, not battle outcome balancing."
+  ]
+}

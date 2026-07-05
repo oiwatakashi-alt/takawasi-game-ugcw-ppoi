@@ -1,0 +1,50 @@
+{
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "weapon-switching-and-armory-choice",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": "reset -> camp -> armory -> select improved rifle -> switch first infantry -> army camp -> deployment -> battle",
+    "armory": {
+      "hasReserveRifle": true,
+      "hasImprovedRifle": true,
+      "switchResult": "第1戦列歩兵大隊を改良針撃銃へ換装",
+      "improvedRifleStock": "620 -> 50",
+      "dreyseStock": "2400 -> 2871",
+      "selectedUnitRow": "第1戦列歩兵大隊 / 現装 改良針撃銃 / 品質 1.16 / 再装備見積 必要0 / 在庫50"
+    },
+    "armyCamp": {
+      "equipmentInspector": "装備 改良針撃銃 / 射程 36 / 火力 1.12 / 品質 1.16 / 在庫 50",
+      "historyHasSwitch": true
+    },
+    "battle": {
+      "firstUnitWeapon": "改良針撃銃",
+      "firstUnitRange": 36,
+      "battleUnitCards": 6
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "mobile": {
+    "viewport": "390x900",
+    "battle": {
+      "hasImprovedRifleRange": true,
+      "battleUnitCards": 6,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "armory": {
+      "hasNewWeapons": true,
+      "selectedImprovedRifle": true,
+      "hasSwitchButtons": true,
+      "visibleButtons": 18,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "consoleErrors": 0
+  }
+}

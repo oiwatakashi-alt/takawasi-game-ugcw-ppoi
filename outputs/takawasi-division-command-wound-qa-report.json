@@ -1,0 +1,53 @@
+{
+  "slice": "division-command-wound",
+  "date": "2026-07-03",
+  "target": "desktop 1440px only; mobile QA intentionally skipped",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "implemented": [
+    "BattleResult.divisionCommanderWoundedOfficerIds stores division-command wound officer ids separately from brigade-command wound ids.",
+    "createBattleResult derives division-command wounds from outcome, casualty pressure, risk, and low-state subordinate brigade count, and appends 指揮所負傷 to the division commander event when thresholds are crossed.",
+    "AfterActionScreen counts brigade and division wounds as a unique officer set, avoiding double-counting officers who hold both brigade and division roles.",
+    "applyBattleResult treats division-command wounds as real officer wounds, setting status/recovery and writing 指揮所負傷 into the division-command officer history line."
+  ],
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "flow": [
+      "reset campaign",
+      "open Army Camp",
+      "open Deployment",
+      "start Battle",
+      "run 3x tick briefly",
+      "withdraw",
+      "open After Action",
+      "apply result",
+      "open Officers"
+    ],
+    "observed": {
+      "afterActionDivisionLines": [
+        "第1師団師団長 フォス: 6旅団統制、戦線固守・火力支援・工兵支援、師団指揮経験+6、危険度12",
+        "第2師団師団長 ヴェーバー: 1旅団統制、予備保持、師団指揮経験+3、危険度12"
+      ],
+      "officerHistoryLines": [
+        "東方辺境防衛線防衛戦: 第1師団師団指揮、経験+6、危険度12",
+        "東方辺境防衛線防衛戦: 第2師団師団指揮、経験+3、危険度12"
+      ],
+      "commandPostWoundInSmokePath": false,
+      "note": "The short withdrawal smoke path stayed below the deterministic division-command wound threshold, so it verified non-regression and no accidental wound firing rather than naturally triggering 指揮所負傷."
+    },
+    "checks": {
+      "afterActionShowsDivisionCommand": true,
+      "officersRetainDivisionCommandHistory": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "knownQaLimit": "A natural high-pressure browser run was not forced in this pass; the high-risk wound branch is implemented in source and will trigger when the deterministic risk thresholds are reached."
+}

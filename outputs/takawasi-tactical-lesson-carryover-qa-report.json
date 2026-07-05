@@ -1,0 +1,31 @@
+{
+  "date": "2026-07-04",
+  "target": "Tactical lesson carryover from staff advisory history",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped: mobile is currently outside the active target",
+  "build": "npm run build passed",
+  "qaSetup": [
+    "Reset localStorage save",
+    "Reloaded app to create a clean save envelope",
+    "Injected a single first-unit battleHistory entry containing 参謀警告対応 右翼泥濘線/殺傷地帯/対応及ばず through the local dev tab",
+    "Reloaded app and followed Theater -> Army Camp -> Deployment -> Battle"
+  ],
+  "verified": {
+    "deploymentShowsLessonSummary": "戦術教訓 参謀警告1件 / 即応+3 / 統制+1 / 後退判断+3",
+    "battleLogShowsLessonSummary": true,
+    "battleSelectedPanelShowsLessonSummary": true,
+    "reserveReadinessApplied": "第1歩兵 即応56",
+    "controlRadiusApplied": "基準 X34 Y23 / 半径22",
+    "fallbackMoraleApplied": "後退 士気35以下",
+    "otherUnitsShowNoLessonFallback": "戦術教訓なし",
+    "qaSaveCleanedAfterRun": true
+  },
+  "visualQa": {
+    "brokenImages": 0,
+    "desktopPageOverflow": false
+  },
+  "consoleErrors": []
+}

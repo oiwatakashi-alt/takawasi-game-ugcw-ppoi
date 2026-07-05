@@ -1,0 +1,40 @@
+{
+  "feature": "Battle Command selected-unit target audit panel",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "flow": [
+    "reset campaign",
+    "Theater Command -> Army Camp -> Deployment -> Battle",
+    "select East Border Jaeger brigade on the tactical map",
+    "run battle at 1x until a spotted enemy enters Jaeger range",
+    "verify target audit panel lists fireable and non-fireable enemy candidates",
+    "click the enabled fireable mob candidate from the audit list",
+    "verify the candidate becomes marked as 指名目標 and selected brigade shows 集中 アンデッド群集"
+  ],
+  "verified": {
+    "panelVisible": true,
+    "emptyStateVisibleBeforeEnemyContact": true,
+    "showsAcceptedTarget": "採用候補 群集 / 優先最接近 / 射程45",
+    "showsFallbackMargin": "士気余裕 / 兵力余裕 / 弾薬余裕",
+    "showsFacilityStatus": true,
+    "disabledInvalidCandidates": true,
+    "enabledFireableCandidate": true,
+    "candidateClickSetsFocusTarget": true,
+    "battleStillRunningAfterCandidateClick": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false
+  },
+  "notes": [
+    "DOM snapshot API failed in the current browser runtime, so QA used bounded page evaluations and Playwright locators.",
+    "The battle was paused after QA to stop the running tick loop."
+  ]
+}

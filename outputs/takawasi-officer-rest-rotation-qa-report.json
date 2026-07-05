@@ -1,0 +1,56 @@
+{
+  "slice": "officer-rest-rotation",
+  "date": "2026-07-03",
+  "target": "desktop 1440px only; mobile QA intentionally skipped",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "implemented": [
+    "OfficerStatus now includes resting.",
+    "Officers can be put into rest from the Officers screen when they have command fatigue.",
+    "Resting officers recover command fatigue faster during campaign recovery and auto-return when fatigue reaches 0.",
+    "Resting officers are inactive for command effects, side-operation candidate filtering, staff effects, and division command effects.",
+    "Officers can be manually returned to duty from the Officers screen.",
+    "Officer command buttons now use responsive auto-fit columns to avoid crowding."
+  ],
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "flow": [
+      "reset campaign",
+      "open Army Camp",
+      "open Deployment",
+      "start Battle",
+      "run 3x tick briefly",
+      "withdraw",
+      "open After Action",
+      "apply result",
+      "open Officers",
+      "put a fatigued officer into rest",
+      "open Deployment and verify resting officer does not provide active command text",
+      "return to Camp -> Officers",
+      "return officer to duty"
+    ],
+    "observed": {
+      "fatigueValuesAfterBattle": [15, 6, 10, 9, 6, 6, 2, 0, 15, 0],
+      "restButtonCount": 10,
+      "returnButtonCount": 10,
+      "hasRestingStatusAfterRest": true,
+      "restingOfficerExcludedFromDeploymentCommand": true,
+      "hasReturnHistory": true
+    },
+    "checks": {
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageHorizontalOverflow": false
+    }
+  },
+  "deferred": [
+    "Political cost for repeated staff/division use remains unimplemented.",
+    "Dedicated staff/division replacement recommendation scoring remains future work."
+  ]
+}

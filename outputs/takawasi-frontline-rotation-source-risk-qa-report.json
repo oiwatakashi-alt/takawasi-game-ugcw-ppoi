@@ -1,0 +1,40 @@
+{
+  "id": "takawasi-frontline-rotation-source-risk-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command frontline rotation reserve-source risk display",
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "Strategic Map -> Army Camp -> Deployment -> Battle",
+      "Advanced battle at 3x until frontline pressure and rotation candidates appeared",
+      "Paused battle and inspected frontline pressure cards plus selected-frontline rotation panel",
+      "Executed a rotation where the reserve source was flagged as risky transfer",
+      "Withdrew and opened After Action",
+      "Reset campaign after QA"
+    ],
+    "verifiedSignals": [
+      "Frontline pressure cards displayed reserve-source labels such as 戦線転用 and 危険転用",
+      "Selected-frontline reserve candidate displayed 危険転用 / 中央塹壕線も危険 / 評価 -56",
+      "Rotation execution logged 戦闘交代: 衛戍予備歩兵大隊を後退線へ下げ、第4戦列歩兵大隊が森林左翼線を引き継ぐ。",
+      "After Action showed 第4戦列歩兵大隊 as 任務 後衛援護 / 交代旅団を援護、即応予備を投入",
+      "After Action showed 衛戍予備歩兵大隊 as 任務 戦闘交代 / 損耗旅団を後退線へ整理",
+      "Campaign reset returned to the initial strategic map"
+    ],
+    "diagnostics": {
+      "consoleErrors": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    }
+  }
+}

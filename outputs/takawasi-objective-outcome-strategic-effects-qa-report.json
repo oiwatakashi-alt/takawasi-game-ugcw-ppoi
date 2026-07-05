@@ -1,0 +1,40 @@
+{
+  "feature": "Objective outcome strategic effects",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reset campaign",
+    "Theater -> Camp -> Deployment -> Battle",
+    "click objective response button 補給点防衛",
+    "withdraw battle",
+    "open After Action",
+    "verify 戦術目標 outcome box",
+    "apply result to camp",
+    "verify next-turn campaign message includes objective effects",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "afterActionObjectiveBox": true,
+    "objectiveExcerpt": "戦術目標 / 勝利点保持 72% / 補給点係争 62% / 視界点係争 48% / 勝利地点保持: 敵圧-3 / 敵勢-1 / 補給点係争: 補給効果なし / 視界点係争: 敵情補正なし",
+    "campaignMessageIncludesObjectiveEffects": true,
+    "campaignMessageExcerpt": "東方辺境防衛線から戦闘撤退した。 勝利地点保持: 敵圧-3 / 敵勢-1 補給点係争: 補給効果なし 視界点係争: 敵情補正なし",
+    "turnAdvanced": "第2戦略ターン",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "BattleResult now stores ObjectiveBattleOutcome with final victory/supply/visibility control, labels, events, resource deltas, theater pressure deltas, and visibility-derived intel shift.",
+    "applyBattleResult applies objective pressure deltas to the current sector/theater, adds objective resource deltas, and passes visibility intel shift into next-turn strategic intel preparation.",
+    "This QA covered the visible victory-point strategic pressure path. Supply-held resource gain and visibility-held intel shift are implemented from the same objectiveOutcome path but require a longer hold-state scenario for direct browser observation.",
+    "Mobile QA was intentionally skipped because mobile is outside the current target."
+  ]
+}

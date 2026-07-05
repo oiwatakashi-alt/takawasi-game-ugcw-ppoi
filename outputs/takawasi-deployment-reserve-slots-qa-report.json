@@ -1,0 +1,52 @@
+{
+  "date": "2026-07-03",
+  "target": "Deployment reserve unit designation / desktop 1440px",
+  "commands": [
+    "npm run build"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "flow": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "予備運用で反撃準備を選択",
+    "第1戦列歩兵大隊を指定予備にする",
+    "選抜部隊で戦闘開始",
+    "3倍で13秒までtick進行"
+  ],
+  "verified": {
+    "deploymentSaveMessage": "出撃戦線を戦区標準、予備運用を反撃準備、指定予備1旅団に調整した。",
+    "deploymentReserveStats": [
+      "温存圧 760",
+      "反撃閾値 46",
+      "指定予備 1/3"
+    ],
+    "deploymentSlot": "第1戦列歩兵大隊 / 指定予備",
+    "battleLog": "指定予備: 1旅団を予備線で待機。",
+    "battleSelectedUnit": {
+      "unit": "第1戦列歩兵大隊",
+      "frontline": "後方砲兵線",
+      "posture": "後退守備",
+      "targetPriority": "敵指揮",
+      "ammoPolicy": "弾薬節約",
+      "facility": "未指定",
+      "initialReserveReadiness": 62,
+      "runningReserveReadiness": 100
+    },
+    "runningBattle": {
+      "elapsed": "防衛時間 13/150秒",
+      "status": "戦闘中",
+      "enemyWave": "敵波 1"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobile": "skipped by current product target"
+}

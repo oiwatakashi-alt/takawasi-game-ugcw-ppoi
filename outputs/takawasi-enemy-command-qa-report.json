@@ -1,0 +1,67 @@
+{
+  "id": "takawasi-enemy-command-qa",
+  "createdAt": "2026-07-02T14:03:45+09:00",
+  "target": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "result": "passed"
+  },
+  "desktop1440": {
+    "flow": "reset -> Camp -> Deployment -> Battle -> 3x tick",
+    "verified": [
+      "enemy command wave officer spawned from wave 3",
+      "enemy command alert appeared as `敵指揮網`",
+      "enemy cards showed `指揮下` with command influence percentages",
+      "later tick showed `敵指揮崩壊` alert",
+      "2 disrupted enemy assault sets were present",
+      "enemy cards showed disrupted groups with lowered cohesion",
+      "page horizontal overflow false",
+      "wide battle map retained intentional horizontal scroll"
+    ],
+    "observedBattleState": {
+      "elapsed": "144/150",
+      "wavesSpawned": 9,
+      "commandedAssaultSets": 16,
+      "disruptedAssaultSets": 2,
+      "enemyCommandAlert": true,
+      "enemyCommandCollapseAlert": true,
+      "brokenImages": 0,
+      "recentConsoleErrors": 0,
+      "pageHorizontalOverflow": false
+    },
+    "sampleEnemyCards": [
+      "群集12 / 圧迫 / 指揮崩壊 集団圧迫:塹壕線 / 幅27 / 凝集24 / 指揮38%",
+      "群集50 / 圧迫 / 指揮崩壊 集団圧迫:塹壕線 / 幅27 / 凝集30 / 指揮43%",
+      "銃兵11 / 銃列 / 指揮下 銃兵支援:森林左翼線 / 幅17 / 凝集100 / 指揮66%"
+    ]
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "verified": [
+      "battle map visible",
+      "`敵指揮網` alert visible",
+      "`敵指揮崩壊` alert visible",
+      "`指揮下` and `指揮崩壊` labels visible in enemy cards",
+      "commanded and disrupted assault overlays present",
+      "broken images 0",
+      "recent console errors 0",
+      "page horizontal overflow false",
+      "battle map horizontal scroll remains intentional"
+    ],
+    "observedBattleState": {
+      "commandedAssaultSets": 16,
+      "disruptedAssaultSets": 2,
+      "brokenImages": 0,
+      "recentConsoleErrors": 0,
+      "pageHorizontalOverflow": false,
+      "mapScrollOverflow": true
+    }
+  },
+  "notes": [
+    "A stale Vite HMR console error was recorded while editing an intermediate syntax mistake; final QA filtered logs after a fresh baseline and observed 0 recent console errors.",
+    "Viewport override was reset after mobile QA."
+  ]
+}

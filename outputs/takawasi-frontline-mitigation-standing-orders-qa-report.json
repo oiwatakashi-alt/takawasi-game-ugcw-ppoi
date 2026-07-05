@@ -1,0 +1,55 @@
+{
+  "feature": "Frontline mitigation standing-order application",
+  "date": "2026-07-04",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "switch frontline geometry to 広域警戒線",
+    "click 是正方針を保存",
+    "verify weak-line unit StandingOrder draft and saved-template count",
+    "start battle",
+    "verify BattleState receives mitigated standing orders",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "mitigationButtons": [
+      "弱線を選択",
+      "是正方針を保存",
+      "推奨形へ変更"
+    ],
+    "deploymentMessage": "東方辺境猟兵隊を右翼泥濘線へ再方針化し、第1戦列歩兵大隊を支援予備に指定した。",
+    "deploymentSavedTemplateCount": "2/7旅団",
+    "deploymentReserveDesignation": "1/3旅団",
+    "deploymentPlannerState": {
+      "unit": "東方辺境猟兵隊",
+      "frontline": "右翼泥濘線",
+      "posture": "弾性防御",
+      "targetPriority": "大型敵",
+      "ammoPolicy": "弾薬節約",
+      "fallback": "士気55 / 弾薬18",
+      "facility": "塹壕線 防衛"
+    },
+    "battleState": {
+      "geometry": "広域警戒線",
+      "mitigatedUnit": "東方辺境猟兵隊 / 右翼泥濘線 / 弾性防御 / 弾薬節約 / 塹壕線 防衛",
+      "reserveUnit": "第1戦列歩兵大隊 / 後方砲兵線 / 後退守備 / 弾薬節約",
+      "reservePanel": "候補7旅団 / 即応4旅団"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "The mitigation action saves StandingOrderTemplate drafts, because BattleState currently reads pre-battle StandingOrders from saved templates and deploymentPlan.",
+    "The selected reserve unit is also written to deploymentPlan.reserveUnitIds so the battle starts with a visible reserve posture."
+  ]
+}

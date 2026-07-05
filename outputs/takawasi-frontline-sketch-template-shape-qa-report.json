@@ -1,0 +1,50 @@
+{
+  "id": "takawasi-frontline-sketch-template-shape",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Battle Command multi-point frontline sketch persistence into StandingOrderTemplate",
+    "Saved sketch polyline display on Battle Command",
+    "Saved sketch-shape readout in Army Camp and Deployment",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900 and reset the campaign.",
+    "Strategic map -> Camp -> Deployment -> selected units battle start.",
+    "Clicked 戦線スケッチ on the selected frontline.",
+    "Clicked three tactical map points: X52 Y28, X24 Y34, and X58 Y42.",
+    "Verified the sketch readout showed 追加点または確定 / 3点指定.",
+    "Clicked スケッチ確定.",
+    "Verified the battle log showed 多点スケッチ更新 and the battle map rendered one saved-sketch polyline.",
+    "Clicked 戦線方針保存.",
+    "Reloaded, returned to Camp, and verified Army Camp displayed 戦線形状 3点.",
+    "Opened Deployment and verified 保存方針比較 plus 保存済み自律方針 rows displayed 形状3点 and 戦線形状 3点 / X52 Y28 -> X24 Y34 -> X58 Y42.",
+    "Reset the QA campaign afterward."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "The slice persists sketch geometry as optional StandingOrderTemplate.frontlineSketchPoints. This is not yet a full campaign-level curved-frontline geometry system.",
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

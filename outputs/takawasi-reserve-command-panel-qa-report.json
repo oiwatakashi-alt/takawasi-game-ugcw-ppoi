@@ -1,0 +1,60 @@
+{
+  "date": "2026-07-03",
+  "target": "Battle Command reserve command panel / desktop 1440px",
+  "commands": [
+    "npm run build"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "flow": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "反撃準備を選択",
+    "第1戦列歩兵大隊を指定予備にする",
+    "選抜部隊で戦闘開始",
+    "Battle Commandの予備指揮パネルを確認",
+    "第1戦列歩兵大隊へ火力予備を適用",
+    "第1戦列歩兵大隊へ予備線へを適用",
+    "3倍で10秒までtick進行"
+  ],
+  "verified": {
+    "reservePanelInitial": {
+      "hasPanel": true,
+      "cardCount": 2,
+      "text": "予備指揮 / 候補2旅団 / 即応2旅団 / 第3砲兵 / 第1歩兵"
+    },
+    "fireReserveCommand": {
+      "unit": "第1戦列歩兵大隊",
+      "line": "後方砲兵線",
+      "posture": "火力支援",
+      "targetPriority": "最大集団",
+      "ammoPolicy": "弾薬節約",
+      "reserveReadiness": 64,
+      "log": "第1戦列歩兵大隊を予備線へ復帰。火力支援で即応を再建する。"
+    },
+    "reserveReturnCommand": {
+      "unit": "第1戦列歩兵大隊",
+      "line": "後方砲兵線",
+      "posture": "後退守備",
+      "targetPriority": "敵指揮",
+      "ammoPolicy": "弾薬節約",
+      "facility": "未指定",
+      "reserveReadiness": 100,
+      "log": "第1戦列歩兵大隊を予備線へ復帰。後退守備で即応を再建する。"
+    },
+    "runningBattle": {
+      "elapsed": "防衛時間 10/150秒",
+      "status": "戦闘中"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobile": "skipped by current product target"
+}

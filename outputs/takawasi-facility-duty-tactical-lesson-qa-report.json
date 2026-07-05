@@ -1,0 +1,50 @@
+{
+  "id": "takawasi-facility-duty-tactical-lesson-qa",
+  "date": "2026-07-05",
+  "target": "Facility duty tactical lesson and next-battle recommendation",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "施設即応6部隊",
+      "戦果報告へ",
+      "結果を反映して幕舎へ",
+      "next-turn Deployment"
+    ],
+    "observed": {
+      "afterActionLessonLines": [
+        "第1戦列歩兵大隊: 次戦教訓 施設襲撃対応 / 得意戦線固守 / 即応+2 / 統制+1",
+        "第2工兵中隊: 次戦教訓 損傷施設修理 / 得意工兵修理線 / 即応+1 / 統制+1 / 後退判断+1"
+      ],
+      "deploymentLineUnitLesson": "戦術教訓 施設任務1件 / 得意戦線固守 / 即応+1 / 統制+1",
+      "deploymentLineRecommendation": "次戦初動は戦線固守を推奨。現戦線を維持し、最接近敵を通常射撃で削る。",
+      "deploymentEngineerLesson": "戦術教訓 施設任務1件 / 得意工兵修理線 / 即応+1 / 統制+1 / 後退判断+1",
+      "deploymentEngineerRecommendation": "次戦初動は工兵修理線を推奨。工兵を損傷施設へ寄せ、非工兵は施設防衛を優先する。",
+      "lessonActionsVisible": [
+        "教訓方針を適用",
+        "教訓方針を保存"
+      ]
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true
+    },
+    "note": "The tested battle collapsed under 3x pressure; this was acceptable because the QA target was facility-duty lesson carryover and next-turn recommendation."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

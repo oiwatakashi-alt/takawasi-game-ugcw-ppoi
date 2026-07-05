@@ -1,0 +1,46 @@
+{
+  "feature": "Deployment band editing",
+  "date": "2026-07-04",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "verify initial active segment deployment band",
+    "click 出撃帯前進",
+    "click 出撃帯広げる",
+    "verify active segment deployment band summary",
+    "reload app",
+    "re-enter Army Camp and Deployment",
+    "verify saved deployment band restored",
+    "start battle",
+    "verify manual geometry label and selected brigade battle state",
+    "reset campaign after QA"
+  ],
+  "verified": {
+    "initialDeploymentBand": "X6-62 / Y11-36",
+    "adjustedDeploymentBand": "X6-65 / Y9-38",
+    "manualAdjustmentCount": "手動調整 1線",
+    "reloadRestoredAdjustedBand": true,
+    "battle": {
+      "title": "東方辺境防衛線防衛戦",
+      "geometryLabel": "展開 戦区標準+手動1",
+      "selectedUnitFrontline": "戦線 森林左翼線",
+      "frontlinePanel": "森林左翼線 / 基準 X34 Y24"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "FrontlineSegmentGeometryOverride now supports deploymentLimitOffset and deploymentLimitSizeOffset.",
+    "Deployment-side band edits persist through the existing deploymentPlan.frontlineGeometry save path.",
+    "Battle creation consumes the same adjusted frontline geometry, so the manual deployment-band plan reaches BattleState."
+  ]
+}

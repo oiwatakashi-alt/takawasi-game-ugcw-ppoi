@@ -1,0 +1,46 @@
+{
+  "slice": "frontline-doctrine-assessment",
+  "date": "2026-07-04",
+  "scope": "desktop-only tactical command QA",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 950
+    },
+    "path": [
+      "Theater",
+      "Army Camp",
+      "Deployment",
+      "Battle Command"
+    ],
+    "verified": {
+      "frontlineDoctrineBoardVisible": true,
+      "predictionTextVisible": true,
+      "reasonTextVisible": true,
+      "doctrineButtonCount": 5,
+      "examplePrediction": "予測 損耗低 / 弾薬高 / 突破低",
+      "exampleReason": "接敵前の強射準備",
+      "killZoneApplied": true,
+      "selectedUnitShowsLargestMassPriority": true,
+      "selectedUnitShowsIntenseAmmo": true,
+      "battleLogContainsKillZone": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "mobile is no longer a current target"
+  },
+  "notes": [
+    "Each frontline doctrine button now displays an immediate forecast for casualty risk, ammo burn, and breakthrough risk.",
+    "Each doctrine button also displays a short Japanese reason tied to pressure level, lead threat, ammo state, morale state, or damaged facilities.",
+    "The assessment is a player-facing command aid; the runtime battle behavior remains driven by StandingOrder updates."
+  ]
+}

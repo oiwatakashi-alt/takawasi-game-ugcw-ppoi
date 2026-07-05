@@ -1,0 +1,38 @@
+{
+  "name": "takawasi recon lesson quality QA",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": "browser default"
+  },
+  "scope": "Desktop QA only. Mobile QA is outside the active target.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "scenario": {
+    "steps": [
+      "Reset campaign from the Theater UI.",
+      "Assigned the first recon side operation to unit-jaeger-1 / officer-keller.",
+      "Captured baseline Theater recon preview.",
+      "Injected one bad-intel unit history and one officer intelligence-lesson history into the same saved campaign.",
+      "Reloaded the app and captured the same Theater recon preview."
+    ],
+    "baselinePreview": "精密偵察90",
+    "lessonPreview": "精密偵察100",
+    "injectedUnitHistory": "QA: 敵情誤認下で交戦",
+    "injectedOfficerHistory": "QA: 敵情誤認対応、偵察教訓を記録"
+  },
+  "assertions": {
+    "lessonIncreasesReconPreview": true,
+    "sameReconOperationStillAssigned": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflowX": false
+  },
+  "notes": [
+    "The recon preview and recon auto-resolve share calculateReconQuality, so the same lesson bonus path affects planning display and operation resolution.",
+    "The save was modified through browser developer protocol only for QA setup; the application persisted and displayed the resulting state after reload."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "takawasi-objective-transfer-forecast-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command objective staff transfer forecast",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "Objective staff transfer forecast",
+      "Apply first recommendation",
+      "Withdraw",
+      "After Action",
+      "Reset campaign"
+    ],
+    "verified": [
+      "Battle Command displayed 目標参謀判断 with three recommendation cards.",
+      "Each recommendation card displayed 転用予測 with label, current pressure, pressure per brigade, ready reserve count, and movement distance.",
+      "The first card showed 転用予測 転用注意 / 平常 / 敵圧0 / 1旅団圧0 / 即応予備1 / 移動40.",
+      "Pressing the first 戦線を寄せる action logged 戦線目標連携: 中央塹壕線の2旅団を視界点確保へ寄せる。",
+      "After Action retained two 任務 視界点確保 / 観測線を確保、敵指揮を制圧 role lines.",
+      "Campaign reset returned to the strategic campaign map."
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

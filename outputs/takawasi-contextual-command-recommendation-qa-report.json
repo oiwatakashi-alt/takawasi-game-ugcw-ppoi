@@ -1,0 +1,54 @@
+{
+  "slice": "contextual-command-recommendation",
+  "date": "2026-07-03",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "mobileQa": "skipped: mobile is not a current target",
+    "flow": [
+      "reload",
+      "reset campaign",
+      "open Army Camp",
+      "verify command recommendation cards include battlefield context",
+      "manually degrade chief-of-staff assignment",
+      "verify contextual staff recommendations appear",
+      "apply a recommended appointment",
+      "reload/recheck formatted context label"
+    ],
+    "observed": {
+      "initialReputation": "威信 52",
+      "contextVisible": true,
+      "contextExample": "東方辺境防衛線 / 塹壕 / 敵圧42 / 危険78%",
+      "initialRecommendationExamples": [
+        "第1師団師団長をアルンハイムへ変更 改善+47 / 威信-6",
+        "第2師団師団長をアルンハイムへ変更 改善+47 / 威信-6"
+      ],
+      "degradedRecommendationExamples": [
+        "参謀長をクルーガーへ変更 改善+57 / 威信-5",
+        "参謀長をフォスへ変更 改善+57 / 威信-6",
+        "参謀長をアルンハイムへ変更 改善+47 / 威信-5"
+      ],
+      "appliedRecommendationReputation": "威信 42",
+      "formattedRiskLabel": true,
+      "uglyRiskFloatPresent": false,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Staff recommendations now include battlefield terrain, enemy pressure, risk, and structure count in their scoring.",
+    "Division commander recommendations now weight morale, control, and reserve readiness according to current battlefield context.",
+    "Army Camp recommendation cards show a battlefield-context line so the player can see why a command replacement is relevant now.",
+    "Risk display is formatted as an integer percentage."
+  ],
+  "deferred": [
+    "Enemy composition-specific command recommendations remain later work.",
+    "Political backlash and officer loyalty events remain later work.",
+    "Doctrine-intent-aware recommendation weighting remains later work."
+  ]
+}

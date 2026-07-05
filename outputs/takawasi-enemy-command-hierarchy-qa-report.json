@@ -1,0 +1,46 @@
+{
+  "feature": "Enemy command hierarchy and intent",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reload app",
+    "reset campaign",
+    "Army Camp",
+    "Deployment",
+    "start mandatory battle",
+    "set 3x speed",
+    "wait for command waves",
+    "verify enemy command network, command intent, command-core labels, broken images, console errors, and page overflow",
+    "reset campaign"
+  ],
+  "verified": {
+    "elapsedLabel": "防衛時間 73/150秒",
+    "enemyCommandAlert": true,
+    "commandIntentLabels": true,
+    "commandCoreLabelVisible": true,
+    "commandedStateVisible": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "evidenceSamples": [
+    "敵指揮網",
+    "19群 / 最大100% / 第2波指揮核",
+    "集団圧迫:塹壕線 / 深0 側0 / 凝集100 / 士気100 / 指揮下 指揮63% / 陣地突破 / 第2波指揮核",
+    "指揮突進:塹壕線 / 深0 側2 / 凝集100 / 士気100 / 指揮下 指揮100% / 陣地突破 / 第4波指揮核"
+  ],
+  "notes": [
+    "EnemyAssaultPlan now carries commandRole, commandIntent, commandGroupId, and commandLabel.",
+    "Undead officers project command intent to same-group or same-target assault groups.",
+    "Command intent affects pressure, movement, breach threshold, flank pressure, and rally recovery.",
+    "Battle Command displays command intent and command-core labels on alert and enemy-group cards."
+  ]
+}

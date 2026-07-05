@@ -1,0 +1,75 @@
+{
+  "date": "2026-07-02",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "observation-post-visibility-concealment",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "Strategic Map",
+      "Camp Engineering",
+      "Build Observation Post",
+      "Deployment",
+      "Battle",
+      "1x tick",
+      "3x later waves"
+    ],
+    "engineering": {
+      "observationPostCard": true,
+      "effectText": "視界 +18",
+      "builtStructuresAfterBuild": 2,
+      "resourcesAfterBuild": {
+        "materials": 306,
+        "engineerLabor": 81
+      }
+    },
+    "battleStart": {
+      "structures": [
+        "塹壕線",
+        "観測所"
+      ],
+      "visibilityRange": 94,
+      "spottedEnemies": "0/0",
+      "brokenImages": 0,
+      "consoleErrors": 0
+    },
+    "afterTick": {
+      "status": "戦闘中",
+      "waves": 1,
+      "visibilityRange": 94,
+      "spottedEnemies": "1/1",
+      "alert": "敵波接近",
+      "brokenImages": 0,
+      "consoleErrors": 0
+    },
+    "laterWaves": {
+      "waves": 3,
+      "spottedEnemies": "5/5",
+      "engagementLines": 8,
+      "brokenImages": 0,
+      "consoleErrors": 0
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "mapCanScrollX": true,
+    "mapClientWidth": 370,
+    "mapScrollWidth": 1680,
+    "pageHorizontalOverflow": false,
+    "visibilityRangeAtLateBattle": 76,
+    "spottedEnemies": "15/17",
+    "hiddenEnemyGroups": 2,
+    "unitCards": 6,
+    "brokenImages": 0,
+    "consoleErrors": 0
+  },
+  "notes": [
+    "Observation post visibility is durability/status dependent; late battle visibility can fall back to base range if the post is damaged or overrun.",
+    "Player and structure target selection is gated to spotted enemies, while hidden enemies continue autonomous movement."
+  ]
+}

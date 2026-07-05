@@ -1,0 +1,45 @@
+{
+  "slice": "misinformation-specific-wave-timeline-styling",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "Strategic Map",
+      "Camp",
+      "Deployment normal medium intel",
+      "force mandatoryBattle enemyCompositionIntel.reconEffect=misleading in localStorage",
+      "reload",
+      "Deployment misleading intel",
+      "Battle"
+    ],
+    "observed": {
+      "normalSummary": "初波約1秒 / 間隔約10秒 / 指揮波推定",
+      "normalTimelineEntry": "第1波 / 約1秒 / 群集+銃兵 / 接近 / 指揮不明 / 推定",
+      "normalClass": "wave-timeline-entry 接近 certainty-estimated",
+      "misleadingSummary": "敵波情報に誤情報疑い / 実波要警戒",
+      "misleadingTimelineEntry": "第1波 / 時刻不明 / 敵種誤情報疑い / 接近 / 指揮誤報疑い / 誤情報疑い",
+      "misleadingClass": "wave-timeline-entry 接近 certainty-misleading",
+      "warningText": "偵察報告に誤情報疑い。敵波の時刻・敵種・指揮波は表示通りとは限らない。",
+      "battleTimelineText": "第1波 時刻不明 接近 誤情報疑い / 第2波 時刻不明 接近 誤情報疑い / 第3波 時刻不明 強圧 誤情報疑い / 第4波 時刻不明 強圧 誤情報疑い",
+      "battleTimelineClass": "接近 certainty-misleading"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "richer enemy-intel UI affordances beyond compact text ranges",
+    "doctrine-intent-aware command recommendation weighting",
+    "deeper misinformation consequences beyond timeline display"
+  ]
+}

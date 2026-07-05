@@ -1,0 +1,53 @@
+{
+  "feature": "reserve-commit-seal-breach-counterstroke-response",
+  "date": "2026-07-03",
+  "scope": "desktop-only",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command"
+    ],
+    "battleRun": {
+      "speed": "3x",
+      "observedResponseButtons": [
+        "予備投入",
+        "突破封鎖",
+        "固守監視"
+      ],
+      "phaseCountsBeforeResponse": {
+        "approach": 9,
+        "engaged": 2,
+        "flanking": 1
+      },
+      "reserveCommitEvidence": [
+        "森林左翼線 危険 / 守備 1旅団 / 予備 1 / 主脅威 側面圧",
+        "戦線圧力対応: 森林左翼線で予備投入。",
+        "予備歩兵大隊を森林左翼線へ配置転換。",
+        "予備歩兵大隊の自律方針を弾性防御へ変更。",
+        "予備歩兵大隊の集中射撃目標をアンデッド群集 73体へ指定。"
+      ],
+      "sealBreachEvidence": [
+        "右翼泥濘線 危険 / 守備 2旅団 / 予備 1 / 突破封鎖",
+        "戦線圧力対応: 右翼泥濘線で突破封鎖。",
+        "第3野戦砲兵中隊 自律方針を後退守備へ変更。",
+        "第6塹壕歩兵大隊 後退判断: 士気55/兵力72%",
+        "北森猟兵分隊 後退守備"
+      ],
+      "counterstroke": "implemented but not naturally triggered in this QA run because no overextended enemy appeared before battle collapse"
+    },
+    "brokenImages": [],
+    "consoleErrors": [],
+    "pageOverflow": false,
+    "mobileQa": "skipped by current product direction; mobile is no longer a current gate"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "slice": "deployment-rearguard-comparison",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "result": "passed"
+  },
+  "qa_scope": {
+    "desktop_default": "verified",
+    "desktop_1440x900": "verified",
+    "mobile": "skipped-current-target-excludes-cellphone"
+  },
+  "flow": [
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "撤退後衛判断 comparison values visible",
+    "推奨候補を後衛指定",
+    "選抜部隊で戦闘開始",
+    "戦役をリセット"
+  ],
+  "observations": {
+    "initial_advisor": {
+      "selected_unit_line": "第1戦列歩兵大隊: 適性65 / 予測損耗32 / 将校危険48",
+      "comparison": "推奨度38 / 追撃抑止30 / 温存余地30",
+      "recommended_candidate": "第3野戦砲兵中隊 / 追撃抑止高・将校危険",
+      "candidate_count": 4,
+      "top_candidate": "第3野戦砲兵中隊 危険 / 推奨65 / 抑止79 / 温存37 / 損耗8 / 将校危険54 / 追撃抑止高・将校危険"
+    },
+    "after_recommended_assign": {
+      "selected_unit_line": "第3野戦砲兵中隊: 適性100 / 予測損耗8 / 将校危険54",
+      "comparison": "推奨度76 / 追撃抑止95 / 温存余地37",
+      "reason": "後衛指定済み / 予備線適性 / 火力支援可",
+      "deployment_count": "撤退後衛 1/3"
+    },
+    "battle_start": {
+      "battle_log": "撤退後衛計画: 1旅団を離脱援護に指定。",
+      "rear_guard_unit": "第3野戦砲兵中隊",
+      "rear_guard_reflected": true
+    },
+    "desktop_1440x900": {
+      "advisor_visible": true,
+      "recommendation_button_visible": true,
+      "tradeoff_values_visible": true,
+      "horizontal_overflow": false
+    }
+  },
+  "quality": {
+    "console_errors": 0,
+    "console_warnings": 0,
+    "broken_images": 0,
+    "horizontal_overflow": false,
+    "contains_nan": false
+  }
+}

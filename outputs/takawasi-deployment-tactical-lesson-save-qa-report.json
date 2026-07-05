@@ -1,0 +1,52 @@
+{
+  "feature": "deployment-tactical-lesson-save",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 950
+  },
+  "mobileQa": "skipped; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "warning": "Vite chunk size warning remains for index bundle over 500 kB"
+  },
+  "flow": [
+    "reset campaign from UI",
+    "Theater -> Army Camp -> Deployment -> Battle",
+    "run battle at 3x until staff advisory appears",
+    "apply `中央塹壕線: 殺傷地帯`",
+    "withdraw, open After Action, apply result",
+    "open next-turn Deployment",
+    "select `第4戦列歩兵大隊`",
+    "click `教訓方針を保存`",
+    "reset campaign from UI after QA"
+  ],
+  "checks": [
+    {
+      "step": "lesson recommendation source",
+      "status": "passed",
+      "evidence": "After Action displayed `次戦教訓`, including `第4戦列歩兵大隊: 次戦教訓 参謀警告1件 / 得意殺傷地帯 / 即応+5 / 統制+2`."
+    },
+    {
+      "step": "lesson save button",
+      "status": "passed",
+      "evidence": "Next-turn Deployment selected `第4戦列歩兵大隊` and displayed both `教訓方針を適用` and `教訓方針を保存`."
+    },
+    {
+      "step": "saved template result",
+      "status": "passed",
+      "evidence": "`教訓方針を保存` changed the planner summary to `姿勢 阻止射撃`, `優先 最大集団`, `弾薬 集中射撃`, `後退 士気34`, changed the deployment slot to `方針 保存済`, and listed `殺傷地帯教訓から保存した自律指揮方針。次回主戦場の初期配置へ適用する。` under `保存済み自律方針`."
+    },
+    {
+      "step": "layout and runtime health",
+      "status": "passed",
+      "evidence": "Broken images 0, console errors 0, document horizontal overflow false."
+    }
+  ],
+  "notes": [
+    "Reload returns the app to the strategic map by current app routing, so this pass verified immediate UI/save-state reflection in Deployment. A later persistence QA can navigate back to Deployment after reload."
+  ],
+  "result": "passed"
+}

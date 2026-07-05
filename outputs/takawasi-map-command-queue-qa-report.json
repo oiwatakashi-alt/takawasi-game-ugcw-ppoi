@@ -1,0 +1,44 @@
+{
+  "id": "takawasi-map-command-queue-qa",
+  "date": "2026-07-04",
+  "target": "Battle Command tactical map commands through paused command queue",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "mobileQa": "skipped intentionally; mobile is outside the current active target"
+  },
+  "flow": [
+    "Open http://127.0.0.1:5173/",
+    "Strategic Map -> Camp -> Deployment -> Battle",
+    "Enable 停止して予約",
+    "Use 基準位置を指定 and click the tactical map around X48 Y35",
+    "Use 戦線をクリック and click a frontline segment",
+    "Apply queued commands with 一括発令",
+    "Enable 停止して予約 again",
+    "Use 施設をクリック and click the trench structure",
+    "Apply queued facility command with 一括発令",
+    "Reset the campaign"
+  ],
+  "observations": {
+    "anchorQueue": "#1 第1戦列歩兵大隊 基準位置 / 基準 X48 Y35 / マップ指定",
+    "segmentQueue": "#2 第1戦列歩兵大隊 戦線 塹壕補修線 / 担当戦線を塹壕補修線へ / 基準 X43 Y55",
+    "firstApplyLogs": [
+      "予約指揮: 2件を一括発令。",
+      "第1戦列歩兵大隊を塹壕補修線へ配置転換。",
+      "第1戦列歩兵大隊の基準位置をX48 Y35へ指定。"
+    ],
+    "facilityQueue": "#1 第1戦列歩兵大隊 塹壕線担当 / 稼働中 / 防衛 / X39 Y34",
+    "facilityApplyLogs": [
+      "予約指揮: 1件を一括発令。",
+      "第1戦列歩兵大隊を塹壕線の担当に指定。"
+    ],
+    "postApplyState": "Queue returned to direct mode with 0 items; selected brigade showed 塹壕補修線 and 塹壕線 facility assignment after apply."
+  },
+  "qa": {
+    "npmRunBuild": "passed",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "campaignReset": true
+  }
+}

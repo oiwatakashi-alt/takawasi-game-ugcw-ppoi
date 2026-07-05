@@ -1,0 +1,52 @@
+{
+  "id": "takawasi-frontline-plan-save",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Battle Command selected-frontline plan save",
+    "Saving all current non-retreating defenders on the selected frontline as StandingOrderTemplates after two-point sketching",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900.",
+    "Reset campaign from the UI.",
+    "Camp -> Deployment -> Battle.",
+    "Enabled 戦線スケッチ for 森林左翼線.",
+    "Clicked map points X50 Y42 and X24 Y46.",
+    "Clicked 戦線方針保存.",
+    "Verified two StandingOrderTemplates were persisted for the selected frontline defenders.",
+    "Reset QA campaign after verification."
+  ],
+  "observations": [
+    "Selected frontline panel showed 戦線方針保存 and 守備2旅団を戦線方針として保存可能.",
+    "Battle log showed 第1戦列歩兵大隊 and 衛戍予備歩兵大隊 autonomous order save messages.",
+    "CDP localStorage check found templateCount 2 under takawasi-game-save.",
+    "Both template descriptions included 森林左翼線で戦闘中に保存した戦線方針。基準X50 Y42 / 後退X24 Y46。次回主戦場の初期配置へ適用する。",
+    "Saved templates retained frontlineSegmentId left-flank and the sketched fallback destination around X24 Y46."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

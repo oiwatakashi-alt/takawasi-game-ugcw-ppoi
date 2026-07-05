@@ -1,0 +1,96 @@
+{
+  "slice": "basic line-of-sight terrain blockers",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "new clean browser tab",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "選抜部隊で戦闘開始",
+    "3倍 tick",
+    "mobile viewport 390x844"
+  ],
+  "desktopInitial": {
+    "titleText": "東方辺境防衛線防衛戦",
+    "terrainTexts": [
+      "森林遮蔽帯 移動72% / 射線遮蔽",
+      "泥濘低地 移動48% / 射線減衰",
+      "塹壕掩体線 移動72% / 射線影響なし"
+    ],
+    "losBlockerCount": 1,
+    "losPartialCount": 1,
+    "lineOfSightTexts": [
+      "射線 待機",
+      "射線 待機",
+      "射線 待機",
+      "射線 待機",
+      "射線 待機",
+      "射線 待機"
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": false,
+    "battleMapHorizontalOverflow": true
+  },
+  "desktopRunning": {
+    "objectiveText": [
+      "防衛時間 35/150秒",
+      "戦線維持 92%",
+      "敵制圧 1%",
+      "敵波 2",
+      "視界 76",
+      "発見 2/3"
+    ],
+    "enemyCount": 3,
+    "spottedEnemyCount": 2,
+    "hiddenEnemyCount": 1,
+    "engagements": 5,
+    "lineOfSightTexts": [
+      "射線 待機",
+      "射線 良好",
+      "射線 良好",
+      "射線 良好",
+      "射線 良好",
+      "射線 待機"
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": false,
+    "battleMapHorizontalOverflow": true
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "terrainTexts": [
+      "森林遮蔽帯 移動72% / 射線遮蔽",
+      "泥濘低地 移動48% / 射線減衰",
+      "塹壕掩体線 移動72% / 射線影響なし"
+    ],
+    "visibleUnitCards": 6,
+    "visiblePresetButtons": 6,
+    "lineOfSightTexts": [
+      "射線 待機",
+      "射線 良好",
+      "射線 良好",
+      "射線 良好",
+      "射線 良好",
+      "射線 待機"
+    ],
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageHorizontalOverflow": false,
+    "battleMapHorizontalOverflow": true
+  },
+  "notes": [
+    "battleMapHorizontalOverflow is intentional: the tactical map is a horizontally scrollable wide field",
+    "forest is rendered as a blocking LOS terrain zone; marsh is rendered as partial LOS attenuation",
+    "line-of-fire and spotting logic both use the shared terrain LOS blockage helper"
+  ]
+}

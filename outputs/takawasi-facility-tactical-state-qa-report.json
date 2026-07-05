@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-facility-tactical-state",
+  "date": "2026-07-05",
+  "target": "desktop browser only",
+  "mobileQa": "skipped; mobile/cellphone is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": [
+      "Vite emitted the existing large chunk warning only."
+    ]
+  },
+  "flow": [
+    "Load http://127.0.0.1:5173/",
+    "Verify Strategic Map",
+    "Open Camp",
+    "Open Deployment",
+    "Start mandatory battle",
+    "Verify map-structure facility state and metrics",
+    "Run at 3x for several ticks",
+    "Pause and inspect facility state, console, images, overflow, and NaN",
+    "Reset campaign back to Strategic Map"
+  ],
+  "observedFacilityState": {
+    "structureCount": 1,
+    "sampleTextInitial": "塹壕線安定 / 稼働中 86 / 射程34 脅威0 / 修理0.0 / 担当0",
+    "sampleTextAfterTicks": "塹壕線安定 / 稼働中 90 / 射程34 脅威0 / 修理0.2 / 担当5",
+    "sampleClassAfterTicks": "map-structure trench built facility-secure targeting",
+    "assignedNamesVisible": true,
+    "facilityMetricsVisible": true,
+    "facilityStateClassVisible": true
+  },
+  "checks": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false,
+    "battleHudVisible": true,
+    "visibleSaveVersion": "v8",
+    "campaignResetAfterQa": true
+  },
+  "desktopSnapshot": {
+    "url": "http://127.0.0.1:5173/",
+    "title": "takawasi game",
+    "viewportWidth": 1280,
+    "documentScrollWidth": 1280
+  }
+}

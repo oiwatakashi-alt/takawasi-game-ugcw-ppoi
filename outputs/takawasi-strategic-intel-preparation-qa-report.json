@@ -1,0 +1,48 @@
+{
+  "name": "takawasi strategic intel preparation QA",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": "browser default"
+  },
+  "scope": "Desktop QA only. Mobile QA is outside the active target.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "scenario": {
+    "steps": [
+      "Reset campaign from the Theater UI.",
+      "Verified turn 1 has no strategic preparation message and main enemy intel starts at 敵情信頼中.",
+      "Injected bad-intel lesson histories into a jaeger unit, an engineer unit, and officer-keller.",
+      "Opened Camp, moved to Deployment, started the mandatory battle, withdrew, opened After Action, and applied the result.",
+      "Returned to Theater and inspected the generated turn 2 operations."
+    ],
+    "initialTurn": {
+      "turn": "第1戦略ターン",
+      "hasPreparationMessage": false,
+      "mainEnemyLabel": "敵編成 群集+銃兵+突破体 / 敵情信頼中 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "reconSideOperationLabel": "敵情 群集+銃兵+突破体 / 敵情信頼低"
+    },
+    "nextTurn": {
+      "turn": "第2戦略ターン",
+      "preparationMessage": "過去の敵情誤認教訓を参謀部が整理。初期敵情+1、教訓値9。",
+      "mainEnemyLabel": "敵編成 群集+銃兵+突破体 / 部分照合 / 群集3-5 / 銃兵2-4 / 突破体1-3",
+      "mainSpoilsSummary": "主戦場後の敵遺棄装備を回収可能 / 参謀偵察教訓を反映",
+      "reconSideOperationLabel": "敵情 群集+銃兵+突破体 / 部分照合 / 群集2-6 / 銃兵2-4 / 突破体1-3"
+    }
+  },
+  "assertions": {
+    "nextTurnPreparationMessageVisible": true,
+    "initialEnemyIntelImprovedOnNextTurn": true,
+    "spoilsSummaryShowsStaffLesson": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflowX": false
+  },
+  "cleanup": {
+    "campaignResetAfterQa": true,
+    "postResetPreparationMessageVisible": false
+  }
+}

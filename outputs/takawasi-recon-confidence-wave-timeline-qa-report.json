@@ -1,0 +1,42 @@
+{
+  "slice": "recon-confidence-wave-timeline-ambiguity",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "path": [
+      "reset localStorage takawasi-game-save",
+      "Strategic Map",
+      "Camp",
+      "Deployment initial medium intel",
+      "Theater side-operation auto-resolve recon",
+      "Deployment after precise recon",
+      "Battle"
+    ],
+    "observed": {
+      "initialTimelineEntry": "第1波 / 約1秒 / 群集+銃兵 / 接近 / 指揮不明",
+      "initialHasApproxTiming": true,
+      "autoResolveClicked": true,
+      "afterReconEnemyComposition": "群集+銃兵+突破体 / 精密照合 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "afterReconTimelineEntry": "第1波 / 1秒 / 群集+銃兵 / 接近 / 指揮なし",
+      "afterReconHasExactTiming": true,
+      "battleTimelineText": "第1波 1秒 接近 / 第2波 13秒 接近 / 第3波 25秒 強圧 / 第4波 37秒 強圧"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobileQa": "skipped: mobile is outside the current target",
+  "deferred": [
+    "misinformation-specific timeline styling",
+    "richer enemy-intel UI affordances beyond compact text ranges",
+    "doctrine-intent-aware command recommendation weighting"
+  ]
+}

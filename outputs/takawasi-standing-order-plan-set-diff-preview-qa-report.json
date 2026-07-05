@@ -1,0 +1,48 @@
+{
+  "id": "takawasi-standing-order-plan-set-diff-preview",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "StandingOrder plan-set detailed apply preview",
+    "Per-brigade changed-field display before applying a saved multi-brigade battle plan",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900 and reset the campaign.",
+    "Strategic map -> Camp -> Deployment.",
+    "Clicked 計画セット保存 to create 戦線計画 1.",
+    "Changed the selected brigade draft to 弾性防御 and 集中射撃.",
+    "Clicked 内容確認.",
+    "Verified the plan-set row showed 差分 1 and 差分あり.",
+    "Verified preview details showed 戦場 現主戦場, 戦区標準（現行一致）, 標準予備, 指定予備 0保存・現行0, and 未投入なし.",
+    "Verified the expanded unit diff named 第1戦列歩兵大隊 and listed 姿勢 / 弾薬方針 / 後退線 with the saved summary 固守 / 最接近 / 通常射撃.",
+    "Clicked 一括適用.",
+    "Verified the row returned to 差分 0 / 即適用可 and displayed 旅団方針差分なし。",
+    "Reset the QA campaign and viewport afterward."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

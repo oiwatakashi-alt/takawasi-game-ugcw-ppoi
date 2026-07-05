@@ -1,0 +1,44 @@
+{
+  "feature": "Terrain LOS tactical modifiers",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped: mobile is not a current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "reset campaign from UI",
+    "Theater -> Army Camp -> Deployment -> Battle",
+    "verify terrain callouts show cover-edge LOS semantics",
+    "run battle at 1x until spotted enemies appear",
+    "verify target audit rows include per-candidate effective range and LOS status",
+    "verify selected brigade panel includes LOS text",
+    "reset QA campaign from UI"
+  ],
+  "verified": {
+    "terrainCallouts": [
+      "森林遮蔽帯 移動72% / 射線遮蔽 / 遮蔽端",
+      "泥濘低地 移動48% / 射線減衰",
+      "塹壕掩体線 移動72% / 射線減衰 / 遮蔽端"
+    ],
+    "targetAuditRowsIncludedEffectiveRange": true,
+    "exampleTargetAuditRows": [
+      "群集 射線減衰 森林遮蔽帯 / 距離25 / 戦列距離23 / 有効射程28",
+      "群集 射界外/遠距離 / 距離30 / 戦列距離28 / 有効射程28",
+      "銃兵 射界外/遠距離 / 距離45 / 戦列距離43 / 有効射程28"
+    ],
+    "selectedSightText": "射線 減衰 森林遮蔽帯",
+    "targetAuditLayerVisible": true,
+    "codePathIncludesHighGroundModifier": true,
+    "highGroundRuntimeQa": "not present in the current generated main battlefield terrain seed",
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  }
+}

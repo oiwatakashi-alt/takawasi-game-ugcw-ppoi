@@ -1,0 +1,51 @@
+{
+  "id": "takawasi-facility-duty-after-action-qa",
+  "date": "2026-07-05",
+  "target": "Facility duty after-action and unit-history carryover",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "3x wave pressure",
+      "施設即応6部隊",
+      "戦果報告へ",
+      "結果を反映して幕舎へ"
+    ],
+    "observed": {
+      "facilityResponseButtons": [
+        "施設即応",
+        "施設即応6部隊"
+      ],
+      "afterActionRoles": [
+        "任務 施設防衛 / 防衛施設へ即応、施設襲撃群を指名",
+        "任務 施設修理 / 損傷施設を修復"
+      ],
+      "officerRoles": [
+        "施設防衛",
+        "施設修理"
+      ],
+      "campHistoryLine": "東方辺境防衛線防衛戦: 戦線崩壊、施設防衛、永久損耗0、収容0、経験+3、装備摩耗-0.03、防衛施設へ即応・施設襲撃群を指名"
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true
+    },
+    "note": "The tested battle collapsed under 3x pressure, which was acceptable for this QA because the target was facility-duty result carryover, not a hold outcome."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

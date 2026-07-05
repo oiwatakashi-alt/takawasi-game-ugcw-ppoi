@@ -1,0 +1,51 @@
+{
+  "id": "takawasi-drag-order-handles-2026-07-03",
+  "slice": "battle-drag-order-handles",
+  "date": "2026-07-03",
+  "summary": "Battle Command now displays draggable selected-brigade anchor and fallback handles on the wide tactical map.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": "default desktop",
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "verify visible 基準 and 後退 handles for the selected brigade",
+      "drag 基準 handle right/down"
+    ],
+    "observations": {
+      "initialAnchorHandle": "38px x 24px",
+      "initialFallbackHandle": "38px x 24px",
+      "dragResult": "anchor handle moved on the tactical map",
+      "log": "第4戦列歩兵大隊の基準位置をX39 Y29へ指定。",
+      "brokenImages": 0,
+      "consoleErrors": 0
+    },
+    "status": "passed"
+  },
+  "mobileQa": {
+    "viewport": "390x900",
+    "url": "http://127.0.0.1:5173/",
+    "observations": {
+      "anchorHandle": "38px x 24px",
+      "fallbackHandle": "38px x 24px",
+      "battleMapHorizontalScroll": true,
+      "unitCards": 6,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": false
+    },
+    "status": "passed"
+  },
+  "implementedBehavior": [
+    "selected-brigade anchor can be dragged and committed through setStandingOrderAnchor",
+    "selected-brigade fallback destination can be dragged and committed through setStandingOrderFallbackDestination",
+    "existing click/tap command modes remain available"
+  ],
+  "knownLimitations": [
+    "dragging edits only the selected brigade's anchor/fallback points, not freehand frontline geometry",
+    "mobile still primarily relies on tap/click command modes plus horizontal map scrolling"
+  ]
+}

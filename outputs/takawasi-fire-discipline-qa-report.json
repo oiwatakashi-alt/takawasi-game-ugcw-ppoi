@@ -1,0 +1,87 @@
+{
+  "id": "takawasi-fire-discipline-qa",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "slice": "Doctrine-linked fire discipline for fire missions and staged fire plans",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "flow": [
+      "reload app",
+      "Strategic Map -> Camp -> Doctrine",
+      "verify current fire discipline card",
+      "invest logistics doctrine",
+      "verify fire discipline changes to 参謀統制射撃 and 4-stage plan",
+      "Deployment -> Battle",
+      "verify battle fire discipline strip and battle log",
+      "3x enemy spawn, pause, focus spotted enemy",
+      "add four 戦線 fire-plan stages",
+      "start plan and resume 1x"
+    ],
+    "evidence": {
+      "doctrine_before_logistics": {
+        "label": "軍団斉射規律",
+        "plan_depth": "火力計画 3段",
+        "stage_spacing": "段間隔 7秒",
+        "broken_images": 0,
+        "page_horizontal_overflow": false
+      },
+      "doctrine_after_logistics": {
+        "label": "参謀統制射撃",
+        "plan_depth": "火力計画 4段",
+        "stage_spacing": "段間隔 7秒",
+        "points": "0 点",
+        "broken_images": 0,
+        "page_horizontal_overflow": false
+      },
+      "battle_start": {
+        "discipline_strip": "火力規律 参謀統制射撃",
+        "plan_controls": "計画 4段 / 間隔 7秒 / 再装填-4秒",
+        "battle_log_contains": "火力規律: 参謀統制射撃",
+        "broken_images": 0,
+        "page_horizontal_overflow": false
+      },
+      "four_stage_draft": [
+        "第1段 +0秒 / 戦線斉射 / 群集",
+        "第2段 +7秒 / 戦線斉射 / 群集",
+        "第3段 +14秒 / 戦線斉射 / 群集",
+        "第4段 +21秒 / 戦線斉射 / 群集"
+      ],
+      "active_plan": {
+        "pending_strip": "第1段 待機 0秒 / 第2段 待機 7秒 / 第3段 待機 14秒 / 第4段 待機 21秒",
+        "active_fire_mission_strip": "戦線斉射アンデッド群集 / 4旅団 / 残り6秒 / 参謀統制射撃",
+        "selected_panel_contains": [
+          "火力 戦線斉射",
+          "規律 参謀統制射撃"
+        ],
+        "log_contains": "射撃開始（参謀統制射撃）"
+      },
+      "clean_reload": {
+        "doctrine_screen_verified": true,
+        "battle_screen_verified": true,
+        "console_errors_after_clean_timestamp": 0,
+        "broken_images": 0,
+        "page_horizontal_overflow": false
+      }
+    }
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "evidence": {
+      "discipline_visible": true,
+      "discipline_text": "火力規律 参謀統制射撃 / 計画 4段 / 間隔 7秒 / 再装填-4秒",
+      "selected_panel_visible": true,
+      "battle_map_horizontal_scroll": true,
+      "broken_images": 0,
+      "page_horizontal_overflow": false,
+      "console_errors_after_clean_timestamp": 0
+    }
+  },
+  "notes": [
+    "BattleState.fireDiscipline is optional at runtime and falls back to 即席火力規律 for HMR or old in-memory state tolerance.",
+    "The clean QA pass filtered console errors after the post-fix reload timestamp.",
+    "The local browser campaign had logistics invested during QA, which is why the active profile was 参謀統制射撃."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "takawasi-staff-directive-recommendation-qa",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "scope": "Army Camp staff/division command recommendations using active staff intelligence directive context",
+  "mobileQa": "skipped: mobile is no longer a current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopBrowserQa": {
+    "viewport": {
+      "width": 1440,
+      "height": 950
+    },
+    "steps": [
+      "Reload local app and enter the camp from the strategic map.",
+      "Open Doctrine and select 敵情分析 as the turn staff directive.",
+      "Open Army Camp and inspect 参謀部推奨.",
+      "Verify recommendation context includes the active directive and the directive explanation line.",
+      "Switch Doctrine directive to 工兵測量.",
+      "Return to Army Camp and verify the recommendation context updates to the new directive."
+    ],
+    "observedSignals": {
+      "enemyAnalysisDirective": {
+        "doctrineScreen": [
+          "敵情分析を保存中",
+          "小任務+8",
+          "敵情分析 +1 / 教訓値+4"
+        ],
+        "armyRecommendation": [
+          "参謀任務敵情分析",
+          "参謀任務補正: 敵情分析",
+          "戦場補正: 東方辺境防衛線 / 塹壕 / 敵圧42 / 危険78% / 主敵群集+銃兵+突破体 / 参謀任務敵情分析"
+        ]
+      },
+      "engineerSurveyDirective": {
+        "armyRecommendation": [
+          "参謀任務工兵測量",
+          "参謀任務補正: 工兵測量",
+          "戦場補正: 東方辺境防衛線 / 塹壕 / 敵圧42 / 危険78% / 主敵群集+銃兵+突破体 / 参謀任務工兵測量"
+        ],
+        "firstRecommendationLine": "工兵主任をシュタインへ変更"
+      }
+    },
+    "quality": {
+      "brokenImageCount": 0,
+      "consoleErrorCount": 0,
+      "pageOverflowX": false
+    }
+  },
+  "cleanup": {
+    "browserCampaignState": "reset after QA",
+    "devServer": "stopped after QA"
+  },
+  "filesCovered": [
+    "src/game/army/politicalCost.ts",
+    "src/components/screens/ArmyCampScreen.tsx",
+    "FILEMAP.md",
+    "docs/00_CONTEXT_SPINE.md",
+    "docs/02_GAME_SYSTEM_SPEC.md",
+    "docs/10_TACTICAL_AUTONOMY_AND_FRONTLINE.md"
+  ]
+}

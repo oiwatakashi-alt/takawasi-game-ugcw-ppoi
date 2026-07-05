@@ -1,0 +1,57 @@
+{
+  "id": "takawasi-enemy-assault-groups-2026-07-02",
+  "date": "2026-07-02",
+  "targetUrl": "http://127.0.0.1:5173/",
+  "summary": "Enemy assault group slice: enemy waves now carry assault mode, target, frontage, depth, cohesion, and axis display.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop1440": {
+    "flow": [
+      "reload",
+      "reset campaign",
+      "open camp",
+      "open deployment",
+      "start mandatory battle",
+      "run battle at 3x"
+    ],
+    "verified": {
+      "enemyCards": [
+        "群集29 / 圧迫 / 幅25 集団圧迫:塹壕線",
+        "群集43 / 圧迫 / 幅26 集団圧迫:右翼泥濘線"
+      ],
+      "battleAlertContains": "敵波接近 群集 / 集団圧迫:塹壕線",
+      "enemyAssaultFootprints": 3,
+      "enemyAssaultAxes": 3,
+      "internalMapNodeIdVisible": false,
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false,
+      "mapHorizontalOverflow": true
+    }
+  },
+  "mobile390": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "verified": {
+      "enemyCards": [
+        "群集14 / 圧迫 / 幅25 集団圧迫:塹壕線",
+        "銃兵11 / 銃列 / 幅17 銃兵支援:森林左翼線"
+      ],
+      "enemyAssaultFootprints": 5,
+      "enemyAssaultAxes": 5,
+      "internalMapNodeIdVisible": false,
+      "brokenImages": 0,
+      "pageHorizontalOverflow": false,
+      "mapHorizontalOverflow": true
+    }
+  },
+  "consoleErrorsSinceRunStart": 0,
+  "notes": [
+    "Battle map horizontal overflow is expected because the tactical field is intentionally scrollable.",
+    "Viewport override was reset after mobile verification.",
+    "Enemy target labels use Japanese segment or fortification names, not internal mapNodeId values."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "takawasi-army-camp-standard-order-clear",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop/default in-app browser",
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "start mandatory battle",
+    "run at 3x until staff advisory appears",
+    "apply one staff advisory",
+    "withdraw battle",
+    "open After Action",
+    "apply result to campaign",
+    "open next-turn Deployment",
+    "select 東方辺境猟兵隊",
+    "save lesson-derived standing order",
+    "return to Army Camp",
+    "select 東方辺境猟兵隊",
+    "clear saved standard order",
+    "reset QA campaign"
+  ],
+  "verified": {
+    "beforeClear": {
+      "unit": "東方辺境猟兵隊",
+      "lessonSummary": "戦術教訓 参謀警告1件 / 得意殺傷地帯 / 即応+4 / 統制+1 / 後退判断+2",
+      "preferredDoctrine": "得意方針 殺傷地帯",
+      "standardOrderDescription": "殺傷地帯教訓から保存した自律指揮方針。次回主戦場の初期配置へ適用する。",
+      "standardOrderStats": "姿勢 阻止射撃 / 優先 最大集団 / 弾薬 集中射撃",
+      "clearButton": "標準方針を解除"
+    },
+    "afterClear": {
+      "lessonSummaryStillVisible": true,
+      "preferredDoctrineStillVisible": true,
+      "standardOrderDescriptionRemoved": true,
+      "clearButtonRemoved": true,
+      "fallbackText": "出撃配置または戦闘中に方針保存すると、この旅団の標準方針として残る。",
+      "campaignMessage": "東方辺境猟兵隊の標準方針を解除した。戦術教訓と部隊史は保持される。"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": 0,
+    "qaCampaignReset": true
+  }
+}

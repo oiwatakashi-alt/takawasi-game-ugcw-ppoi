@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-frontline-polyline-sketch",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Battle Command multi-point frontline sketch",
+    "Three-point sketch preview and confirm flow for selected frontline",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900 and reset the campaign.",
+    "Strategic map -> Camp -> Deployment -> selected units battle start.",
+    "Clicked 戦線スケッチ on the selected frontline.",
+    "Clicked three tactical map points: new anchor, fallback point, and an additional bend/width point.",
+    "Verified the readout showed 追加点または確定 / 3点指定.",
+    "Verified the SVG preview rendered one polyline plus three sketch points.",
+    "Clicked スケッチ確定.",
+    "Verified battle log showed 森林左翼線を多点スケッチ更新。3点 / 基準X52 Y28 / 後退X24 Y34 / 幅39。",
+    "Verified selected frontline readout showed the new anchor and fallback.",
+    "Reset the QA campaign and viewport afterward."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

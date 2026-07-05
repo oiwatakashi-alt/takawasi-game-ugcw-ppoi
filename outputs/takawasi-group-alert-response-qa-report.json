@@ -1,0 +1,65 @@
+{
+  "id": "takawasi-group-alert-response-2026-07-03",
+  "slice": "battle-group-alert-response-command",
+  "date": "2026-07-03",
+  "summary": "Battle alert cards can now expose a secondary group-response command when an alert resolves to multiple brigades or facility-related units.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "evidence": "Vite production build completed before browser QA."
+  },
+  "desktopQa": {
+    "viewport": "default desktop",
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "reload local app",
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "set battle speed to 3x",
+      "wait for line-integrity alert",
+      "click secondary group action 全線6旅団"
+    ],
+    "observations": {
+      "lineIntegrityAlert": "戦線突破危険 exposed 全線6旅団",
+      "fallbackGuardCards": 6,
+      "unitCards": 6,
+      "log": "警報一括対応: 6部隊へ全線後退守備を適用。",
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": 0
+    },
+    "status": "passed"
+  },
+  "mobileQa": {
+    "viewport": "390x900",
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "inspect existing battle alert cards after group response",
+      "verify alert actions and unit-card state on mobile layout"
+    ],
+    "observations": {
+      "visibleActionsIncluded": [
+        "後退守備へ",
+        "全線6旅団",
+        "阻止射撃へ",
+        "敵指揮優先"
+      ],
+      "groupButtonApproxSize": "70px x 34px",
+      "fallbackGuardCards": 6,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": 0
+    },
+    "status": "passed"
+  },
+  "implementedBehavior": [
+    "line-integrity alerts can resolve all non-retreating player brigades",
+    "segment alerts can resolve all brigades assigned to that segment when multiple units are present",
+    "structure alerts can resolve assigned defenders plus nearest engineer candidates",
+    "group actions use existing StandingOrder/domain command paths instead of a separate shortcut-only state mutation"
+  ],
+  "knownLimitations": [
+    "group response is preset-based; it does not yet run a deeper staff-planner evaluation",
+    "the tactical map remains intentionally horizontally scrollable on mobile",
+    "direct drag placement and freehand line drawing remain deferred"
+  ]
+}

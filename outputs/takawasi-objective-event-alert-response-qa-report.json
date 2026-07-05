@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-objective-event-alert-response",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": "desktop-only; mobile/cellphone QA is outside the current target",
+  "commands": [
+    "npm run build",
+    "npm run dev -- --host 127.0.0.1"
+  ],
+  "route": [
+    "http://127.0.0.1:5173/",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "選抜部隊で戦闘開始",
+    "3倍 tick progression",
+    "視界点: 観測点沈黙 alert -> 視界点奪回"
+  ],
+  "observedAlertCards": [
+    "勝利地点: 指揮信号途絶 / 指揮小丘 / 戦線維持-4 / 喪失 0% / 勝利点奪回 / 目標3部隊",
+    "視界点: 観測点沈黙 / 林縁観測丘 / 視界-8 / 喪失 0% / 視界点奪回 / 目標3部隊"
+  ],
+  "observedHud": [
+    "目標効果 勝利点-14戦線 / 補給+0.16弾薬 / 斉射弾薬x0.86 / 視界-22 / 制圧-0.08 / 敵波不明瞭 / イベント 指揮信号途絶 / 観測点沈黙",
+    "目標イベント 指揮信号途絶 / 観測点沈黙",
+    "視界 54",
+    "発見 10/20"
+  ],
+  "alertActionEvidence": [
+    "警報対応: 第2工兵中隊へ視界点奪回を適用。",
+    "目標対応: 視界点奪回へ3旅団を投入。担当戦線 塹壕補修線。",
+    "selected unit changed to 第2工兵中隊 with anchor X70 Y42, posture 阻止射撃, target priority 敵指揮, and facility repair assignment retained"
+  ],
+  "qualityGates": {
+    "build": "passed",
+    "consoleErrorsAndWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false
+  },
+  "notes": [
+    "Objective event alerts are generated from BattleObjectiveNode.eventState when severity is strained or critical.",
+    "Alert body click selects the nearest relevant unit and scrolls to the objective position.",
+    "Alert action uses the existing applyObjectiveNodeResponse path, preserving objective-response role carryover."
+  ]
+}

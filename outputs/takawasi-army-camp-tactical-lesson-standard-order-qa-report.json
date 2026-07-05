@@ -1,0 +1,41 @@
+{
+  "name": "takawasi-army-camp-tactical-lesson-standard-order",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop/default in-app browser",
+  "mobileQa": "skipped: mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "reset campaign",
+    "open Army Camp",
+    "open Deployment",
+    "start mandatory battle",
+    "run at 3x until staff advisory appears",
+    "apply one staff advisory",
+    "withdraw battle",
+    "open After Action",
+    "apply result to campaign",
+    "open next-turn Deployment",
+    "select 第4戦列歩兵大隊",
+    "save lesson-derived standing order",
+    "return to Army Camp",
+    "select 第4戦列歩兵大隊 and verify inspector"
+  ],
+  "verified": {
+    "afterActionLessonPreview": "次戦教訓 appeared for 第4戦列歩兵大隊 and 第6塹壕歩兵大隊",
+    "deploymentLessonSave": "弾性拒止教訓から保存した自律指揮方針。次回主戦場の初期配置へ適用する。",
+    "armyCampInspector": {
+      "unit": "第4戦列歩兵大隊",
+      "lessonSummary": "戦術教訓 参謀警告1件 / 得意弾性拒止 / 即応+4 / 統制+1 / 後退判断+2",
+      "preferredDoctrine": "得意方針 弾性拒止",
+      "standardOrderDescription": "弾性拒止教訓から保存した自律指揮方針。次回主戦場の初期配置へ適用する。",
+      "standardOrderStats": "姿勢 弾性防御 / 優先 最接近 / 弾薬 弾薬節約"
+    },
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": 0
+  }
+}

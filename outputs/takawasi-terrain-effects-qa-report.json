@@ -1,0 +1,28 @@
+{
+  "desktop": {
+    "terrainCallouts": [
+      "森林遮蔽帯 移動72%",
+      "泥濘低地 移動48%",
+      "塹壕掩体線 移動72%"
+    ],
+    "hasForestMovement": true,
+    "hasMarshMovement": true,
+    "hasTrenchMovement": true,
+    "selectedPanelHasTerrain": true,
+    "firstCardHasEffectiveRange": true,
+    "tickAdvanced": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "mobile": {
+    "hasTerrainText": true,
+    "brokenImages": 0,
+    "overflow": 0,
+    "errors": []
+  },
+  "screenshots": [
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-terrain-effects-battle-desktop.png",
+    "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-terrain-effects-battle-mobile.png"
+  ]
+}

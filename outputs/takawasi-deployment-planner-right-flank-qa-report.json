@@ -1,0 +1,33 @@
+{
+  "saved": {
+    "saveVersion": 3,
+    "campaignSaveVersion": 3,
+    "count": 1,
+    "unitId": "unit-infantry-1",
+    "segment": "right-flank",
+    "posture": "aggressive_screen",
+    "targetPriority": "officer",
+    "ammoPolicy": "conserve",
+    "fallback": {
+      "enabled": true,
+      "moraleBelow": 55,
+      "soldiersBelowRatio": 0.72,
+      "ammoBelow": 18,
+      "destination": {
+        "x": 15,
+        "y": 72
+      }
+    },
+    "facilityAssignment": {
+      "structureId": "fort-active-front-trench-1",
+      "mode": "defend"
+    }
+  },
+  "battleHasAppliedLog": true,
+  "firstCardHasRightFlank": true,
+  "firstCardHasPreset": true,
+  "brokenImages": 0,
+  "overflow": 1,
+  "errors": [],
+  "screenshot": "/Users/oiwa/Desktop/takawasi game/outputs/takawasi-deployment-planner-right-flank-battle.png"
+}

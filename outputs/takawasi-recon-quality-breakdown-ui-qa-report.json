@@ -1,0 +1,44 @@
+{
+  "name": "takawasi recon quality breakdown UI QA",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": "browser default"
+  },
+  "scope": "Desktop QA only. Mobile QA is outside the active target.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "scenario": {
+    "steps": [
+      "Reset campaign from the Theater UI.",
+      "Assigned the first recon side operation to 東方辺境猟兵隊 and ケラー.",
+      "Verified baseline recon preview and breakdown chips.",
+      "Injected one bad-intel unit history and one officer intelligence-lesson history into the same saved campaign.",
+      "Reloaded and verified lesson bonus chips plus increased recon preview."
+    ],
+    "baseline": {
+      "preview": "精密偵察90",
+      "chips": ["部隊72", "将校12", "参謀支援+6"],
+      "lessonChipsPresent": false
+    },
+    "withLessons": {
+      "preview": "精密偵察100",
+      "chips": ["部隊76", "将校18", "参謀支援+6", "部隊教訓+4", "将校教訓+6"]
+    }
+  },
+  "assertions": {
+    "reconBreakdownVisible": true,
+    "lessonBreakdownVisible": true,
+    "lessonIncreasesReconPreview": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflowX": false
+  },
+  "notes": [
+    "The browser save was modified through developer protocol for QA setup only.",
+    "The app was visually verified at 1440px; mobile QA was intentionally skipped."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "takawasi-battle-withdrawal-forecast",
+  "date": "2026-07-04",
+  "target": "Battle Command desktop withdrawal forecast and withdrawal flow",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "out_of_scope_current_target",
+  "flow": [
+    "reset campaign via UI",
+    "Strategic Map -> Army Camp -> Deployment -> Battle",
+    "verify withdrawal forecast panel is visible before pressing withdrawal",
+    "run battle at 3x long enough for frontline/objective pressure to change",
+    "verify withdrawal forecast updates from ready to warning and explains vision-point loss",
+    "press withdrawal after pressure has worsened and verify the battle can still progress to After Action",
+    "reset campaign via UI",
+    "Strategic Map -> Army Camp -> Deployment -> Battle",
+    "press withdrawal immediately",
+    "verify battle status becomes 戦闘撤退, withdrawal button disables, 戦果報告へ appears, and After Action reports withdrawal"
+  ],
+  "observed": {
+    "initialForecast": {
+      "className": "withdrawal-forecast-panel ready",
+      "textIncludes": [
+        "撤退予測",
+        "秩序撤退可能",
+        "戦線維持 100%",
+        "戦利品効率 46%",
+        "補給消費 中"
+      ]
+    },
+    "afterTicksForecast": {
+      "className": "withdrawal-forecast-panel warning",
+      "textIncludes": [
+        "撤退で古参温存",
+        "戦線維持 87%",
+        "視界点喪失",
+        "予備と後衛を残し主力を逃がす"
+      ]
+    },
+    "lateWithdrawal": {
+      "note": "At 3x pressure, battle had already collapsed by the time withdrawal was pressed; 戦果報告へ still appeared and After Action opened."
+    },
+    "immediateWithdrawal": {
+      "battleStatus": "戦闘撤退",
+      "withdrawButtonDisabled": true,
+      "afterActionIncludes": "東方辺境防衛線から戦闘撤退した。"
+    }
+  },
+  "checks": {
+    "npmRunBuild": "pass",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false,
+    "qaCampaignReset": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "takawasi-objective-scenario-variants",
+  "date": "2026-07-05",
+  "target": "desktop browser only",
+  "mobileQa": "skipped; mobile/cellphone is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": [
+      "Vite emitted the existing large chunk warning only."
+    ]
+  },
+  "flow": [
+    "Load http://127.0.0.1:5173/",
+    "Verify Strategic Map initial state",
+    "Open Camp",
+    "Open Deployment",
+    "Start mandatory battle",
+    "Inspect battle objective scenario labels, staff cards, support cards, map nodes, and battle log",
+    "Reset campaign back to Strategic Map"
+  ],
+  "observedObjectiveVariants": {
+    "sector": "Active Front default",
+    "terrainTags": [
+      "forest",
+      "marsh",
+      "trench"
+    ],
+    "battleLog": "目標地形: 勝利地点/塹壕交差点、補給点/板道荷車列、視界点/葦原監視線。",
+    "victory": "塹壕交差点",
+    "supply": "板道荷車列",
+    "visibility": "葦原監視線",
+    "visibleIn": [
+      "battle log",
+      "map objective nodes",
+      "objective staff recommendation cards",
+      "selected-frontline objective-support cards"
+    ]
+  },
+  "checks": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false,
+    "battleHudVisible": true,
+    "visibleSaveVersion": "v8",
+    "campaignResetAfterQa": true
+  },
+  "desktopSnapshot": {
+    "url": "http://127.0.0.1:5173/",
+    "title": "takawasi game",
+    "viewportWidth": 1280,
+    "documentScrollWidth": 1280
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-withdrawal-rearguard-after-action",
+  "date": "2026-07-04",
+  "target": "Withdrawal rear-guard outcome and campaign carryover",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "out_of_scope_current_target",
+  "flow": [
+    "reset campaign via UI",
+    "Strategic Map -> Army Camp -> Deployment -> Battle",
+    "press 撤退実行 immediately",
+    "open 戦果報告",
+    "verify 撤退後衛 section and per-unit pursuit prevention lines",
+    "apply result back to Army Camp",
+    "verify last campaign message and unit history carry 撤退後衛 / 追撃被害 text",
+    "reset campaign via UI"
+  ],
+  "observed": {
+    "afterAction": {
+      "hasWithdrawalRearGuard": true,
+      "hasPursuitPrevented": true,
+      "summary": "後衛3部隊が追撃被害32相当を抑止。追撃圧18。",
+      "entries": [
+        "第3野戦砲兵中隊: 後衛援護 / 追撃被害15抑止",
+        "衛戍予備歩兵大隊: 後衛援護 / 追撃被害12抑止",
+        "第1戦列歩兵大隊: 離脱掩護 / 追撃被害5抑止"
+      ]
+    },
+    "campCarryover": {
+      "inCamp": true,
+      "lastMessageIncludes": "後衛3部隊が追撃被害32相当を抑止。",
+      "unitHistoryIncludes": [
+        "撤退後衛",
+        "追撃被害"
+      ]
+    }
+  },
+  "checks": {
+    "npmRunBuild": "pass",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false,
+    "qaCampaignReset": true
+  }
+}

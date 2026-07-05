@@ -1,0 +1,37 @@
+{
+  "id": "takawasi-objective-tactical-effects-qa",
+  "date": "2026-07-04",
+  "target": "Desktop 1440px Battle Command tactical objective runtime effects",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "Army Camp",
+      "Deployment",
+      "Battle Command",
+      "Run several ticks at 3x",
+      "Withdraw",
+      "After Action",
+      "Reset campaign"
+    ],
+    "verified": [
+      "Battle Command displayed 目標効果 in the battle objective HUD.",
+      "After several ticks the HUD showed concrete tactical objective effects: 勝利点+4戦線 / 補給+0.16弾薬 / 視界-14 / 制圧-0.08.",
+      "Visibility readout reflected the visibility objective penalty with 視界 62 and 発見 1/5.",
+      "After Action still displayed tactical objective outcome lines including 勝利点, 補給点, and 視界点.",
+      "Campaign reset returned to the strategic campaign map."
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

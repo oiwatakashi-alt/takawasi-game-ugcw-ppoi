@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-autonomous-reason-detail-2026-07-03",
+  "slice": "battle-autonomous-reason-detail",
+  "date": "2026-07-03",
+  "summary": "Battle Command now explains autonomous brigade behavior with detailed Japanese reason strings in the selected panel, unit cards, and map tokens.",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktopQa": {
+    "viewport": "1280x720",
+    "url": "http://127.0.0.1:5173/",
+    "flow": [
+      "Strategic Map -> Camp -> Deployment -> Battle",
+      "inspect selected command summary",
+      "inspect brigade cards",
+      "inspect player map-token reason badges"
+    ],
+    "observations": {
+      "selectedSummary": "基準 X34 Y23 / 半径17 後退 X16 Y28 / 自動後退あり 現在行動 基準位置を保持 判断理由 保持判断: 森林左翼線 / 基準距離0 / 地形森林遮蔽帯",
+      "detailCount": 6,
+      "mapReasonCount": 6,
+      "examples": [
+        "保持判断: 森林左翼線 / 基準距離0 / 地形森林遮蔽帯",
+        "修理判断: 塹壕線 修理または損傷施設へ移動"
+      ],
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflow": false
+    },
+    "status": "passed"
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile-specific QA is no longer a current gate by user direction on 2026-07-03."
+  },
+  "implementedBehavior": [
+    "Derives reason detail from BattleUnit.actionReason and StandingOrder state.",
+    "Includes current target, facility assignment, fallback thresholds, terrain, and line-of-sight context where relevant.",
+    "Shows the selected brigade's reason in the command summary.",
+    "Shows each brigade's reason in the command card and player map token."
+  ],
+  "knownLimitations": [
+    "Reason strings are UI-derived from existing battle state; no new planner trace model is stored yet.",
+    "Enemy-side reasoning remains limited to existing assault/command/morale labels."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "slice": "enemy-morale-routing-regrouping",
+  "date": "2026-07-03",
+  "url": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "desktop": {
+    "viewport": "default",
+    "flow": "Strategic Map -> Camp -> Deployment -> Battle -> 3x tick -> pause",
+    "timeText": "防衛時間 62/150秒",
+    "moraleText": {
+      "wavering": true,
+      "routing": true,
+      "regrouping": true
+    },
+    "currentMapState": {
+      "routingEnemies": 0,
+      "waveringEnemies": 0,
+      "regroupingEnemies": 1
+    },
+    "visibleAlert": "敵潰走/再集結1群 / 群集 再集結",
+    "visibleEnemyNode": "群集9 / 圧迫 / 再集結 / 凝集30 / 士気35 / 指揮下 指揮26%",
+    "battleLogEvidence": [
+      "アンデッド群集 動揺 -> 潰走。",
+      "アンデッド群集 潰走 -> 再集結。"
+    ],
+    "brokenImages": 0,
+    "pageHorizontalOverflow": false
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeText": "防衛時間 62/150秒",
+    "hasBattle": true,
+    "hasMoraleText": true,
+    "currentMapState": {
+      "routingEnemies": 0,
+      "waveringEnemies": 0,
+      "regroupingEnemies": 1
+    },
+    "mapHorizontalScroll": {
+      "intentional": true,
+      "clientWidth": 370,
+      "scrollWidth": 1680
+    },
+    "visibleAlert": "敵潰走/再集結1群 / 群集 再集結",
+    "brokenImages": 0,
+    "pageHorizontalOverflow": false,
+    "consoleErrors": 0
+  },
+  "notes": [
+    "Enemy morale is now distinct from command collapse.",
+    "Damage lowers morale; low morale and cohesion can move enemy groups from steady to wavering to routing.",
+    "Routing or regrouping groups move rearward and do not attack until they recover.",
+    "Regrouping is deliberately held long enough to be visible on map tokens, alerts, and battle logs."
+  ]
+}

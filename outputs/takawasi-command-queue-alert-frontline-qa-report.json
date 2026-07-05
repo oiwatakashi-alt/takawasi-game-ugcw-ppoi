@@ -1,0 +1,46 @@
+{
+  "pass": "battle-command-queue-alert-frontline",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x900",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Vite chunk-size warning only."
+  },
+  "flow": [
+    "Strategic Map -> Camp",
+    "Camp -> Deployment",
+    "Deployment -> Battle",
+    "run battle at 3x until enemy pressure and alerts appear",
+    "enable 予約指揮 with 停止して予約",
+    "queue alert recommendation 阻止射撃へ",
+    "queue frontline pressure recommendation 予備投入",
+    "apply queued commands with 一括発令",
+    "verify unit/card state, console, images, overflow",
+    "reset campaign"
+  ],
+  "observed": {
+    "queuedItems": [
+      "#1 第1戦列歩兵大隊 警報 阻止射撃",
+      "#2 中央塹壕線 予備投入"
+    ],
+    "afterApply": {
+      "queueItems": 0,
+      "queueApplyLog": "予約指揮: 2件を一括発令",
+      "frontlineLog": "戦線圧力対応: 中央塹壕線",
+      "alertEffect": "第1戦列歩兵大隊 showed 姿勢 阻止射撃 / 目標 大型敵 / 弾薬 集中射撃",
+      "frontlineEffect": "衛戍予備歩兵大隊 moved to 戦線 中央塹壕線 and central defenders rose from 2 to 3"
+    },
+    "reset": {
+      "turnOne": true,
+      "hasMainBattle": true
+    }
+  },
+  "qa": {
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "mobileQa": "skipped intentionally; mobile is no longer a current gate"
+  }
+}

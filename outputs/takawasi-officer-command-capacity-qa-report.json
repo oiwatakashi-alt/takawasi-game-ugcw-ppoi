@@ -1,0 +1,41 @@
+{
+  "name": "takawasi officer command capacity QA",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x1000",
+  "mobileQa": "skipped intentionally; mobile is not a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "load app",
+    "reset campaign",
+    "open Camp",
+    "verify selected brigade command capacity preview",
+    "open Deployment",
+    "start mandatory battle",
+    "verify battle unit cards include command capacity and overload summaries"
+  ],
+  "checks": {
+    "campHasCommandCapacity": true,
+    "battleHasCommandCapacity": true,
+    "battleHasOfficerEffect": true,
+    "overloadVisibleSomewhere": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "observedText": {
+    "camp": "指揮効果 階級指揮 士気+2 即応+4 / 指揮容量 760/810 / 規律: 士気+3 容量+90 後退遅延",
+    "battle": [
+      "指揮効果 階級指揮 士気+2 即応+4 / 指揮容量 760/810 / 規律: 士気+3 容量+90 後退遅延",
+      "指揮効果 階級指揮 士気+1 即応+2 / 指揮容量 640/530 / 塹壕: 統制+2 容量+110 後退遅延 / 指揮過負荷 110 士気-2"
+    ]
+  },
+  "notes": [
+    "OfficerCommandProfile now includes commandCapacity, commandLoad, and commandOverload.",
+    "Rank defines baseline command capacity. Branch-fitting traits can raise capacity.",
+    "Over-capacity brigades apply morale, condition, control-radius, reserve-readiness, and fallback-threshold penalties at battle creation."
+  ]
+}

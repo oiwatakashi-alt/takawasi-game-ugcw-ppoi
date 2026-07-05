@@ -1,0 +1,64 @@
+{
+  "slice": "corps-headquarters-staff",
+  "date": "2026-07-03",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "status": "passed",
+    "steps": [
+      "Open app at desktop viewport",
+      "Navigate campaign map to Army Camp",
+      "Verify existing-save migration shows headquarters staff box with empty assignments",
+      "Reset campaign and verify initial staff assignments",
+      "Change quartermaster staff officer from Weber to Keller",
+      "Navigate to Deployment and verify deployment slot plus headquarters ledger",
+      "Start battle and verify headquarters command-capacity and reserve-readiness effects on BattleUnit cards"
+    ],
+    "observed": {
+      "initialStaffAfterReset": [
+        "大佐 アルンハイム",
+        "少佐 ヴェーバー",
+        "大尉 メッツ",
+        "大尉 バウアー"
+      ],
+      "afterStaffChange": [
+        "大佐 アルンハイム",
+        "大尉 ケラー",
+        "大尉 メッツ",
+        "大尉 バウアー"
+      ],
+      "armyEffectText": "司令部効果: 出撃枠+1 / 指揮容量+233 / 予備即応+23",
+      "deploymentHeader": "7/7",
+      "deploymentLedger": "軍団司令部 出撃+1 / 予備+23",
+      "deploymentCommandCapacity": "全旅団 指揮容量内",
+      "battleCommandEffectSample": "指揮容量 760/1043 / 司令部 容量+233",
+      "battleReserveReadinessSamples": [
+        "第1戦列歩兵大隊 予備即応45",
+        "第3野戦砲兵中隊 予備即応88"
+      ]
+    },
+    "checks": {
+      "armyHeadquartersVisible": true,
+      "divisionRowsVisible": true,
+      "staffSelectsCount": 4,
+      "staffChangeMessageVisible": true,
+      "deploymentHeadquartersVisible": true,
+      "battleHeadquartersCapacityVisible": true,
+      "battleReserveReadinessVisible": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "horizontalOverflow": false
+    }
+  },
+  "notes": [
+    "Mobile QA intentionally skipped because mobile is not a current target.",
+    "Existing save v4 campaigns are normalized with empty staff assignments; new campaigns receive the initial headquarters staff assignments."
+  ]
+}

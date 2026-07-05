@@ -1,0 +1,62 @@
+{
+  "slice": "staff-duty-burden",
+  "date": "2026-07-03",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "status": "passed",
+    "steps": [
+      "Reset campaign",
+      "Open Army Camp",
+      "Verify initial staff assignments and headquarters effect",
+      "Assign Weber to chief of staff while he was quartermaster",
+      "Verify Weber appears in only one staff slot and quartermaster is cleared",
+      "Select Weber's brigade and verify staff-duty burden in command summary",
+      "Open Officers tab and verify staff-duty burden lines",
+      "Open Deployment and verify adjusted headquarters reserve and command capacity",
+      "Start battle and verify BattleUnit command summaries include staff-duty burden"
+    ],
+    "observed": {
+      "initialStaff": [
+        "大佐 アルンハイム",
+        "少佐 ヴェーバー",
+        "大尉 メッツ",
+        "大尉 バウアー"
+      ],
+      "afterDuplicateAssignment": [
+        "少佐 ヴェーバー",
+        "未任命",
+        "大尉 メッツ",
+        "大尉 バウアー"
+      ],
+      "duplicateWeberSlots": 1,
+      "armyEffectAfterChange": "司令部効果: 出撃枠+1 / 指揮容量+189 / 予備即応+15",
+      "weberArmyCommandSummary": "指揮容量 580/949 / 司令部 容量+189 / 参謀兼任 負荷-120 / 予備: 即応+12 統制+2 容量+160",
+      "deploymentLedger": "軍団司令部 出撃+1 / 予備+15",
+      "deploymentWeberCapacity": "指揮容量 580/949",
+      "battleWeberCommandSummary": "指揮容量 580/949 / 司令部 容量+189 / 参謀兼任 負荷-120",
+      "battleMetzCommandSummary": "指揮容量 210/619 / 司令部 容量+189 / 参謀兼任 負荷-70"
+    },
+    "checks": {
+      "staffDuplicateCleared": true,
+      "armyBurdenVisible": true,
+      "officersBurdenVisible": true,
+      "deploymentCapacityAdjusted": true,
+      "battleBurdenVisible": true,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "horizontalOverflow": false
+    }
+  },
+  "notes": [
+    "Mobile QA intentionally skipped because mobile is not a current target.",
+    "This pass implements one officer per staff slot and command-capacity burden for officers who also command a brigade. Longer-term fatigue, political cost, and staff-only officer pools remain deferred."
+  ]
+}

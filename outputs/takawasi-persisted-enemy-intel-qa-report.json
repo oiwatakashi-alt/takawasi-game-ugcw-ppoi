@@ -1,0 +1,53 @@
+{
+  "slice": "persisted-enemy-composition-intel",
+  "date": "2026-07-03",
+  "scope": {
+    "summary": "StrategicOperation now stores enemyCompositionIntel with per-enemy threat ranges, and recon auto-resolve updates the same enemy intel alongside spoils intel.",
+    "mobileQa": "skipped: mobile is no longer a current target"
+  },
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "target": "http://127.0.0.1:5173/",
+    "viewport": "1440x950",
+    "tooling": "Playwright desktop check after in-app browser runtime timed out during localStorage inspection",
+    "flow": [
+      "Strategic Map",
+      "inspect main battle enemy intel ranges",
+      "Camp",
+      "Deployment",
+      "assign recon operation unit/officer",
+      "auto-resolve recon operation",
+      "inspect revised main battle and side-operation enemy intel"
+    ],
+    "observed": {
+      "initialMainBrief": "敵編成 群集+銃兵+突破体 / 敵情信頼中 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "deploymentBrief": "敵編成 群集+銃兵+突破体 / 敵情信頼中 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "afterReconMainBrief": "敵編成 群集+銃兵+突破体 / 精密照合 / 群集2-4 / 銃兵2-4 / 突破体1-3",
+      "afterReconSideBriefExample": "敵情 群集+銃兵+突破体 / 精密照合 / 群集4-6 / 銃兵2-4 / 突破体1-3",
+      "saveEnvelopeVersion": 6,
+      "campaignSaveVersion": 6,
+      "mandatoryBattleHasEnemyCompositionIntel": true,
+      "sideOperationsWithEnemyCompositionIntel": 4,
+      "brokenImages": 0,
+      "consoleErrors": 0,
+      "pageOverflowX": false
+    }
+  },
+  "implemented": [
+    "Added StrategicOperation.enemyCompositionIntel.",
+    "Added EnemyCompositionIntel summary, confidence, threats, threatRanges, reconQualityScore, reconEffect, and revision metadata.",
+    "Strategic turn generation creates enemyCompositionIntel for main battles and side operations.",
+    "Recon auto-resolve improves or marks enemyCompositionIntel as misleading together with spoils intel.",
+    "Save version moved to v6 and migration backfills enemyCompositionIntel for existing operations.",
+    "Theater, Deployment, and Army command recommendations now read persisted enemyCompositionIntel first."
+  ],
+  "deferred": [
+    "Wave timing probability display.",
+    "Enemy command-wave probability display.",
+    "Doctrine-intent-aware command recommendation weighting.",
+    "Strategic operation enemy-intel UI affordances beyond text ranges."
+  ]
+}

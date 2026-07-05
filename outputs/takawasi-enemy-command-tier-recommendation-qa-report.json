@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-enemy-command-tier-recommendation-qa",
+  "date": "2026-07-05",
+  "target": "Enemy command-tier recommendation cards and recommended action execution",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "Strategic Map",
+      "戦役をリセット",
+      "幕舎で準備する",
+      "出撃配置へ",
+      "選抜部隊で戦闘開始",
+      "3倍",
+      "wait for command waves",
+      "inspect enemy command recommendation cards",
+      "推奨実行",
+      "戦役をリセット"
+    ],
+    "observed": {
+      "recommendationCardVisible": true,
+      "recommendedButtonVisible": true,
+      "recommendationExamples": [
+        "推奨 予備投入 / 突撃先導2群。突破・施設襲撃を止めるため担当線へ予備を接続する。",
+        "推奨 指揮核射撃 / 支援節1群。敵の士気維持と銃列支援を指揮核射撃で切る。",
+        "推奨 予備投入 / 前衛群中心。最も近い担当線へ予備を接続し、圧力を受け止める。"
+      ],
+      "recommendedActionEvidence": "敵指揮網対応: 第2波指揮核へ予備投入。中央塹壕線に1旅団を接続。"
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true,
+      "viewportResetAfterQa": true
+    },
+    "note": "Recommendation dispatch reuses existing command-network actions, so existing After Action roles remain unchanged."
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

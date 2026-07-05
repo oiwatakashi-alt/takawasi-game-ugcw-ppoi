@@ -1,0 +1,54 @@
+{
+  "feature": "Battle objective node control",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reload app",
+    "reset campaign",
+    "Army Camp",
+    "Deployment",
+    "start mandatory battle",
+    "verify initial objective nodes and HUD",
+    "set 3x speed",
+    "wait for enemy waves and node-control changes",
+    "verify objective node text, HUD values, broken images, console errors, and page overflow",
+    "reset campaign"
+  ],
+  "verified": {
+    "initialNodes": [
+      "勝利地点保持 72%",
+      "補給点保持 62%",
+      "視界点争奪 48% / 視界76"
+    ],
+    "afterTickElapsed": "防衛時間 73/150秒",
+    "afterTickControls": {
+      "victory": 0,
+      "supply": 100,
+      "visibility": 0
+    },
+    "afterTickNodes": [
+      "勝利地点喪失 0%",
+      "補給点保持 100%",
+      "視界点喪失 0% / 視界76"
+    ],
+    "objectiveHudVisible": true,
+    "controlStateVisible": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "BattleState now carries BattleObjectiveNode entries for victory, supply, and visibility objectives.",
+    "resolveTick updates objective control from nearby player presence and enemy pressure.",
+    "Victory control affects line integrity, visibility control affects suppression gain, and supply control provides local ammunition recovery.",
+    "Battle Command renders objective control state and HUD percentages from BattleState instead of fixed decorative nodes."
+  ]
+}

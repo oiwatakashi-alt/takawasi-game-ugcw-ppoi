@@ -1,0 +1,42 @@
+{
+  "feature": "Frontline geometry terrain comparison",
+  "date": "2026-07-04",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "skipped - mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning remains non-blocking and pre-existing."
+  },
+  "flow": [
+    "open http://127.0.0.1:5173/",
+    "戦役をリセット",
+    "幕舎で準備する",
+    "出撃配置へ",
+    "verify geometry preset comparison buttons",
+    "click 広域警戒線",
+    "verify active geometry and terrain note update",
+    "return to normal URL and reset campaign"
+  ],
+  "verifiedSignals": {
+    "geometryButtonCount": 7,
+    "bestPresetCount": 1,
+    "initialActivePreset": "戦区標準 平均93 / 最低82 / 地形推奨",
+    "initialNote": "現プリセット: 森林遮蔽 / 塹壕防衛 / 施設防衛 / 平均93 / 最低82 / 推奨方針戦線固守。平均評価93で遮蔽/施設利得が厚い。",
+    "afterClickActivePreset": "広域警戒線 平均89 / 最低59",
+    "afterClickNote": "現プリセット: 森林遮蔽 / 塹壕防衛 / 施設防衛 / 平均89 / 最低59 / 推奨方針戦線固守。平均評価89で遮蔽/施設利得が厚い。",
+    "previewPill": "広域警戒線",
+    "terrainAssessmentCards": 5,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "The preset comparison evaluates each geometry by applying it to the current sector segments, creating matching preview terrain zones, and summarizing fire, cover, mobility risk, support, average score, weakest score, and recommended doctrine.",
+    "The current active-front seed gives high scores to most geometry presets because trench and facility coverage are broad; the comparison still exposes weaker minimum score on wide_screen."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "date": "2026-07-03",
+  "target": "Officer battle result, risk, and history carryover / desktop 1440px",
+  "commands": [
+    "npm run build",
+    "npm run dev -- --host 127.0.0.1"
+  ],
+  "flow": [
+    "Open http://127.0.0.1:5173/ at 1440x1000",
+    "Reset campaign",
+    "Strategic Map -> Camp",
+    "Camp -> Deployment",
+    "Deployment -> selected units battle start",
+    "Battle -> 3x tick for roughly 5 seconds",
+    "Withdraw",
+    "Battle -> After Action",
+    "Apply result to Camp",
+    "Open Officers tab"
+  ],
+  "afterAction": {
+    "hasAfterAction": true,
+    "hasOfficerSection": true,
+    "hasOfficerXp": true,
+    "hasRisk": true,
+    "hasWoundState": true,
+    "examples": [
+      "第1戦列歩兵大隊指揮官: 戦線固守、指揮経験+2、危険度17、負傷なし",
+      "第4戦列歩兵大隊指揮官: 弾性防御、指揮経験+4、危険度21、負傷なし",
+      "東方辺境猟兵隊指揮官: 阻止反撃、指揮経験+4、危険度24、負傷なし",
+      "第3野戦砲兵中隊指揮官: 火力支援、指揮経験+3、危険度17、負傷なし",
+      "第2工兵中隊指揮官: 工兵支援、指揮経験+4、危険度17、負傷なし"
+    ]
+  },
+  "officersScreen": {
+    "isOfficersScreen": true,
+    "hasAssignment": true,
+    "hasOfficerHistory": true,
+    "hasRiskHistory": true,
+    "examples": [
+      "少佐 フォス 任務中 / 経験 36 / 配属: 第1戦列歩兵大隊 / 東方辺境防衛線防衛戦: 第1戦列歩兵大隊指揮、経験+2、危険度17",
+      "大尉 ケラー 任務中 / 経験 22 / 配属: 東方辺境猟兵隊 / 東方辺境防衛線防衛戦: 東方辺境猟兵隊指揮、経験+4、危険度24",
+      "大佐 アルンハイム 任務中 / 経験 49 / 配属: 第3野戦砲兵中隊 / 東方辺境防衛線防衛戦: 第3野戦砲兵中隊指揮、経験+3、危険度17"
+    ]
+  },
+  "browserQa": {
+    "desktopWidth": 1440,
+    "desktopHeight": 1000,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "pageOverflow": false
+  },
+  "mobile": "skipped by current product target"
+}

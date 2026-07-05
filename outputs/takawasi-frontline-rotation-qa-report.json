@@ -1,0 +1,38 @@
+{
+  "id": "takawasi-frontline-rotation-qa",
+  "date": "2026-07-04",
+  "feature": "frontline-rotation-fighting-withdrawal",
+  "scope": [
+    "Battle Command frontline pressure cards expose a fighting-rotation command when a pressured segment has both defenders and reserves.",
+    "The command moves a stressed defender to the fallback line and assigns a reserve unit to cover the same frontline segment.",
+    "The decision survives into After Action as battle roles for the withdrawn unit and covering unit."
+  ],
+  "codeChanges": [
+    "BattleUnit now has a battle-runtime frontlineRotationRole.",
+    "orders.ts adds applyFrontlineRotation for tired-defender/reserve-cover swaps.",
+    "Battle Command pressure cards show a rotation preview and a secondary 戦闘交代 button.",
+    "results.ts maps rotation roles into 任務 戦闘交代 and 任務 後衛援護 with commendations and XP bonuses."
+  ],
+  "verification": {
+    "build": "npm run build passed",
+    "browser": "http://127.0.0.1:5173/",
+    "viewport": "1440x900 desktop",
+    "mobileQa": "skipped; mobile is outside the current target",
+    "flow": [
+      "Reset campaign.",
+      "Theater -> Army Camp -> Deployment -> Battle.",
+      "Ran battle at 3x until frontline pressure cards showed enemy pressure and enabled 戦闘交代 buttons.",
+      "Observed five enabled 戦闘交代 buttons under pressure.",
+      "Clicked one 戦闘交代 button.",
+      "Observed battle log '戦闘交代: 衛戍予備歩兵大隊を後退線へ下げ、第3野戦砲兵中隊が森林左翼線を引き継ぐ。'",
+      "Moved to After Action.",
+      "Observed '任務 戦闘交代 / 損耗旅団を後退線へ整理'.",
+      "Observed '任務 後衛援護 / 交代旅団を援護、即応予備を投入'.",
+      "Applied result, returned to Theater, and reset campaign."
+    ],
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  }
+}

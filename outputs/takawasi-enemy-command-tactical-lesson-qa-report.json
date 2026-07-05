@@ -1,0 +1,48 @@
+{
+  "slice": "enemy-command-tactical-lesson-carryover",
+  "date": "2026-07-04",
+  "target": "desktop-only",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "browserQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "flow": [
+      "reset campaign",
+      "theater command",
+      "army camp",
+      "deployment",
+      "battle",
+      "enable queued command mode",
+      "advance at 3x until enemy command network appears",
+      "queue 指揮核射撃 and 予備投入",
+      "apply queued commands",
+      "withdraw",
+      "after action",
+      "apply result",
+      "next-turn deployment",
+      "select 第4戦列歩兵大隊",
+      "apply tactical lesson doctrine",
+      "reset campaign"
+    ],
+    "verifiedSignals": [
+      "After Action showed 第4戦列歩兵大隊 and 第6塹壕歩兵大隊 as 任務 敵指揮核制圧",
+      "After Action showed commendations 敵指揮核を射撃制圧 and 戦線斉射に参加",
+      "Next-turn Deployment showed 戦術教訓 敵指揮核制圧1件 / 得意遅滞節約 / 即応+1 / 統制+2 for 第4戦列歩兵大隊",
+      "Deployment showed 戦術教訓推奨 with 次戦初動は遅滞節約を推奨",
+      "教訓方針を適用 changed the selected draft to 姿勢 後退守備 / 優先 敵指揮 / 弾薬 弾薬節約",
+      "QA campaign was reset to 第1戦略ターン afterward"
+    ],
+    "diagnostics": {
+      "consoleErrors": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false
+    },
+    "mobileQa": "skipped by current user direction"
+  }
+}

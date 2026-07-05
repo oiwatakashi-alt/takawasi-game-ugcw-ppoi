@@ -1,0 +1,43 @@
+{
+  "id": "takawasi-enemy-command-response-queue-qa",
+  "date": "2026-07-04",
+  "target": "Enemy command-network summary and enemy-intent response commands through paused command queue",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "mobileQa": "skipped intentionally; mobile is outside the current active target"
+  },
+  "flow": [
+    "Open http://127.0.0.1:5173/",
+    "Strategic Map -> Camp -> Deployment -> Battle",
+    "Run at 3x briefly until spotted command-influenced enemy groups appear",
+    "Enable 停止して予約",
+    "Open an enemy command group detail from 敵指揮網",
+    "Queue 担当戦線で対応",
+    "Queue 担当戦線斉射",
+    "Apply queued commands with 一括発令",
+    "Reset the campaign"
+  ],
+  "observations": {
+    "enemyCommandNetworkPanel": "敵指揮網3群 / 発見敵 6/8 with command labels such as 第2波指揮核, intent 陣地突破, influence %, total force, total pressure, and lead threat lines.",
+    "queuedCommands": [
+      "#1 森林左翼線 敵群対応 阻止射撃 / 最大集団 / 群集 65体 / 2旅団",
+      "#2 森林左翼線 担当戦線斉射 / 衛戍予備歩兵大隊基準 / 群集 65体"
+    ],
+    "applyLogs": [
+      "予約指揮: 2件を一括発令。",
+      "敵群対応斉射: 衛戍予備歩兵大隊基準で森林左翼線の斉射を要請。",
+      "戦線斉射: 5旅団がアンデッド群集 65体へ9秒斉射（軍団斉射規律）。",
+      "敵群対応: 2旅団を森林左翼線で阻止射撃 / 最大集団へ移行。"
+    ],
+    "fireMission": "戦線斉射 アンデッド群集 / 5旅団 / 残り9秒 / 軍団斉射規律",
+    "postApplyState": "Queue returned to direct mode with 0 items."
+  },
+  "qa": {
+    "npmRunBuild": "passed",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "campaignReset": true
+  }
+}

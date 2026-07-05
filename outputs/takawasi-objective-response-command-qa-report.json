@@ -1,0 +1,47 @@
+{
+  "feature": "Battle objective response commands",
+  "date": "2026-07-04",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": "1440x900 desktop",
+  "mobile": "skipped intentionally; mobile is outside the current target",
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "note": "Vite chunk-size warning only"
+  },
+  "flow": [
+    "reload app",
+    "reset campaign",
+    "Theater -> Camp -> Deployment",
+    "start selected-unit battle",
+    "verify initial objective response buttons",
+    "click supply objective response",
+    "advance battle at 3x until objective pressure changes",
+    "click victory objective retake response",
+    "verify logs, selected unit order, console, images, overflow, and reset"
+  ],
+  "verified": {
+    "initialButtons": ["勝利点保持", "補給点防衛", "視界点制圧"],
+    "supplyResponseLog": true,
+    "supplyResponseSelectedUnit": "第4歩兵690 / 固守 / 幅20保持判断: 中央塹壕線 / 基準距離0 / 地形塹壕掩体線",
+    "buttonsAfterPressure": ["勝利点奪回", "補給点防衛", "視界点奪回"],
+    "retakeButton": "勝利点奪回",
+    "retakeResponseLog": true,
+    "elapsedAfterRetake": "防衛時間 68/150秒",
+    "objectiveNodesAfterPressure": [
+      "勝利地点喪失 0% 勝利点奪回",
+      "補給点保持 100% 補給点防衛",
+      "視界点喪失 0% / 視界76 視界点奪回"
+    ],
+    "selectedResponseUnit": "第4歩兵690 / 阻止 / 幅20復帰判断: 塹壕補修線の基準から20離脱 / 半径24",
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "horizontalOverflow": false,
+    "qaCampaignReset": true
+  },
+  "notes": [
+    "Objective-node buttons are state-specific: held objectives use hold/defend wording, contested objectives use secure/suppress wording, and enemy-held objectives use retake wording.",
+    "The response command uses StandingOrder changes rather than a UI-only marker, so the tick simulation consumes the new anchor, posture, target priority, ammo policy, fallback, and facility assignment.",
+    "Mobile QA was intentionally skipped because mobile is outside the current target."
+  ]
+}

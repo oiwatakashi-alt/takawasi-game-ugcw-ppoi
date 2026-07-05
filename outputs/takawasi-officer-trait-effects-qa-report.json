@@ -1,0 +1,39 @@
+{
+  "name": "takawasi officer trait effects QA",
+  "date": "2026-07-03",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": "desktop 1440x1000",
+  "mobileQa": "skipped intentionally; mobile is no longer a current gate",
+  "build": {
+    "command": "npm run build",
+    "status": "passed"
+  },
+  "flow": [
+    "load app",
+    "reset campaign",
+    "open Camp",
+    "verify Army selected-unit commander command-effect preview",
+    "open Officers",
+    "verify promotion action exists and promote one eligible officer",
+    "open Deployment",
+    "start mandatory battle",
+    "verify Battle unit card officer/effect display"
+  ],
+  "checks": {
+    "campHasCommandEffectLabel": true,
+    "battleHasOfficerLine": true,
+    "battleHasCommandSummary": true,
+    "promotionActionFound": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "observedText": {
+    "camp": "指揮官 / 少佐 フォス / 指揮効果 階級指揮 士気+2 即応+4 / 規律: 士気+3 後退遅延",
+    "battle": "指揮 フォス / 指揮効果 階級指揮 士気+2 即応+4 / 規律: 士気+3 後退遅延"
+  },
+  "notes": [
+    "OfficerCommandProfile now affects BattleUnit creation through morale, condition, ammo, range, firepower, fireRate, control radius, fallback morale, and reserve readiness.",
+    "Army Camp previews the selected command profile; Battle Command displays the profile applied to the runtime unit."
+  ]
+}

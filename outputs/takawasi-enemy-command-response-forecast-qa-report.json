@@ -1,0 +1,47 @@
+{
+  "id": "takawasi-enemy-command-response-forecast-qa",
+  "date": "2026-07-05",
+  "target": "Enemy command-network recommendation forecast display and recommended action dispatch",
+  "build": {
+    "command": "npm run build",
+    "result": "passed",
+    "note": "Vite large chunk warning remains non-blocking."
+  },
+  "desktopQa": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": "1440x900",
+    "flow": [
+      "戦役をリセット",
+      "幕舎で準備する",
+      "出撃配置へ",
+      "選抜部隊で戦闘開始",
+      "3倍",
+      "wait for enemy command-network cards",
+      "inspect recommendation and forecast rows",
+      "推奨実行",
+      "戦役をリセット"
+    ],
+    "observed": {
+      "forecastVisible": true,
+      "recommendationVisible": true,
+      "recommendedButtonCount": 5,
+      "forecastExamples": [
+        "予測 突破封鎖 / 予備1 / 即応-32 / 中央塹壕線へ接続。現守備2旅団、主脅威群集を受け止める。",
+        "予測 指揮低下 / 2旅団 / 弾薬高 / 銃兵を集中射撃。命中すれば同群の再集結と士気維持を崩す。"
+      ],
+      "recommendedActionEvidence": "敵指揮網対応: 第2波指揮核へ予備投入。中央塹壕線に1旅団を接続。"
+    },
+    "checks": {
+      "consoleErrorsOrWarnings": 0,
+      "brokenImages": 0,
+      "horizontalOverflow": false,
+      "containsNaN": false,
+      "campaignResetAfterQa": true,
+      "viewportResetAfterQa": true
+    }
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current target."
+  }
+}

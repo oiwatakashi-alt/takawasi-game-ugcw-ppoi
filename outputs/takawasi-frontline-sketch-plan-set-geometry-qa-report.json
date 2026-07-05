@@ -1,0 +1,51 @@
+{
+  "id": "takawasi-frontline-sketch-plan-set-geometry",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Promote saved Battle Command sketch points into FrontlineGeometryAdjustment.sketchLines",
+    "Save sketch-line geometry inside StandingOrderPlanSet",
+    "Preview saved plan-set sketch geometry in Deployment",
+    "Apply the plan set and rehydrate Deployment-facing sketch shape state",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Reset campaign and entered Army Camp, Deployment, then Battle Command.",
+    "Entered 3-point Battle Command frontline sketch for the selected Forest Left Line and confirmed it.",
+    "Saved the selected frontline standing order from Battle Command.",
+    "Verified saved battle sketch polyline count 1 and battle log contained multi-point sketch update.",
+    "Retreated, applied After Action, reloaded the app, and returned to Deployment.",
+    "Verified Deployment showed saved-order shape text: 戦線形状 3点 / X52 Y28 -> X24 Y34 -> X58 Y42.",
+    "Verified Deployment plan-save note: 計画セット保存時に戦線形状 1線を含める。",
+    "Saved a standing-order plan set and verified the row summary contained 形状1線.",
+    "Opened plan-set content preview and verified 保存戦線形状 森林左翼線 3点.",
+    "Applied the plan set and verified Deployment still exposed 形状3点 / 戦線形状 3点 and the saved shape preview."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "This stores saved sketch frontage as segment-scoped geometry in plan sets. It is not a full arbitrary freehand terrain-painting editor.",
+    "Browser automation became slow on the large Deployment page, so clicks were verified with targeted DOM evidence and visible text after each major state change.",
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}

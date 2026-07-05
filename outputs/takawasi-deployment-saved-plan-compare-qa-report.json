@@ -1,0 +1,53 @@
+{
+  "id": "takawasi-deployment-saved-plan-compare",
+  "date": "2026-07-04",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "Deployment saved standing-order comparison",
+    "Restoring a selected brigade's pre-battle draft from the saved StandingOrderTemplate",
+    "Desktop QA only; mobile/cellphone is outside the current target"
+  ],
+  "commands": [
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1",
+      "status": "used_for_browser_qa"
+    }
+  ],
+  "flow": [
+    "Opened app at 1440x900.",
+    "Reset campaign from the UI.",
+    "Camp -> Deployment -> Battle.",
+    "Sketched 森林左翼線 to X50 Y42 / X24 Y46 and clicked 戦線方針保存.",
+    "Verified two StandingOrderTemplates in localStorage for left-flank defenders.",
+    "Reloaded to campaign map, then Camp -> Deployment.",
+    "Verified 保存方針比較 panel for 第1戦列歩兵大隊 with 現在ドラフト and 保存済み標準 columns.",
+    "Verified 保存済み自律方針 list shows two rows and 比較 buttons.",
+    "Changed the selected draft to 弾性防御, confirming diff labels 姿勢 / 弾薬方針 / 後退線 and enabled 保存方針へ戻す.",
+    "Clicked 保存方針へ戻す and confirmed diff returned to なし and the button disabled again.",
+    "Reset QA campaign after verification."
+  ],
+  "observations": [
+    "Saved templates carried the frontline-plan description: 森林左翼線で戦闘中に保存した戦線方針。基準X50 Y42 / 後退X24 Y46。次回主戦場の初期配置へ適用する。",
+    "Deployment comparison displays the saved order after sector deployment-limit alignment, so chip coordinates may differ from the original battle sketch while the description preserves the original sketch coordinates.",
+    "Restore is a draft-level operation. The existing 方針保存 button remains the explicit action for persisting a changed draft."
+  ],
+  "quality": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanVisible": false
+  },
+  "result": "passed",
+  "notes": [
+    "Mobile QA was skipped because the current target excludes cellphone/mobile."
+  ]
+}
