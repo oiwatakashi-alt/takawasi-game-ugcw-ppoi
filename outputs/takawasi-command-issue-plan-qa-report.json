@@ -1,7 +1,7 @@
 {
   "id": "takawasi-command-issue-plan-qa",
   "date": "2026-07-05",
-  "scope": "Deployment command issue plan persistence, advisor, Battle Command compliance display, and queue congestion policy",
+  "scope": "Deployment command issue plan persistence, advisor, Battle Command compliance display, policy partial execution, and queue congestion policy",
   "result": "partial-pass",
   "verified": [
     {
@@ -28,6 +28,11 @@
       "check": "battle compliance display review",
       "status": "pass",
       "notes": "BattleCommandScreen derives a live compliance line from queued command count, commandIssuePlan, and commandCongestionReport. It distinguishes waiting, compliant, split-batch handling, congestion warning, and strict-direct violations before batch issue."
+    },
+    {
+      "check": "policy partial execution review",
+      "status": "pass",
+      "notes": "BattleCommandScreen can issue only the first command-issue-policy batch for split_batches or strict_direct, calculates congestion from the issued subset, logs the partial issue count, and keeps remaining commands queued."
     }
   ],
   "notVerified": [
@@ -50,6 +55,8 @@
     "Switch 伝令運用 to 分割発令 and verify the ledger changes to 2件単位.",
     "Start the mandatory battle and verify Battle Command 予約指揮 shows 分割発令 2件単位.",
     "Verify Battle Command shows 方針待機 with an empty queue, 方針適合 or 分割適用 when queued commands match the saved policy, and 逐次違反 when multiple commands are queued under 逐次発令.",
+    "Under 分割発令, queue more commands than the max batch size, click 方針通りN件ずつ発令, and verify only the first batch is issued while the rest remain queued.",
+    "Under 逐次発令, queue multiple commands, click 方針通り1件だけ発令, and verify one command is issued while the rest remain queued.",
     "Queue five selected-brigade commands and verify 一括混線 is reduced compared with 標準発令 under the same command-post capacity.",
     "Repeat with 逐次発令 and verify batching multiple commands creates the policy-violation delay reason."
   ]

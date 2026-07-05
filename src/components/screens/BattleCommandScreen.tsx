@@ -2758,6 +2758,14 @@ export function BattleCommandScreen({
       detail: `${commandIssuePlanLabels[commandIssuePlan.mode]}で処理可能。${commandCongestionPreview?.detail ?? "混線なし"}`,
     };
   })();
+  const commandIssuePolicyBatchSize =
+    commandIssuePlan.mode === "standard_queue"
+      ? queuedCommands.length
+      : Math.min(queuedCommands.length, Math.max(1, commandIssuePlan.maxBatchSize));
+  const canApplyCommandIssuePolicyBatch =
+    queuedCommands.length > 0 && commandIssuePlan.mode !== "standard_queue" && commandIssuePolicyBatchSize < queuedCommands.length;
+  const commandIssuePolicyBatchLabel =
+    commandIssuePlan.mode === "strict_direct" ? "1件だけ発令" : `${commandIssuePolicyBatchSize}件ずつ発令`;
   const selectedTargetAudits = selectedUnit ? targetAuditForUnit(battle, selectedUnit).slice(0, 5) : [];
   const selectedAuditTarget = selectedUnit ? selectedTargetAudit(battle, selectedUnit) : undefined;
   const spottedEnemyCount = battle.enemyUnits.filter((enemy) => enemy.isSpotted).length;
@@ -2860,22 +2868,34 @@ export function BattleCommandScreen({
     );
   };
 
-  const applyQueuedCommands = () => {
-    if (queuedCommands.length === 0) {
+  const applyQueuedCommandBatch = (batchSize: number, issueLabel: string) => {
+    const issuedCommands = queuedCommands.slice(0, batchSize);
+    const remainingCommands = queuedCommands.slice(batchSize);
+    if (issuedCommands.length === 0) {
       return;
     }
     const issuedAt = battle.elapsedSeconds;
     const nextBattle = applyCommandCongestionToPendingOrders(
-      queuedCommands.reduce((currentBattle, command) => command.apply(currentBattle), battle),
-      queuedCommands.length,
+      issuedCommands.reduce((currentBattle, command) => command.apply(currentBattle), battle),
+      issuedCommands.length,
       issuedAt,
     );
+    const remainingLabel = remainingCommands.length > 0 ? `残り${remainingCommands.length}件。` : "";
     onChange({
       ...nextBattle,
-      log: [`予約指揮: ${queuedCommands.length}件を一括発令。`, ...nextBattle.log].slice(0, 12),
+      log: [`予約指揮: ${issuedCommands.length}/${queuedCommands.length}件を${issueLabel}。${remainingLabel}`, ...nextBattle.log].slice(
+        0,
+        12,
+      ),
     });
-    setQueuedCommands([]);
-    setCommandQueueMode(false);
+    setQueuedCommands(remainingCommands);
+    if (remainingCommands.length === 0) {
+      setCommandQueueMode(false);
+    }
+  };
+
+  const applyQueuedCommands = () => {
+    applyQueuedCommandBatch(queuedCommands.length, "一括発令");
   };
 
   const removeQueuedCommand = (commandId: string) => {
@@ -4450,6 +4470,15 @@ export function BattleCommandScreen({
           <button type="button" disabled={queuedCommands.length === 0 || finished} onClick={applyQueuedCommands}>
             一括発令
           </button>
+          {canApplyCommandIssuePolicyBatch && (
+            <button
+              type="button"
+              disabled={finished}
+              onClick={() => applyQueuedCommandBatch(commandIssuePolicyBatchSize, commandIssuePolicyBatchLabel)}
+            >
+              方針通り{commandIssuePolicyBatchLabel}
+            </button>
+          )}
           <button type="button" disabled={queuedCommands.length === 0} onClick={() => setQueuedCommands([])}>
             予約破棄
           </button>
