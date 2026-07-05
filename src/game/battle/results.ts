@@ -612,6 +612,154 @@ const objectiveEventResponseXpBonusForUnit = (
   return 0;
 };
 
+const enemyCommandEffectOutcomesForBattle = (
+  state: BattleState,
+  battleRoleByUnit: Record<string, string>,
+): BattleResult["enemyCommandEffectOutcomes"] => {
+  const enemyById = Object.fromEntries(state.enemyUnits.map((enemy) => [enemy.id, enemy]));
+  const frontlineById = Object.fromEntries(state.frontlineSegments.map((segment) => [segment.id, segment]));
+  const playerUnitsBySegment = (segmentId: string) =>
+    state.playerUnits.filter((unit) => unit.soldiers > 0 && unit.standingOrder.frontlineSegmentId === segmentId);
+  const pressureForSegment = (segmentId: string) =>
+    state.enemyUnits
+      .filter((enemy) => enemy.count > 0 && enemy.assaultPlan.targetSegmentId === segmentId)
+      .reduce((sum, enemy) => sum + enemy.pressure, 0);
+  const nearestFrontlineSegmentId = (unit: BattleState["playerUnits"][number]): string | undefined =>
+    state.frontlineSegments
+      .map((segment) => ({ id: segment.id, distance: distance(unit.position, segment.anchor) }))
+      .sort((a, b) => a.distance - b.distance)[0]?.id;
+
+  const commandFireUnits = state.playerUnits.filter(
+    (unit) =>
+      (unit.enemyCommandActionRole === "command_node_fire" || battleRoleByUnit[unit.unitId] === "敵指揮核制圧") &&
+      unit.soldiers > 0,
+  );
+  const pursuitUnits = state.playerUnits.filter(
+    (unit) =>
+      (unit.enemyCommandActionRole === "collapse_pursuit" || battleRoleByUnit[unit.unitId] === "敵崩壊追撃") &&
+      unit.soldiers > 0,
+  );
+  const reserveUnits = state.playerUnits.filter(
+    (unit) =>
+      (unit.enemyCommandActionRole === "command_reserve_commit" || battleRoleByUnit[unit.unitId] === "指揮網予備投入") &&
+      unit.soldiers > 0,
+  );
+  const outcomes: BattleResult["enemyCommandEffectOutcomes"] = [];
+
+  const groupedCommandFire = new Map<string, typeof commandFireUnits>();
+  for (const unit of commandFireUnits) {
+    const targetId = unit.focusTargetId ?? "unknown-command-target";
+    groupedCommandFire.set(targetId, [...(groupedCommandFire.get(targetId) ?? []), unit]);
+  }
+  for (const [targetId, units] of groupedCommandFire.entries()) {
+    const target = enemyById[targetId];
+    const influence = target ? clamp(target.assaultPlan.commandInfluence, 0, 1) : 0;
+    const cohesion = target ? clamp(target.assaultPlan.cohesion, 0, 1) : 0;
+    const resultLabel =
+      !target || target.count <= 0
+        ? "制圧完了"
+        : target.assaultPlan.commandState === "disrupted" || influence <= 0.45
+          ? "指揮低下"
+          : "効果限定";
+    outcomes.push({
+      id: `enemy-command-fire-${targetId}`,
+      unitIds: units.map((unit) => unit.unitId),
+      unitNames: units.map((unit) => unit.name),
+      roleLabel: "敵指揮核制圧",
+      resultLabel,
+      effectLabel:
+        resultLabel === "制圧完了"
+          ? "指揮核を戦闘外へ追い込んだ"
+          : resultLabel === "指揮低下"
+            ? "指揮影響を低下させた"
+            : "射撃は届いたが指揮影響は残った",
+      metricLabel: target
+        ? `影響${Math.round(influence * 100)}% / 凝集${Math.round(cohesion * 100)}% / 残敵${target.count}`
+        : "指揮核消滅",
+      lessonTag:
+        resultLabel === "制圧完了" ? "指揮核制圧完了" : resultLabel === "指揮低下" ? "指揮低下成功" : "指揮射撃効果限定",
+      assessmentReason: `${units.length}旅団が${target?.name ?? "敵指揮核"}へ射撃を集中。`,
+    });
+  }
+
+  const groupedPursuit = new Map<string, typeof pursuitUnits>();
+  for (const unit of pursuitUnits) {
+    const targetId = unit.focusTargetId ?? "unknown-pursuit-target";
+    groupedPursuit.set(targetId, [...(groupedPursuit.get(targetId) ?? []), unit]);
+  }
+  for (const [targetId, units] of groupedPursuit.entries()) {
+    const target = enemyById[targetId];
+    const cohesion = target ? clamp(target.assaultPlan.cohesion, 0, 1) : 0;
+    const moraleState = target?.assaultPlan.moraleState;
+    const resultLabel =
+      !target || target.count <= 0
+        ? "掃討"
+        : moraleState === "routing" || moraleState === "regrouping" || cohesion <= 0.58
+          ? "再集結抑止"
+          : "追撃継続";
+    outcomes.push({
+      id: `enemy-command-pursuit-${targetId}`,
+      unitIds: units.map((unit) => unit.unitId),
+      unitNames: units.map((unit) => unit.name),
+      roleLabel: "敵崩壊追撃",
+      resultLabel,
+      effectLabel:
+        resultLabel === "掃討"
+          ? "崩れた敵群を掃討した"
+          : resultLabel === "再集結抑止"
+            ? "敵の再集結を抑えた"
+            : "追撃中だが敵群はまだまとまっている",
+      metricLabel: target
+        ? `士気${moraleState ?? "不明"} / 凝集${Math.round(cohesion * 100)}% / 残敵${target.count}`
+        : "追撃対象消滅",
+      lessonTag: resultLabel === "掃討" ? "崩壊掃討" : resultLabel === "再集結抑止" ? "再集結抑止" : "追撃継続",
+      assessmentReason: `${units.length}旅団が${target?.name ?? "崩壊敵群"}を追撃。`,
+    });
+  }
+
+  const groupedReserve = new Map<string, typeof reserveUnits>();
+  for (const unit of reserveUnits) {
+    const segmentId = unit.standingOrder.frontlineSegmentId ?? nearestFrontlineSegmentId(unit) ?? "reserve-unknown";
+    groupedReserve.set(segmentId, [...(groupedReserve.get(segmentId) ?? []), unit]);
+  }
+  for (const [segmentId, units] of groupedReserve.entries()) {
+    const segment = frontlineById[segmentId];
+    const defenders = playerUnitsBySegment(segmentId).length;
+    const pressure = pressureForSegment(segmentId);
+    const pressurePerDefender = defenders > 0 ? Math.round(pressure / defenders) : Math.round(pressure);
+    const resultLabel = defenders <= 0 || pressurePerDefender > 850 ? "圧力過大" : pressurePerDefender <= 520 ? "封鎖安定" : "戦線保持";
+    outcomes.push({
+      id: `enemy-command-reserve-${segmentId}`,
+      unitIds: units.map((unit) => unit.unitId),
+      unitNames: units.map((unit) => unit.name),
+      roleLabel: "指揮網予備投入",
+      resultLabel,
+      effectLabel:
+        resultLabel === "封鎖安定"
+          ? "予備投入で突破圧を安定化した"
+          : resultLabel === "戦線保持"
+            ? "予備投入で戦線を支えた"
+            : "予備投入後も敵圧が過大",
+      metricLabel: `${segment?.name ?? "担当戦線"} / 守備${defenders}旅団 / 1旅団圧${pressurePerDefender}`,
+      lessonTag:
+        resultLabel === "封鎖安定" ? "予備封鎖成功" : resultLabel === "戦線保持" ? "予備戦線保持" : "予備投入不足",
+      assessmentReason: `${units.length}旅団が${segment?.name ?? "担当戦線"}へ接続。`,
+    });
+  }
+  return outcomes;
+};
+
+const enemyCommandEffectXpBonusForUnit = (
+  outcomes: BattleResult["enemyCommandEffectOutcomes"],
+  unitId: string,
+): number => {
+  const outcome = outcomes.find((candidate) => candidate.unitIds.includes(unitId));
+  if (!outcome) {
+    return 0;
+  }
+  return outcome.resultLabel === "効果限定" || outcome.resultLabel === "追撃継続" || outcome.resultLabel === "圧力過大" ? 1 : 2;
+};
+
 const rearGuardOfficerRiskPressure = (rearGuard?: BattleResult["withdrawalRearGuard"][number]): number => {
   if (!rearGuard) {
     return 0;
@@ -1089,6 +1237,7 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
     }),
   );
   const objectiveEventResponseOutcomes = objectiveEventResponseOutcomesForBattle(state);
+  const enemyCommandEffectOutcomes = enemyCommandEffectOutcomesForBattle(state, battleRoleByUnit);
   const roleXpBonusByUnit = Object.fromEntries(
     state.playerUnits.map((unit) => [unit.unitId, roleXpBonusForUnit(unit, outcome)]),
   );
@@ -1100,7 +1249,8 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
           (roleXpBonusByUnit[unit.unitId] ?? 0) +
           withdrawalRearGuardXpBonusForUnit(withdrawalRearGuardResult.entries, unit.unitId) +
           staffAdvisoryXpBonusForUnit(state, unit.unitId, outcome) +
-          objectiveEventResponseXpBonusForUnit(objectiveEventResponseOutcomes, unit.unitId),
+          objectiveEventResponseXpBonusForUnit(objectiveEventResponseOutcomes, unit.unitId) +
+          enemyCommandEffectXpBonusForUnit(enemyCommandEffectOutcomes, unit.unitId),
       ),
     ]),
   );
@@ -1120,6 +1270,10 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
         commendations.push(
           `${rearGuard.roleLabel}で追撃被害${rearGuard.pursuitDamagePrevented}抑止・後衛損耗${rearGuard.rearGuardCasualties}`,
         );
+      }
+      const enemyCommandEffect = enemyCommandEffectOutcomes.find((outcome) => outcome.unitIds.includes(unit.unitId));
+      if (enemyCommandEffect) {
+        commendations.push(`指揮網効果 ${enemyCommandEffect.resultLabel}`);
       }
       return [unit.unitId, commendations];
     }),
@@ -1202,6 +1356,7 @@ export const createBattleResult = (state: BattleState, turnNumber: number): Batt
     intelligenceEvents: intelligenceAfterAction.events,
     staffAccountabilityEvents,
     staffAdvisoryOutcomes,
+    enemyCommandEffectOutcomes,
     objectiveEventResponseOutcomes,
     objectiveOutcome,
     officerXpById,

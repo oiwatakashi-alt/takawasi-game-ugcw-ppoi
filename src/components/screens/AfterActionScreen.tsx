@@ -1,5 +1,6 @@
 import type { BattleResult } from "../../game/battle/types";
 import {
+  tacticalLessonPreviewForEnemyCommandEffects,
   tacticalLessonPreviewForFacilityDuties,
   tacticalLessonPreviewForObjectiveEventOutcomes,
   tacticalLessonPreviewForStaffOutcomes,
@@ -45,6 +46,7 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
       unitName: result.unitNamesById[unitId] ?? unitId,
       preview:
         tacticalLessonPreviewForStaffOutcomes(result.staffAdvisoryOutcomes, unitId) ??
+        tacticalLessonPreviewForEnemyCommandEffects(result.enemyCommandEffectOutcomes, unitId) ??
         tacticalLessonPreviewForObjectiveEventOutcomes(result.objectiveEventResponseOutcomes, unitId) ??
         tacticalLessonPreviewForFacilityDuties(result.battleRoleByUnit, result.commendationsByUnit, unitId),
     }))
@@ -128,6 +130,17 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
               <span key={outcome.id}>
                 {outcome.summary} / {outcome.resultLabel} / 敵圧{outcome.pressureAtIssue} / 戦線
                 {outcome.finalLineIntegrity}%
+              </span>
+            ))}
+          </div>
+        )}
+        {result.enemyCommandEffectOutcomes.length > 0 && (
+          <div className="battle-spoils-box intelligence-review-box">
+            <strong>敵指揮網対応評価</strong>
+            {result.enemyCommandEffectOutcomes.map((outcome) => (
+              <span key={outcome.id}>
+                {outcome.roleLabel}: {outcome.resultLabel} / {outcome.effectLabel} / {outcome.metricLabel} /{" "}
+                {outcome.assessmentReason}
               </span>
             ))}
           </div>
@@ -222,6 +235,13 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
                   目標イベント {outcome.objectiveLabel} / {outcome.eventLabel} / {outcome.resultLabel} / {outcome.assessmentReason}
                 </p>
               ))}
+            {result.enemyCommandEffectOutcomes
+              .filter((outcome) => outcome.unitIds.includes(unitId))
+              .map((outcome) => (
+                <p key={outcome.id}>
+                  敵指揮網 {outcome.roleLabel} / {outcome.resultLabel} / {outcome.metricLabel} / 教訓 {outcome.lessonTag}
+                </p>
+              ))}
             {result.withdrawalRearGuard
               .filter((entry) => entry.unitId === unitId)
               .map((entry) => (
@@ -240,6 +260,9 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
             )}
             {tacticalLessonPreviewForStaffOutcomes(result.staffAdvisoryOutcomes, unitId) && (
               <p>{tacticalLessonPreviewForStaffOutcomes(result.staffAdvisoryOutcomes, unitId)}</p>
+            )}
+            {tacticalLessonPreviewForEnemyCommandEffects(result.enemyCommandEffectOutcomes, unitId) && (
+              <p>{tacticalLessonPreviewForEnemyCommandEffects(result.enemyCommandEffectOutcomes, unitId)}</p>
             )}
             {tacticalLessonPreviewForObjectiveEventOutcomes(result.objectiveEventResponseOutcomes, unitId) && (
               <p>{tacticalLessonPreviewForObjectiveEventOutcomes(result.objectiveEventResponseOutcomes, unitId)}</p>

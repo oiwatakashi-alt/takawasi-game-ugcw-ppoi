@@ -625,6 +625,17 @@ export interface BattleResult {
   intelligenceEvents: string[];
   staffAccountabilityEvents: StaffAccountabilityEvent[];
   staffAdvisoryOutcomes: StaffAdvisoryOutcome[];
+  enemyCommandEffectOutcomes: {
+    id: string;
+    unitIds: string[];
+    unitNames: string[];
+    roleLabel: "敵指揮核制圧" | "敵崩壊追撃" | "指揮網予備投入";
+    resultLabel: "指揮低下" | "制圧完了" | "効果限定" | "再集結抑止" | "掃討" | "追撃継続" | "封鎖安定" | "戦線保持" | "圧力過大";
+    effectLabel: string;
+    metricLabel: string;
+    lessonTag: string;
+    assessmentReason: string;
+  }[];
   objectiveEventResponseOutcomes: ObjectiveEventResponseOutcome[];
   objectiveOutcome: ObjectiveBattleOutcome;
   officerXpById: Record<string, number>;

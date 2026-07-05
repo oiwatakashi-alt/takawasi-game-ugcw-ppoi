@@ -1,0 +1,54 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 920
+  },
+  "mobileQa": "skipped; mobile/cellphone QA is outside the current target",
+  "build": "npm run build passed",
+  "flow": [
+    "localStorage clear",
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "3x until enemy command cards",
+    "press recommended action",
+    "pause",
+    "withdraw",
+    "After Action"
+  ],
+  "battleCommandBeforeAction": {
+    "enemyCommandCards": 5,
+    "recommendedButtons": 5,
+    "sample": "効果 未測定 / 対応実行後に指揮崩壊、凝集、戦線補強を測定する。"
+  },
+  "battleCommandAfterAction": {
+    "activeStatus": "効果中 予備接続 / 1旅団が中央塹壕線へ接続中。予備即応を消費済み。",
+    "sampleEffects": [
+      "効果 戦線補強 / 守備3旅団 / 1旅団圧637",
+      "効果 戦線補強 / 守備3旅団 / 1旅団圧105",
+      "効果 戦線補強 / 守備3旅団 / 1旅団圧103"
+    ]
+  },
+  "afterAction": {
+    "flags": [
+      "戦果報告",
+      "敵指揮網対応評価",
+      "指揮網効果",
+      "次戦教訓"
+    ],
+    "commandBlocks": [
+      "敵指揮網対応評価 指揮網予備投入: 封鎖安定 / 予備投入で突破圧を安定化した / 中央塹壕線 / 守備3旅団 / 1旅団圧57 / 1旅団が中央塹壕線へ接続。",
+      "次戦教訓 衛戍予備歩兵大隊: 次戦教訓 指揮網効果1件 / 予備封鎖成功 / 即応+4 / 統制+2"
+    ],
+    "unitRows": [
+      "衛戍予備歩兵大隊 ... 任務 指揮網予備投入 ... 指揮網効果 封鎖安定 ... 敵指揮網 指揮網予備投入 / 封鎖安定 / 中央塹壕線 / 守備3旅団 / 1旅団圧57 / 教訓 予備封鎖成功 ... 次戦教訓 指揮網効果1件 / 予備封鎖成功 / 即応+4 / 統制+2"
+    ],
+    "brokenImages": [],
+    "consoleErrors": [],
+    "hasNaN": false,
+    "horizontalOverflow": false
+  }
+}

@@ -1,6 +1,6 @@
 import type { ArmyUnit } from "../army/types";
 import type { FrontlineDoctrinePresetId } from "../battle/orders";
-import type { ObjectiveEventResponseOutcome, StaffAdvisoryOutcome } from "../battle/types";
+import type { BattleResult, ObjectiveEventResponseOutcome, StaffAdvisoryOutcome } from "../battle/types";
 
 const countHistoryEntries = (history: string[], pattern: string): number =>
   history.filter((entry) => entry.includes(pattern)).length;
@@ -29,6 +29,7 @@ export interface TacticalLessonProfile {
   enemyCollapsePursuitCount: number;
   enemyCommandReserveCount: number;
   enemyCommandActionCount: number;
+  enemyCommandEffectCount: number;
   objectiveEventResponseCount: number;
   objectiveEventRecoveredCount: number;
   objectiveEventDelayedCount: number;
@@ -143,6 +144,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
   const enemyCollapsePursuitCount = countHistoryEntries(unit.battleHistory, "敵崩壊追撃");
   const enemyCommandReserveCount = countHistoryEntries(unit.battleHistory, "指揮網予備投入");
   const enemyCommandActionCount = enemyCommandNodeFireCount + enemyCollapsePursuitCount + enemyCommandReserveCount;
+  const enemyCommandEffectCount = countHistoryEntries(unit.battleHistory, "指揮網効果");
   const objectiveEventResponseCount = countHistoryEntries(unit.battleHistory, "目標イベント対応");
   const objectiveEventRecoveredCount = unit.battleHistory.filter(
     (entry) => entry.includes("目標イベント対応") && entry.includes("再確保"),
@@ -175,6 +177,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       withdrawalSupportCount +
       enemyCommandReserveCount * 5 +
       enemyCommandActionCount +
+      enemyCommandEffectCount * 2 +
       objectiveEventResponseCount * 2 +
       facilityDutyCount,
   );
@@ -184,6 +187,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       heldAdvisoryCount +
       enemyCommandNodeFireCount * 2 +
       enemyCollapsePursuitCount +
+      enemyCommandEffectCount +
       objectiveEventRecoveredCount +
       facilityDefenseCount +
       facilityRepairCount,
@@ -202,6 +206,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     enemyCommandNodeFireCount > 0 ? `敵指揮核制圧${enemyCommandNodeFireCount}件` : undefined,
     enemyCollapsePursuitCount > 0 ? `敵崩壊追撃${enemyCollapsePursuitCount}件` : undefined,
     enemyCommandReserveCount > 0 ? `指揮網予備投入${enemyCommandReserveCount}件` : undefined,
+    enemyCommandEffectCount > 0 ? `指揮網効果${enemyCommandEffectCount}件` : undefined,
     objectiveEventResponseCount > 0 ? `目標イベント対応${objectiveEventResponseCount}件` : undefined,
     facilityDutyCount > 0 ? `施設任務${facilityDutyCount}件` : undefined,
   ].filter(Boolean);
@@ -220,6 +225,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     enemyCollapsePursuitCount,
     enemyCommandReserveCount,
     enemyCommandActionCount,
+    enemyCommandEffectCount,
     objectiveEventResponseCount,
     objectiveEventRecoveredCount,
     objectiveEventDelayedCount,
@@ -236,6 +242,30 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     fallbackMoraleModifier,
     summary,
   };
+};
+
+export const tacticalLessonPreviewForEnemyCommandEffects = (
+  outcomes: BattleResult["enemyCommandEffectOutcomes"],
+  unitId: string,
+): string | undefined => {
+  const unitOutcomes = outcomes.filter((outcome) => outcome.unitIds.includes(unitId));
+  if (unitOutcomes.length === 0) {
+    return undefined;
+  }
+  const strongCount = unitOutcomes.filter(
+    (outcome) =>
+      outcome.resultLabel === "制圧完了" ||
+      outcome.resultLabel === "指揮低下" ||
+      outcome.resultLabel === "掃討" ||
+      outcome.resultLabel === "再集結抑止" ||
+      outcome.resultLabel === "封鎖安定",
+  ).length;
+  const reserveReadinessBonus = Math.min(8, unitOutcomes.length * 2 + strongCount * 2);
+  const controlRadiusBonus = Math.min(4, strongCount + unitOutcomes.length);
+  const lessonTags = unitOutcomes.map((outcome) => outcome.lessonTag).slice(0, 2).join(" / ");
+  return `次戦教訓 指揮網効果${unitOutcomes.length}件 / ${lessonTags} / 即応+${reserveReadinessBonus}${
+    controlRadiusBonus > 0 ? ` / 統制+${controlRadiusBonus}` : ""
+  }`;
 };
 
 export const tacticalLessonPreviewForObjectiveEventOutcomes = (

@@ -16,6 +16,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
   const intelligenceSummary = result.intelligenceEvents[0];
   const staffAccountabilitySummary = result.staffAccountabilityEvents[0]?.summary;
   const staffAdvisorySummary = result.staffAdvisoryOutcomes[0]?.summary;
+  const enemyCommandEffectSummary = result.enemyCommandEffectOutcomes[0]?.effectLabel;
   const objectiveEventResponseSummary = result.objectiveEventResponseOutcomes[0]?.summary;
   const withdrawalPursuitSummary = result.withdrawalPursuitSummary;
   const objectiveSummary = result.objectiveOutcome.events.join(" ");
@@ -60,6 +61,12 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
         (outcome) =>
           `目標イベント対応 ${outcome.objectiveLabel}/${outcome.eventLabel}/${outcome.resultLabel}/${outcome.lessonTag}/支配${outcome.finalControl}%`,
       );
+    const enemyCommandEffectEntries = result.enemyCommandEffectOutcomes
+      .filter((outcome) => outcome.unitIds.includes(unit.id))
+      .map(
+        (outcome) =>
+          `指揮網効果 ${outcome.roleLabel}/${outcome.resultLabel}/${outcome.lessonTag}/${outcome.metricLabel}`,
+      );
     const rearGuardPlan = result.withdrawalRearGuardPlanAssessments.find((entry) => entry.unitId === unit.id);
     const withdrawalRearGuardEntries = result.withdrawalRearGuard
       .filter((entry) => entry.unitId === unit.id)
@@ -89,6 +96,8 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
             : ""
         }${staffAdvisoryEntries.length > 0 ? `、${staffAdvisoryEntries.join("・")}` : ""}${
           objectiveEventEntries.length > 0 ? `、${objectiveEventEntries.join("・")}` : ""
+        }${
+          enemyCommandEffectEntries.length > 0 ? `、${enemyCommandEffectEntries.join("・")}` : ""
         }${
           withdrawalRearGuardEntries.length > 0 ? `、${withdrawalRearGuardEntries.join("・")}` : ""
         }${
@@ -225,12 +234,15 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
           intelligenceSummary ||
           staffAccountabilitySummary ||
           staffAdvisorySummary ||
+          enemyCommandEffectSummary ||
           objectiveEventResponseSummary ||
           withdrawalPursuitSummary ||
           objectiveSummary
             ? `${result.campaignMessage} ${objectiveSummary}${
                 staffAccountabilitySummary ? ` ${staffAccountabilitySummary}` : ""
               }${staffAdvisorySummary ? ` ${staffAdvisorySummary}` : ""}${
+                enemyCommandEffectSummary ? ` 敵指揮網評価: ${enemyCommandEffectSummary}` : ""
+              }${
                 objectiveEventResponseSummary ? ` ${objectiveEventResponseSummary}` : ""
               }${
                 withdrawalPursuitSummary ? ` ${withdrawalPursuitSummary}` : ""
@@ -245,6 +257,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
       intelligenceSummary ||
       staffAccountabilitySummary ||
       staffAdvisorySummary ||
+      enemyCommandEffectSummary ||
       objectiveEventResponseSummary ||
       withdrawalPursuitSummary ||
       objectiveSummary ||
@@ -252,6 +265,8 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
         ? `${result.campaignMessage} ${objectiveSummary}${
             staffAccountabilitySummary ? ` ${staffAccountabilitySummary}` : ""
           }${staffAdvisorySummary ? ` ${staffAdvisorySummary}` : ""}${
+            enemyCommandEffectSummary ? ` 敵指揮網評価: ${enemyCommandEffectSummary}` : ""
+          }${
             objectiveEventResponseSummary ? ` ${objectiveEventResponseSummary}` : ""
           }${
             withdrawalPursuitSummary ? ` ${withdrawalPursuitSummary}` : ""
