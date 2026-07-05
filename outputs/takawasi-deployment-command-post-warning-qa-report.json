@@ -1,0 +1,46 @@
+{
+  "id": "takawasi-deployment-command-post-warning-qa",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "shared commandPostProfileForCampaign",
+    "Deployment pre-battle command-post transmission ledger",
+    "Deployment command-post warning card",
+    "Officers-tab route from command-post warning"
+  ],
+  "steps": [
+    "npm run build",
+    "Reset campaign",
+    "Camp -> Deployment",
+    "Verify initial command-post ledger shows no command-post penalty and no warning card",
+    "Start battle, enable command queue, queue five selected-brigade commands, issue, run briefly, withdraw",
+    "Open After Action and apply result",
+    "Return to next Deployment",
+    "Verify next-battle command-post warning appears before starting battle",
+    "Click warning card Officers route",
+    "Check console, images, horizontal overflow, NaN, then reset QA campaign and viewport"
+  ],
+  "observations": {
+    "initialDeploymentLedger": "参謀長 アルンハイム 疲労0 / 伝達+0秒 / 容量±0",
+    "initialWarningCount": 0,
+    "firstBattleQueue": "一括混線 +1秒",
+    "afterAction": "伝令評価 present",
+    "nextDeploymentLedger": "参謀長 アルンハイム 疲労100 / 伝達+2秒 / 容量-2",
+    "nextDeploymentWarning": "司令部伝達警告 / 参謀長不在扱い / 指揮疲労100で伝達+2秒/処理容量-2",
+    "officerRoute": "将校調整へ opened 幕舎: 将校 with rest/return controls visible"
+  },
+  "checks": {
+    "build": "pass",
+    "desktopBrowserQa": "pass",
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "containsNaN": false,
+    "campaignResetAfterQa": true,
+    "mobileQa": "skipped: mobile/cellphone is outside the active target"
+  }
+}

@@ -1609,11 +1609,17 @@ Officer/staff carryover follow-up implemented:
 
 Command-post fatigue follow-up implemented:
 
-- `BattleState.commandPost` is generated at battle creation from the assigned `参謀長` status and persistent command fatigue.
+- `src/game/battle/commandPost.ts` centralizes the `BattleState.commandPost` profile generated from the assigned `参謀長` status and persistent command fatigue.
 - Active but tired staff now reduce queued-command handling capacity and add command-transmission delay; an inactive/wounded/missing chief of staff is treated as severe command-post fatigue.
 - `commandTransmissionReport` adds reasons such as `司令部疲労+2秒`, and `commandCongestionReport` folds the command-post capacity modifier into `一括混線 +N秒`.
 - Battle Command shows the command-post label in the top HUD and the detailed `参謀長 ... / 指揮疲労...` reason inside `予約指揮`, so the next-battle effect of staff exhaustion or absence is visible before issuing orders.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five selected-brigade commands with initial `指揮疲労0で支障なし` and `一括混線 +1秒` -> After Action -> apply result -> next battle. The next battle showed `司令部 参謀長 アルンハイム 疲労100`, `参謀長不在扱い / 指揮疲労100で伝達+2秒/処理容量-2`, queued transmission previews with `司令部疲労+2秒`, and `一括混線 +2秒`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`, viewport reset, and QA campaign reset. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-command-post-fatigue-qa-report.json`.
+
+Deployment warning follow-up implemented:
+
+- Deployment now shows `司令部伝達` in the left briefing ledger using the same `commandPostProfileForCampaign` calculation as Battle creation.
+- If the next battle has command-post delay or capacity loss, Deployment shows `司令部伝達警告`, the fatigue/status reasons, and a direct `将校調整へ` route before the player starts the mandatory battle.
+- Desktop 1440px browser QA verified initial Deployment `参謀長 アルンハイム 疲労0 / 伝達+0秒 / 容量±0` with no warning, then after command-congested withdrawal and result application the next Deployment showed `参謀長 アルンハイム 疲労100 / 伝達+2秒 / 容量-2`, warning reasons, and the Officers-tab route. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`, viewport reset, and QA campaign reset. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-deployment-command-post-warning-qa-report.json`.
 
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 

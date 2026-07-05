@@ -32,6 +32,7 @@ import {
 } from "../../game/battle/formations";
 import { standingOrderPresets } from "../../game/battle/orders";
 import { frontlineDoctrinePresets } from "../../game/battle/orders";
+import { commandPostProfileForCampaign } from "../../game/battle/commandPost";
 import {
   alignStandingOrderToFrontlineSegments,
   createDeploymentStandingOrderDraft,
@@ -307,6 +308,11 @@ export function DeploymentScreen({
   const deployableUnits = campaign.army.units.filter((unit) => !assignedSideUnits.has(unit.id));
   const strategicDoctrine = strategicDoctrineFromDoctrine(campaign.doctrines);
   const headquartersProfile = armyHeadquartersProfile(campaign.army, campaign.officers);
+  const commandPostProfile = commandPostProfileForCampaign(campaign);
+  const commandPostCapacityLabel =
+    commandPostProfile.commandCapacityModifier === 0
+      ? "容量±0"
+      : `容量${commandPostProfile.commandCapacityModifier > 0 ? "+" : ""}${commandPostProfile.commandCapacityModifier}`;
   const commandDutyLoads = commandDutyLoadByOfficer(campaign.army);
   const deploymentLimit = baseDeploymentLimit + strategicDoctrine.deploymentSlotBonus + headquartersProfile.deploymentSlotBonus;
   const savedGeometry =
@@ -1676,6 +1682,11 @@ export function DeploymentScreen({
           <dd>{reserveDoctrineLabels[reserveDoctrine.mode]}</dd>
           <dt>軍団司令部</dt>
           <dd>出撃+{headquartersProfile.deploymentSlotBonus} / 予備+{headquartersProfile.reserveReadinessBonus}</dd>
+          <dt>司令部伝達</dt>
+          <dd>
+            {commandPostProfile.label} / 伝達+
+            {commandPostProfile.transmissionDelayModifier}秒 / {commandPostCapacityLabel}
+          </dd>
           <dt>指定予備</dt>
           <dd>{reserveUnitIds.length}/{reserveSlotLimit}旅団</dd>
           <dt>撤退後衛</dt>
@@ -1689,6 +1700,24 @@ export function DeploymentScreen({
           <dt>回収候補</dt>
           <dd>{describeOperationSpoils(operation)}</dd>
         </dl>
+        {(commandPostProfile.transmissionDelayModifier > 0 || commandPostProfile.commandCapacityModifier < 0) && (
+          <div className="deployment-command-warning">
+            <strong>司令部伝達警告</strong>
+            <span>{commandPostProfile.label}</span>
+            <p>
+              参謀長の疲労または不在により、戦闘中の伝令到達と一括発令の処理容量が悪化する。
+              将校調整で参謀長を交代するか、命令を小分けに発令する。
+            </p>
+            <div>
+              {commandPostProfile.reasons.map((reason) => (
+                <small key={reason}>{reason}</small>
+              ))}
+            </div>
+            <button type="button" onClick={onOpenOfficerManagement}>
+              将校調整へ
+            </button>
+          </div>
+        )}
         <EnemyIntelPanel context={enemyCompositionContext} operation={operation} title="出撃前敵情" />
         <div className="wave-timeline-panel" aria-label="敵波タイムライン">
           <div className="section-title">

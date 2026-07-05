@@ -1,5 +1,6 @@
 import type { StaffSlotId, UnitOrder, UnitType } from "../army/types";
 import type { ReserveDoctrinePlan } from "../campaign/types";
+import type { BattleCommandPostProfile } from "./commandPost";
 import type { FireDisciplineProfile, StrategicDoctrineProfile } from "../doctrine/types";
 import type { FortificationInstance } from "../fortifications/types";
 import type { ResourceCost } from "../logistics/spend";
@@ -616,14 +617,7 @@ export interface BattleState {
   fireDiscipline?: FireDisciplineProfile;
   strategicDoctrine?: StrategicDoctrineProfile;
   reserveDoctrine?: ReserveDoctrinePlan;
-  commandPost?: {
-    label: string;
-    chiefOfStaffName?: string;
-    chiefOfStaffFatigue: number;
-    commandCapacityModifier: number;
-    transmissionDelayModifier: number;
-    reasons: string[];
-  };
+  commandPost?: BattleCommandPostProfile;
   fireMissions?: BattleFireMission[];
   firePlans?: BattleFirePlan[];
   staffAccountabilityContext: BattleStaffAccountabilityContext[];
