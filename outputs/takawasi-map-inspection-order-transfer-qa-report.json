@@ -1,0 +1,36 @@
+{
+  "id": "takawasi-map-inspection-order-transfer-qa",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "resetAfterQa": true
+  },
+  "scope": "Battle Command map-selection inspector transfer actions for selected brigade StandingOrder",
+  "steps": [
+    "Opened the local app and entered the campaign from the strategic map.",
+    "Clicked `幕舎で準備する`, waited about 3 seconds, then clicked `出撃配置へ`.",
+    "Clicked `選抜部隊で戦闘開始` and verified Battle Command loaded with 7 player map units and 1 structure.",
+    "Clicked `施設近接へ基準` from the map-selection inspector and verified the selected brigade command summary changed to a facility-near anchor with pending command transmission.",
+    "Clicked `選択旅団を戦線へ` and verified the selected brigade received the selected frontline anchor/fallback values.",
+    "Ran battle at `3倍` long enough to spawn enemies, stopped the battle, clicked a visible enemy map token, and verified `敵前縁布陣予測` plus `敵前縁へ布陣` appeared.",
+    "Clicked `敵前縁へ布陣` and verified the selected brigade command summary changed to enemy-front anchor `X45 Y48`, fallback `X29 Y48`, and focus target `アンデッド群集`."
+  ],
+  "verified": {
+    "facilityTransferForecastVisible": true,
+    "frontlineTransferForecastVisible": true,
+    "enemyScreenForecastVisible": true,
+    "facilityNearAnchorCommand": "selected command summary showed `基準 X35 Y34` and pending `伝令 3秒 / 基準位置`",
+    "frontlineTransferCommand": "selected command compass showed `戦線 森林左翼線`, `基準 X34 Y24`, and `後退 X16 Y28`",
+    "enemyScreenCommand": "selected command summary showed `基準 X45 Y48`, `後退 X29 Y48`, and focus target `アンデッド群集`",
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "The new actions reuse existing StandingOrder/order functions and command-transmission behavior.",
+    "Mobile/cellphone QA remains outside the current target."
+  ]
+}

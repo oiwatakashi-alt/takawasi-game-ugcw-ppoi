@@ -3066,10 +3066,38 @@ export function BattleCommandScreen({
       : undefined,
   ].filter((item): item is { label: string; value: string; detail: string } => Boolean(item));
   const inspectedOrAssignedStructure = inspectedStructure ?? selectedStructure;
+  const selectedEnemyScreenAnchor = selectedEnemy
+    ? clampBattlePoint(battle, {
+        x: selectedEnemy.position.x - 18,
+        y: selectedEnemy.position.y,
+      })
+    : undefined;
+  const selectedEnemyScreenFallback = selectedEnemy
+    ? clampBattlePoint(battle, {
+        x: selectedEnemy.position.x - 34,
+        y: selectedEnemy.position.y,
+      })
+    : undefined;
+  const inspectedFacilityAnchor = inspectedOrAssignedStructure
+    ? clampBattlePoint(battle, {
+        x: inspectedOrAssignedStructure.position.x - 4,
+        y: inspectedOrAssignedStructure.position.y,
+      })
+    : undefined;
   const inspectedFacilityResponseUnits = inspectedOrAssignedStructure
     ? facilityInspectionResponseUnits(battle, inspectedOrAssignedStructure)
     : [];
   const selectedMapActionForecasts = [
+    selectedEnemy && selectedUnit && selectedEnemyScreenAnchor && selectedEnemyScreenFallback
+      ? {
+          tone: selectedEnemy.isSpotted ? "ready" : "warning",
+          title: "敵前縁布陣予測",
+          summary: `${selectedUnit.name} / 基準${mapCoordinateLabel(selectedEnemyScreenAnchor)} / 後退${mapCoordinateLabel(
+            selectedEnemyScreenFallback,
+          )}`,
+          detail: `${mapEnemyDisplayName(selectedEnemy)}を基準敵群として扱い、発見済みなら集中目標も指名`,
+        }
+      : undefined,
     selectedEnemy
       ? {
           tone:
@@ -3099,6 +3127,21 @@ export function BattleCommandScreen({
           detail: `${mapEnemyDisplayName(selectedEnemy)}へ単独集中 / 現在弾薬${Math.round(selectedUnit.ammo)} / 伝令遅延あり`,
         }
       : undefined,
+    selectedFrontlineSegment && selectedUnit
+      ? {
+          tone:
+            selectedFrontlinePressure?.level === "danger"
+              ? "danger"
+              : selectedFrontlinePressure?.level === "warning"
+                ? "warning"
+                : "ready",
+          title: "戦線転属予測",
+          summary: `${selectedUnit.name} / ${selectedFrontlineSegment.name}`,
+          detail: `担当戦線、基準${mapCoordinateLabel(selectedFrontlineSegment.anchor)}、後退${mapCoordinateLabel(
+            selectedFrontlineSegment.fallbackPoint,
+          )}を選択旅団へ転写`,
+        }
+      : undefined,
     inspectedOrAssignedStructure
       ? {
           tone:
@@ -3123,6 +3166,21 @@ export function BattleCommandScreen({
           title: "修理優先予測",
           summary: `${inspectedFacilityResponseUnits.some((unit) => unit.type === "engineer") ? "工兵あり" : "工兵なし"} / 耐久${Math.round(inspectedOrAssignedStructure.durability)}`,
           detail: `損傷または接敵なら工兵は築城/修理へ移行 / 周辺部隊は防衛または補給を担当`,
+        }
+      : undefined,
+    inspectedOrAssignedStructure && selectedUnit && inspectedFacilityAnchor
+      ? {
+          tone:
+            inspectedOrAssignedStructure.status === "overrun" || inspectedOrAssignedStructure.facilityState === "contested"
+              ? "danger"
+              : inspectedOrAssignedStructure.status === "damaged"
+                ? "warning"
+                : "ready",
+          title: "施設担当転写予測",
+          summary: `${selectedUnit.name} / ${fortificationTypeLabels[inspectedOrAssignedStructure.type]} / ${
+            facilityAssignmentModeLabels[facilityModeForUnit(selectedUnit, inspectedOrAssignedStructure)]
+          }`,
+          detail: `担当施設を選択旅団へ設定し、基準を施設近接${mapCoordinateLabel(inspectedFacilityAnchor)}へ移せる`,
         }
       : undefined,
     selectedFrontlinePressure
@@ -3898,6 +3956,71 @@ export function BattleCommandScreen({
       `集中 ${mapEnemyDisplayName(selectedEnemy)}`,
       `${Math.round(selectedEnemy.count)}体 / ${enemyAssaultPhaseLabels[selectedEnemy.assaultPlan.phase]} / 敵パネル指定`,
       (state) => withMapInspectionResponseRole(setUnitFocusTarget(state, selectedUnit.unitId, selectedEnemy.id), [selectedUnit.unitId], "enemy_focus"),
+    );
+  };
+
+  const assignSelectedEnemyScreenToUnit = () => {
+    if (!selectedUnit || !selectedEnemy || !selectedEnemyScreenAnchor || !selectedEnemyScreenFallback) {
+      return;
+    }
+    setCommandMode("none");
+    scrollToPosition(selectedEnemy.position);
+    issueOrQueueCommand(
+      selectedUnit,
+      "敵前縁布陣",
+      `基準 ${mapCoordinateLabel(selectedEnemyScreenAnchor)} / 後退 ${mapCoordinateLabel(selectedEnemyScreenFallback)} / ${
+        selectedEnemy.isSpotted ? "集中目標あり" : "未発見敵影"
+      }`,
+      (state) => {
+        let nextBattle = setStandingOrderAnchor(state, selectedUnit.unitId, selectedEnemyScreenAnchor);
+        nextBattle = setStandingOrderFallbackDestination(nextBattle, selectedUnit.unitId, selectedEnemyScreenFallback);
+        if (selectedEnemy.isSpotted) {
+          nextBattle = setUnitFocusTarget(nextBattle, selectedUnit.unitId, selectedEnemy.id);
+        }
+        return nextBattle;
+      },
+    );
+  };
+
+  const assignSelectedFrontlineToUnit = () => {
+    if (!selectedUnit || !selectedFrontlineSegment) {
+      return;
+    }
+    setCommandMode("none");
+    scrollToPosition(selectedFrontlineSegment.anchor);
+    issueOrQueueCommand(
+      selectedUnit,
+      `戦線転属 ${selectedFrontlineSegment.name}`,
+      `担当戦線 / 基準 ${mapCoordinateLabel(selectedFrontlineSegment.anchor)} / 後退 ${mapCoordinateLabel(
+        selectedFrontlineSegment.fallbackPoint,
+      )}`,
+      (state) => {
+        let nextBattle = assignFrontlineSegment(state, selectedUnit.unitId, selectedFrontlineSegment.id);
+        nextBattle = setStandingOrderAnchor(nextBattle, selectedUnit.unitId, selectedFrontlineSegment.anchor);
+        nextBattle = setStandingOrderFallbackDestination(nextBattle, selectedUnit.unitId, selectedFrontlineSegment.fallbackPoint);
+        return nextBattle;
+      },
+    );
+  };
+
+  const assignInspectedFacilityToUnit = (moveAnchor: boolean) => {
+    if (!selectedUnit || !inspectedOrAssignedStructure) {
+      return;
+    }
+    const mode = facilityModeForUnit(selectedUnit, inspectedOrAssignedStructure);
+    setCommandMode("none");
+    scrollToPosition(inspectedOrAssignedStructure.position);
+    issueOrQueueCommand(
+      selectedUnit,
+      `${fortificationTypeLabels[inspectedOrAssignedStructure.type]}担当`,
+      `${facilityAssignmentModeLabels[mode]} / ${moveAnchor && inspectedFacilityAnchor ? `基準 ${mapCoordinateLabel(inspectedFacilityAnchor)}` : "担当のみ"}`,
+      (state) => {
+        let nextBattle = assignFacilityToUnit(state, selectedUnit.unitId, inspectedOrAssignedStructure.id, mode);
+        if (moveAnchor && inspectedFacilityAnchor) {
+          nextBattle = setStandingOrderAnchor(nextBattle, selectedUnit.unitId, inspectedFacilityAnchor);
+        }
+        return nextBattle;
+      },
     );
   };
 
@@ -6008,6 +6131,13 @@ export function BattleCommandScreen({
                       >
                         選択旅団集中
                       </button>
+                      <button
+                        type="button"
+                        disabled={!selectedUnit || finished}
+                        onClick={assignSelectedEnemyScreenToUnit}
+                      >
+                        敵前縁へ布陣
+                      </button>
                     </>
                   )}
                   {(inspectedStructure || selectedStructure) && (
@@ -6018,20 +6148,43 @@ export function BattleCommandScreen({
                       <button type="button" disabled={finished} onClick={() => applyInspectedFacilityResponse(true)}>
                         修理優先
                       </button>
+                      <button
+                        type="button"
+                        disabled={!selectedUnit || finished}
+                        onClick={() => assignInspectedFacilityToUnit(false)}
+                      >
+                        選択旅団を担当
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!selectedUnit || finished}
+                        onClick={() => assignInspectedFacilityToUnit(true)}
+                      >
+                        施設近接へ基準
+                      </button>
                     </>
                   )}
                   {selectedFrontlinePressure && (
-                    <button
-                      type="button"
-                      disabled={
-                        finished ||
-                        selectedFrontlinePressure.level === "quiet" ||
-                        (selectedFrontlinePressure.defenders.length === 0 && selectedFrontlinePressure.reserves.length === 0)
-                      }
-                      onClick={applyInspectedFrontlineResponse}
-                    >
-                      戦線対応
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        disabled={
+                          finished ||
+                          selectedFrontlinePressure.level === "quiet" ||
+                          (selectedFrontlinePressure.defenders.length === 0 && selectedFrontlinePressure.reserves.length === 0)
+                        }
+                        onClick={applyInspectedFrontlineResponse}
+                      >
+                        戦線対応
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!selectedUnit || finished}
+                        onClick={assignSelectedFrontlineToUnit}
+                      >
+                        選択旅団を戦線へ
+                      </button>
+                    </>
                   )}
                 </div>
               )}
