@@ -16,6 +16,7 @@ import type {
   AmmoPolicy,
 } from "./types";
 import { defaultFormationFacingForSegment, formationFacingDisplayLabel, normalizeFormationFacingDeg } from "./formations";
+import { compactSketchPoints, maxFrontlineSketchPoints } from "./sketchLines";
 
 const orderLabel = (order: UnitOrder) => {
   const labels: Record<UnitOrder, string> = {
@@ -1157,7 +1158,10 @@ export const sketchFrontlineSegmentPolyline = (
   if (!segment || pointsInput.length < 2) {
     return state;
   }
-  const points = pointsInput.map((point) => clampPosition(state, point));
+  const points = compactSketchPoints(
+    pointsInput.map((point) => clampPosition(state, point)),
+    maxFrontlineSketchPoints,
+  );
   const [nextAnchor, nextFallback] = points;
   const linePoints = [nextAnchor, ...points.slice(2)];
   const xs = linePoints.map((point) => point.x);

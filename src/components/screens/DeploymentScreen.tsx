@@ -39,6 +39,12 @@ import {
 } from "../../game/battle/standingOrderDrafts";
 import { createTerrainZonesForBattle } from "../../game/battle/terrainEffects";
 import { createBattleWaveIntel } from "../../game/battle/waveIntel";
+import {
+  compactSketchPoints,
+  maxFrontlineSketchPoints,
+  svgPolylinePoints,
+  svgSmoothSketchPath,
+} from "../../game/battle/sketchLines";
 import type {
   AmmoPolicy,
   BattlePosition,
@@ -767,31 +773,7 @@ export function DeploymentScreen({
 
   const simplifySketchPoints = (points: BattlePosition[]): BattlePosition[] => {
     const clamped = points.map(clampSketchPoint);
-    if (clamped.length <= 5) {
-      return clamped;
-    }
-    const distances = clamped.map((point, index) =>
-      index === 0 ? 0 : Math.hypot(point.x - clamped[index - 1].x, point.y - clamped[index - 1].y),
-    );
-    const cumulative = distances.reduce<number[]>((acc, distance, index) => {
-      acc[index] = (acc[index - 1] ?? 0) + distance;
-      return acc;
-    }, []);
-    const total = cumulative[cumulative.length - 1] ?? 0;
-    if (total <= 0) {
-      return [clamped[0], clamped[clamped.length - 1]].filter(Boolean);
-    }
-    const selected = [clamped[0]];
-    for (let step = 1; step < 4; step += 1) {
-      const targetDistance = (total * step) / 4;
-      const nearestIndex = cumulative.findIndex((distance) => distance >= targetDistance);
-      const candidate = clamped[Math.max(1, nearestIndex)];
-      if (candidate && selected[selected.length - 1] !== candidate) {
-        selected.push(candidate);
-      }
-    }
-    selected.push(clamped[clamped.length - 1]);
-    return selected.filter((point, index, all) => index === 0 || point.x !== all[index - 1].x || point.y !== all[index - 1].y);
+    return compactSketchPoints(clamped, maxFrontlineSketchPoints);
   };
 
   const appendDeploymentSketchDragPoint = (point: BattlePosition) => {
@@ -802,7 +784,7 @@ export function DeploymentScreen({
         return current;
       }
       const raw = [...current, nextPoint];
-      return raw.length > 5 ? simplifySketchPoints(raw) : raw;
+      return raw.length > maxFrontlineSketchPoints ? simplifySketchPoints(raw) : raw;
     });
   };
 
@@ -828,7 +810,7 @@ export function DeploymentScreen({
     }
     const nextSketchLines = {
       ...(frontlineGeometry.sketchLines ?? {}),
-      [segmentId]: points.slice(0, 5).map(clampSketchPoint),
+      [segmentId]: simplifySketchPoints(points).map(clampSketchPoint),
     };
     applyFrontlineGeometry({
       ...frontlineGeometry,
@@ -933,10 +915,10 @@ export function DeploymentScreen({
       return;
     }
     const nextPoint = pointFromPreviewEvent(event);
-    if (deploymentSketchDraftPoints.length >= 5) {
+    if (deploymentSketchDraftPoints.length >= maxFrontlineSketchPoints) {
       return;
     }
-    setDeploymentSketchDraftPoints((current) => [...current, nextPoint].slice(0, 5));
+    setDeploymentSketchDraftPoints((current) => [...current, nextPoint].slice(0, maxFrontlineSketchPoints));
   };
 
   const toggleUnit = (unitId: string) => {
@@ -1845,7 +1827,8 @@ export function DeploymentScreen({
                 <span className={`preview-geometry-pill ${frontlineGeometry.preset}`}>{frontlineGeometryLabel}</span>
                 {deploymentSketchMode && (
                   <span className="preview-sketch-instruction">
-                    {deploymentSketchDragActive ? "ドラッグ中" : "クリック/ドラッグ"} {deploymentSketchDraftPoints.length}/5
+                    {deploymentSketchDragActive ? "ドラッグ中" : "クリック/ドラッグ"} {deploymentSketchDraftPoints.length}/
+                    {maxFrontlineSketchPoints}
                   </span>
                 )}
                 {(frontlineSegments.some((segment) => segment.sketchPoints && segment.sketchPoints.length > 1) ||
@@ -1859,11 +1842,11 @@ export function DeploymentScreen({
                       .filter((segment) => segment.sketchPoints && segment.sketchPoints.length > 1)
                       .map((segment) => (
                         <g key={`${segment.id}-sketch-preview`}>
-                          <polyline
-                            points={(segment.sketchPoints ?? [])
-                              .map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`)
-                              .join(" ")}
-                          />
+                          {segment.sketchPoints && segment.sketchPoints.length > 2 ? (
+                            <path d={svgSmoothSketchPath(segment.sketchPoints)} />
+                          ) : (
+                            <polyline points={svgPolylinePoints(segment.sketchPoints ?? [])} />
+                          )}
                           {(segment.sketchPoints ?? []).map((point, pointIndex) => (
                             <circle
                               key={`${segment.id}-sketch-point-${pointIndex}`}
@@ -1877,11 +1860,11 @@ export function DeploymentScreen({
                     {deploymentSketchDraftPoints.length > 0 && (
                       <g className="draft-sketch">
                         {deploymentSketchDraftPoints.length > 1 && (
-                          <polyline
-                            points={deploymentSketchDraftPoints
-                              .map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`)
-                              .join(" ")}
-                          />
+                          deploymentSketchDraftPoints.length > 2 ? (
+                            <path d={svgSmoothSketchPath(deploymentSketchDraftPoints)} />
+                          ) : (
+                            <polyline points={svgPolylinePoints(deploymentSketchDraftPoints)} />
+                          )
                         )}
                         {deploymentSketchDraftPoints.map((point, pointIndex) => (
                           <circle
@@ -2061,8 +2044,9 @@ export function DeploymentScreen({
                       </span>
                       {deploymentSketchMode && (
                         <em>
-                          戦区プレビュー上でクリック点打ち、またはドラッグで線を引く。ドラッグ線は戦線計画用に最大5点へ要約し、描画確定で保存する。現在{" "}
-                          {deploymentSketchDraftPoints.length}/5点。
+                          戦区プレビュー上でクリック点打ち、またはドラッグで線を引く。ドラッグ線は戦線計画用に最大
+                          {maxFrontlineSketchPoints}点へ要約し、3点以上は曲線戦線として保存する。現在{" "}
+                          {deploymentSketchDraftPoints.length}/{maxFrontlineSketchPoints}点。
                         </em>
                       )}
                     </div>

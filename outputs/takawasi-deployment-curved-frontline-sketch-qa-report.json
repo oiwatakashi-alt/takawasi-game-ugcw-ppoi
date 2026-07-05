@@ -1,0 +1,47 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 920
+  },
+  "mobileQa": "skipped; mobile/cellphone QA is outside the current target",
+  "build": "npm run build passed",
+  "flow": [
+    "localStorage clear",
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "地図で描画",
+    "drag curved frontage across deployment preview",
+    "描画確定",
+    "戦闘開始",
+    "Battle Command"
+  ],
+  "deploymentDraft": {
+    "instruction": "クリック/ドラッグ 8/8",
+    "draftSvgPathCount": 1,
+    "draftSvgPolylineCount": 0,
+    "draftPointCount": 8,
+    "flags": [
+      "8点",
+      "曲線戦線",
+      "描画確定"
+    ],
+    "confirmEnabled": true
+  },
+  "deploymentSaved": {
+    "savedSvgPathCount": 1,
+    "savedSvgPolylineCount": 0,
+    "savedPointCount": 8,
+    "shapeLabel": "形状8点"
+  },
+  "battleCommand": {
+    "savedSketchPathCount": 1,
+    "savedSketchPolylineCount": 0,
+    "hasNaN": false,
+    "brokenImages": [],
+    "horizontalOverflow": false
+  },
+  "consoleErrors": []
+}

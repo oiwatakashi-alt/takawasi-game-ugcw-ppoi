@@ -8,6 +8,7 @@ import type {
   FrontlineSegment,
   FrontlineSegmentGeometryOverride,
 } from "./types";
+import { compactSketchPoints, maxFrontlineSketchPoints } from "./sketchLines";
 
 export const defaultBattleMapBounds: BattleMapBounds = { width: 140, height: 100 };
 
@@ -247,7 +248,7 @@ const applySketchLine = (segment: FrontlineSegment, pointsInput?: BattlePosition
   if (!pointsInput || pointsInput.length < 2) {
     return segment;
   }
-  const points = pointsInput.slice(0, 5).map((point) => ({
+  const points = compactSketchPoints(pointsInput, maxFrontlineSketchPoints).map((point) => ({
     x: clamp(point.x, 2, defaultBattleMapBounds.width - 2),
     y: clamp(point.y, 2, defaultBattleMapBounds.height - 2),
   }));

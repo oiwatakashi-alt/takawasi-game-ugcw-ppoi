@@ -37,6 +37,7 @@ import {
   type FrontlineDoctrinePresetId,
 } from "../../game/battle/orders";
 import { frontlineGeometryDisplayLabel } from "../../game/battle/frontlineDefaults";
+import { maxFrontlineSketchPoints, svgPolylinePoints, svgSmoothSketchPath } from "../../game/battle/sketchLines";
 import { assessFrontlineTerrain } from "../../game/battle/frontlineTerrainAssessment";
 import {
   formationDistanceToPoint,
@@ -3061,7 +3062,7 @@ export function BattleCommandScreen({
       setFrontlineSketchDraft(null);
       return true;
     }
-    const nextPoints = [...frontlineSketchDraft.points, position].slice(0, 5);
+    const nextPoints = [...frontlineSketchDraft.points, position].slice(0, maxFrontlineSketchPoints);
     setFrontlineSketchDraft({ ...frontlineSketchDraft, points: nextPoints });
     setSelectedFrontlineSegmentId(segment.id);
     scrollToPosition(position);
@@ -4794,7 +4795,7 @@ export function BattleCommandScreen({
                   : frontlineSketchDraft.points.length === 1
                     ? `2点目: 後退点をクリック / 基準 ${mapCoordinateLabel(frontlineSketchDraft.points[0])}`
                     : `追加点または確定 / ${frontlineSketchDraft.points.length}点指定`
-                : "2-5点指定で選択戦線の基準、後退、幅、曲がりを再配置"}
+                : `2-${maxFrontlineSketchPoints}点指定で選択戦線の基準、後退、幅、曲線を再配置`}
             </span>
             {frontlineSketchDraft?.segmentId === selectedFrontlineSegment.id && (
               <button type="button" disabled={frontlineSketchDraft.points.length < 2} onClick={completeFrontlineSketch}>
@@ -5536,13 +5537,23 @@ export function BattleCommandScreen({
             >
               {battle.frontlineSegments.map((segment) =>
                 segment.sketchPoints && segment.sketchPoints.length > 1 ? (
-                  <polyline
-                    key={`${segment.id}-saved-sketch`}
-                    className={`frontline-saved-sketch-line ${
-                      selectedFrontlineSegment?.id === segment.id ? "selected" : ""
-                    }`}
-                    points={segment.sketchPoints.map((point) => `${point.x},${point.y}`).join(" ")}
-                  />
+                  segment.sketchPoints.length > 2 ? (
+                    <path
+                      key={`${segment.id}-saved-sketch`}
+                      className={`frontline-saved-sketch-line ${
+                        selectedFrontlineSegment?.id === segment.id ? "selected" : ""
+                      }`}
+                      d={svgSmoothSketchPath(segment.sketchPoints)}
+                    />
+                  ) : (
+                    <polyline
+                      key={`${segment.id}-saved-sketch`}
+                      className={`frontline-saved-sketch-line ${
+                        selectedFrontlineSegment?.id === segment.id ? "selected" : ""
+                      }`}
+                      points={svgPolylinePoints(segment.sketchPoints)}
+                    />
+                  )
                 ) : null,
               )}
             </svg>
@@ -5556,12 +5567,12 @@ export function BattleCommandScreen({
             >
               {frontlineSketchDraft.points.length > 0 && (
                 <>
-                  {frontlineSketchDraft.points.length > 1 && (
-                    <polyline
-                      className="frontline-sketch-line"
-                      points={frontlineSketchDraft.points.map((point) => `${point.x},${point.y}`).join(" ")}
-                    />
-                  )}
+                  {frontlineSketchDraft.points.length > 1 &&
+                    (frontlineSketchDraft.points.length > 2 ? (
+                      <path className="frontline-sketch-line" d={svgSmoothSketchPath(frontlineSketchDraft.points)} />
+                    ) : (
+                      <polyline className="frontline-sketch-line" points={svgPolylinePoints(frontlineSketchDraft.points)} />
+                    ))}
                   {frontlineSketchDraft.points.map((point, index) => (
                     <circle
                       key={`${point.x}-${point.y}-${index}`}
