@@ -2708,6 +2708,33 @@ export function BattleCommandScreen({
         pressureReports,
       )
     : undefined;
+  const selectedFrontlineDefenderDiagnostics = selectedFrontlineDefenders
+    .map((unit) => {
+      const soldierRatio = unit.maxSoldiers > 0 ? Math.round((unit.soldiers / unit.maxSoldiers) * 100) : 0;
+      const stress = Math.round(frontlineRotationStressScore(unit));
+      const distanceToAnchor = selectedFrontlineSegment ? Math.round(distance(unit.position, selectedFrontlineSegment.anchor)) : 0;
+      const warnings = [
+        unit.morale < 48 ? `士気${Math.round(unit.morale)}` : undefined,
+        unit.condition < 45 ? `疲労${Math.round(100 - unit.condition)}` : undefined,
+        unit.ammo < 35 ? `弾薬${Math.round(unit.ammo)}` : undefined,
+        soldierRatio < 62 ? `兵力${soldierRatio}%` : undefined,
+        distanceToAnchor > unit.standingOrder.controlRadius ? `基準外${distanceToAnchor}` : undefined,
+      ]
+        .filter(Boolean)
+        .join(" / ");
+      const isOutsideControl = distanceToAnchor > unit.standingOrder.controlRadius;
+      const tone = stress >= 96 || isOutsideControl ? "danger" : stress >= 68 || warnings ? "warning" : "stable";
+      return {
+        unit,
+        soldierRatio,
+        stress,
+        distanceToAnchor,
+        warnings,
+        tone,
+      };
+    })
+    .sort((a, b) => b.stress - a.stress)
+    .slice(0, 6);
   const selectedFrontlineStaffAdvisory = selectedFrontlineSegment
     ? staffAdvisories.find((advisory) => advisory.segment.id === selectedFrontlineSegment.id)
     : undefined;
@@ -5109,6 +5136,49 @@ export function BattleCommandScreen({
               </div>
             </div>
           )}
+          <div className="frontline-defender-diagnosis" aria-label="選択戦線の守備旅団診断">
+            <div className="frontline-defender-diagnosis-heading">
+              <strong>守備旅団診断</strong>
+              <span>守備 {selectedFrontlineDefenderDiagnostics.length} / 圧力 {Math.round(selectedFrontlinePressure?.pressure ?? 0)}</span>
+              <em>ストレス、弾薬、士気、基準線距離から危険な旅団を先に表示。</em>
+            </div>
+            <div className="frontline-defender-diagnosis-list">
+              {selectedFrontlineDefenderDiagnostics.map(({ unit, soldierRatio, stress, distanceToAnchor, warnings, tone }) => (
+                <article key={`frontline-defender-${unit.unitId}`} className={`frontline-defender-card ${tone}`}>
+                  <button
+                    className="frontline-defender-main"
+                    type="button"
+                    onClick={() => {
+                      setSelectedUnitId(unit.unitId);
+                      scrollToPosition(unit.position);
+                    }}
+                  >
+                    <strong>{mapUnitDisplayName(unit)}</strong>
+                    <span>
+                      ストレス{stress} / 士気{Math.round(unit.morale)} / 弾薬{Math.round(unit.ammo)} / 兵力{soldierRatio}%
+                    </span>
+                    <small>
+                      {standingPostureLabels[unit.standingOrder.posture]} / {targetPriorityLabels[unit.standingOrder.targetPriority]} /{" "}
+                      距離{distanceToAnchor} / {warnings || "余力維持"}
+                    </small>
+                  </button>
+                  <button
+                    className="frontline-defender-select"
+                    type="button"
+                    onClick={() => {
+                      setSelectedUnitId(unit.unitId);
+                      scrollToPosition(unit.position);
+                    }}
+                  >
+                    選択
+                  </button>
+                </article>
+              ))}
+              {selectedFrontlineDefenderDiagnostics.length === 0 && (
+                <span className="frontline-defender-empty">この戦線に守備旅団なし</span>
+              )}
+            </div>
+          </div>
           <div className="frontline-command-actions">
             <button
               type="button"

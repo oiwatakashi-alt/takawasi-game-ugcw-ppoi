@@ -1,0 +1,46 @@
+{
+  "id": "takawasi-selected-frontline-defender-diagnosis-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-frontline defender diagnosis cards",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding selected-frontline defender diagnosis cards."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "The selected-frontline panel derives defender diagnosis from existing selectedFrontlineDefenders and frontlineRotationStressScore, shows stress, morale, ammo, strength ratio, posture, target priority, anchor distance, and warnings, and selects/scrolls to the clicked brigade without adding BattleState or save fields."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and select a frontline from the pressure strip or map.",
+    "Verify the selected-frontline panel shows 守備旅団診断 below 戦線提案.",
+    "Verify defender cards are sorted with the most stressed brigade first.",
+    "Verify each card shows stress, morale, ammo, strength ratio, posture, target priority, anchor distance, and warning or 余力維持.",
+    "Click a defender card and verify that brigade becomes the selected unit and the viewport scrolls to its position.",
+    "Confirm the selected-brigade panel updates to the same unit, including 指揮コンパス and 担当戦線診断.",
+    "Confirm console error count is 0 and the defender cards do not overlap frontline command controls at desktop 1440px."
+  ]
+}
