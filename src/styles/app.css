@@ -4901,6 +4901,93 @@ main {
   font-weight: 800;
 }
 
+.selected-frontline-diagnosis {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
+  margin: 8px 0;
+  border: 1px solid rgba(67, 57, 44, 0.24);
+  border-left: 5px solid #5d7a46;
+  border-radius: 8px;
+  background: rgba(255, 252, 240, 0.72);
+  padding: 8px;
+}
+
+.selected-frontline-diagnosis.watch {
+  border-left-color: #6f7345;
+}
+
+.selected-frontline-diagnosis.warning {
+  border-left-color: #a86f29;
+  background: rgba(248, 231, 185, 0.84);
+}
+
+.selected-frontline-diagnosis.danger {
+  border-left-color: #8e2f2b;
+  background: rgba(244, 218, 202, 0.9);
+}
+
+.selected-frontline-diagnosis-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.selected-frontline-diagnosis-main strong,
+.selected-frontline-diagnosis-main span,
+.selected-frontline-diagnosis-main small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-frontline-diagnosis-main strong {
+  color: #2f4937;
+  font-size: 12px;
+}
+
+.selected-frontline-diagnosis-main span {
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.selected-frontline-diagnosis-main small {
+  color: #6b5f4d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.selected-frontline-diagnosis-actions {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.selected-frontline-diagnosis-actions button {
+  border: 1px solid rgba(47, 83, 58, 0.38);
+  border-radius: 6px;
+  background: rgba(47, 83, 58, 0.92);
+  color: #f8efcf;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.selected-frontline-diagnosis-actions button:first-child {
+  background: rgba(255, 252, 240, 0.86);
+  color: #2f4937;
+}
+
+.selected-frontline-diagnosis-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .selected-tactical-suggestions {
   display: grid;
   gap: 8px;

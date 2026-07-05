@@ -2829,6 +2829,31 @@ export function BattleCommandScreen({
     commandIssuePlan.mode === "strict_direct" ? "1件だけ発令" : `${commandIssuePolicyBatchSize}件ずつ発令`;
   const selectedTargetAudits = selectedUnit ? targetAuditForUnit(battle, selectedUnit).slice(0, 5) : [];
   const selectedAuditTarget = selectedUnit ? selectedTargetAudit(battle, selectedUnit) : undefined;
+  const selectedUnitFrontlinePressure = selectedUnit
+    ? pressureReports.find((report) => report.segment.id === selectedUnit.standingOrder.frontlineSegmentId)
+    : undefined;
+  const selectedUnitFrontlineDistance =
+    selectedUnit && selectedUnitFrontlinePressure
+      ? Math.round(distance(selectedUnit.position, selectedUnitFrontlinePressure.segment.anchor))
+      : 0;
+  const selectedUnitFrontlineRole =
+    selectedUnit && selectedUnitFrontlinePressure?.defenders.some((unit) => unit.unitId === selectedUnit.unitId)
+      ? "守備中"
+      : selectedUnit && selectedUnitFrontlinePressure?.reserves.some((unit) => unit.unitId === selectedUnit.unitId)
+        ? "予備候補"
+        : selectedUnit?.standingOrder.posture === "fire_support"
+          ? "火力支援"
+          : "戦線外";
+  const selectedUnitReadinessWarning = selectedUnit
+    ? [
+        selectedUnit.morale < 48 ? `士気${Math.round(selectedUnit.morale)}` : undefined,
+        selectedUnit.condition < 45 ? `疲労${Math.round(100 - selectedUnit.condition)}` : undefined,
+        selectedUnit.ammo < 35 ? `弾薬${Math.round(selectedUnit.ammo)}` : undefined,
+        selectedUnit.soldiers < selectedUnit.maxSoldiers * 0.62 ? `兵力${selectedUnit.soldiers}` : undefined,
+      ]
+        .filter(Boolean)
+        .join(" / ")
+    : "";
   const spottedEnemyCount = battle.enemyUnits.filter((enemy) => enemy.isSpotted).length;
   const hiddenEnemyCount = battle.enemyUnits.length - spottedEnemyCount;
   const objectiveEffects = battle.objectiveState.tacticalEffects;
@@ -5425,6 +5450,43 @@ export function BattleCommandScreen({
               })}
             </div>
           </div>
+          {selectedUnitFrontlinePressure && (
+            <div className={`selected-frontline-diagnosis ${selectedUnitFrontlinePressure.level}`} aria-label="選択部隊の担当戦線診断">
+              <div className="selected-frontline-diagnosis-main">
+                <strong>担当戦線診断</strong>
+                <span>
+                  {selectedUnitFrontlinePressure.segment.name} / {frontlinePressureLevelLabels[selectedUnitFrontlinePressure.level]} /{" "}
+                  {selectedUnitFrontlineRole}
+                </span>
+                <small>
+                  敵圧{Math.round(selectedUnitFrontlinePressure.pressure)} / 守備{selectedUnitFrontlinePressure.defenders.length} / 予備
+                  {selectedUnitFrontlinePressure.reserves.length} / 距離{selectedUnitFrontlineDistance}
+                </small>
+                <small>
+                  {selectedUnitFrontlinePressure.leadEnemy
+                    ? `主脅威 ${mapEnemyDisplayName(selectedUnitFrontlinePressure.leadEnemy)} ${enemyAssaultPhaseLabels[selectedUnitFrontlinePressure.leadEnemy.assaultPlan.phase]}`
+                    : "主脅威なし"}
+                  {selectedUnitReadinessWarning ? ` / 注意 ${selectedUnitReadinessWarning}` : " / 余力維持"}
+                </small>
+              </div>
+              <div className="selected-frontline-diagnosis-actions">
+                <button type="button" onClick={() => inspectFrontlinePressure(selectedUnitFrontlinePressure)}>
+                  戦線表示
+                </button>
+                <button
+                  type="button"
+                  disabled={
+                    finished ||
+                    selectedUnitFrontlinePressure.level === "quiet" ||
+                    (selectedUnitFrontlinePressure.defenders.length === 0 && selectedUnitFrontlinePressure.reserves.length === 0)
+                  }
+                  onClick={() => applyFrontlinePressureResponse(selectedUnitFrontlinePressure)}
+                >
+                  {commandQueueMode ? "圧力対応を予約" : selectedUnitFrontlinePressure.recommendationLabel}
+                </button>
+              </div>
+            </div>
+          )}
           <div className="selected-tactical-suggestions" aria-label="選択部隊の戦術提案">
             <div className="tactical-suggestion-heading">
               <strong>戦術提案</strong>

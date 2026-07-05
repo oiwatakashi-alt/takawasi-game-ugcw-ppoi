@@ -1,0 +1,46 @@
+{
+  "id": "takawasi-selected-unit-frontline-diagnosis-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-brigade frontline diagnosis card",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding the selected-unit frontline diagnosis card."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "The selected-brigade panel derives assigned frontline pressure from existing pressureReports, displays role, pressure, defender/reserve counts, distance, main threat, and readiness warnings, and calls inspectFrontlinePressure or applyFrontlinePressureResponse without adding BattleState or save fields."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and select a player brigade.",
+    "Verify the selected-brigade panel shows 担当戦線診断 below 指揮コンパス.",
+    "Verify the card shows assigned frontline name, pressure level, role, enemy pressure, defender count, reserve count, distance, main threat, and readiness warning or 余力維持.",
+    "Click 戦線表示 and verify the responsible frontline becomes selected and the viewport scrolls to the line or lead threat.",
+    "With a pressured frontline, click the response button and verify it calls the same frontline pressure response behavior.",
+    "Enable 予約指揮, click the response button, and verify the pressure response is queued rather than issued immediately.",
+    "Confirm console error count is 0 and the card does not overlap nearby command controls at desktop 1440px."
+  ]
+}
