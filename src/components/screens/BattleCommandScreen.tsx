@@ -6884,6 +6884,12 @@ export function BattleCommandScreen({
                   指令 {enemyCommandIntentLabels[selectedEnemy.assaultPlan.commandIntent]} /{" "}
                   {selectedEnemy.assaultPlan.commandLabel ?? "単独行動"}
                 </span>
+                {selectedEnemy.assaultPlan.terrainTacticLabel && (
+                  <span>
+                    地形行動 {selectedEnemy.assaultPlan.terrainTacticLabel} /{" "}
+                    {selectedEnemy.assaultPlan.terrainTacticDetail ?? "地形を利用して接近中"}
+                  </span>
+                )}
                 <span>
                   階梯 {enemyCommandTierLabels[selectedEnemy.assaultPlan.commandTier ?? "none"]} / 親系統{" "}
                   {selectedEnemy.assaultPlan.commandParentId ?? selectedEnemy.assaultPlan.commandGroupId ?? "なし"}
@@ -7467,6 +7473,7 @@ export function BattleCommandScreen({
                 {" / "}
                 {enemyCommandIntentLabels[unit.assaultPlan.commandIntent]}
                 {unit.assaultPlan.targetStructureId ? " / 施設襲撃" : ""}
+                {unit.assaultPlan.terrainTacticLabel ? ` / ${unit.assaultPlan.terrainTacticLabel}` : ""}
                 {" / "}
                 {enemyCommandTierLabels[unit.assaultPlan.commandTier ?? "none"]}
                 {" / "}

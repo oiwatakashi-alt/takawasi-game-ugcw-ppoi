@@ -345,6 +345,8 @@ export interface EnemyAssaultPlan {
   commandIntent: EnemyCommandIntent;
   commandGroupId?: string;
   commandLabel?: string;
+  terrainTacticLabel?: string;
+  terrainTacticDetail?: string;
   morale: number;
   moraleState: EnemyMoraleState;
   laneSpread: number;

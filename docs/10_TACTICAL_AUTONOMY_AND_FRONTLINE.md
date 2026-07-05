@@ -1,6 +1,6 @@
 # Tactical Autonomy / Frontline Command Design
 
-Last updated: 2026-07-05
+Last updated: 2026-07-06
 
 ## Purpose
 
@@ -2431,6 +2431,21 @@ Implemented:
 - Campaign application writes the same role and measured `指揮網効果` into brigade history through the existing result path.
 - `tacticalLessonProfileForUnit` counts `敵継承遮断` separately, maps it toward `遅滞節約`, and gives reserve-readiness/control growth alongside measured command-effect lessons.
 - Desktop 1440px QA verified Strategic Map -> Camp -> Deployment -> Battle -> 3x command waves -> stop -> execute `推奨 継承遮断` -> withdraw -> After Action -> apply result -> Army Camp selected brigade. Battle showed `推奨 継承遮断`, `予測 継承遮断`, `効果中 継承遮断`, and `効果 継承遮断候補2群`; After Action showed `敵指揮網対応評価 敵継承遮断`; Army Camp showed `戦術教訓 敵継承遮断1件 / 指揮網効果1件` and unit history containing `敵継承遮断`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`, and viewport reset. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-enemy-command-inheritance-carryover-qa-report.json`.
+
+## Implemented Enemy Ridge Maneuver Slice - 2026-07-06
+
+Enemy groups now react to explicit ridge-line terrain while moving, not only while being fired upon.
+
+Implemented:
+
+- `EnemyAssaultPlan` carries optional `terrainTacticLabel` and `terrainTacticDetail` fields for battle-runtime display.
+- `resolveTick` checks whether an enemy movement vector crosses a terrain zone's `ridgeLine`.
+- Crossing a ridge slows the group by ridge height, slightly shifts its destination into a probing approach, and reduces cohesion.
+- Enemies close to the crest can display `稜線裏滞留`; farther ridge-crossing movement can display `稜線越え接近`.
+- Battle Command enemy map labels show the terrain tactic beside assault phase, facility-raider, command intent, command tier, and command label.
+- The enemy inspection panel has a matching `地形行動` row for the selected enemy.
+- No save migration is needed. The fields are battle-runtime only and live inside the current `BattleState` enemy units.
+- Desktop 1440px QA verified the reverse-slope profile through Strategic Map -> Camp -> Deployment -> Battle. A spotted enemy label showed `施設襲撃 / 稜線裏滞留`, existing LOS audit rows still showed `射線遮断` and `稜線越え`, console errors 0, broken images 0, horizontal overflow false, and no visible `NaN`. The selected enemy detail row was added in code but was not separately verified because the automated enemy click did not open the detail panel in that run. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-enemy-ridge-maneuver-qa-report.json`.
 
 ## Current Known Gap
 

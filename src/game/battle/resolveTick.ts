@@ -385,6 +385,71 @@ const targetSegmentForEnemy = (
   return [...segments].sort((a, b) => distance(a.anchor, enemy.position) - distance(b.anchor, enemy.position))[0];
 };
 
+const sideOfLine = (point: BattlePosition, start: BattlePosition, end: BattlePosition): number =>
+  (end.x - start.x) * (point.y - start.y) - (end.y - start.y) * (point.x - start.x);
+
+const crossesLine = (from: BattlePosition, to: BattlePosition, start: BattlePosition, end: BattlePosition): boolean => {
+  const fromSide = sideOfLine(from, start, end);
+  const toSide = sideOfLine(to, start, end);
+  if (Math.abs(fromSide) < 0.001 || Math.abs(toSide) < 0.001) {
+    return false;
+  }
+  return fromSide * toSide < 0;
+};
+
+const distanceToLineSegment = (point: BattlePosition, start: BattlePosition, end: BattlePosition): number => {
+  const lineX = end.x - start.x;
+  const lineY = end.y - start.y;
+  const lengthSquared = lineX * lineX + lineY * lineY;
+  if (lengthSquared <= 0.001) {
+    return distance(point, start);
+  }
+  const ratio = clamp(((point.x - start.x) * lineX + (point.y - start.y) * lineY) / lengthSquared, 0, 1);
+  return distance(point, {
+    x: start.x + lineX * ratio,
+    y: start.y + lineY * ratio,
+  });
+};
+
+const ridgeManeuverForEnemy = (
+  enemy: EnemyBattleUnit,
+  destination: BattlePosition,
+  terrainZones: BattleTerrainZone[],
+  index: number,
+  bounds: BattleMapBounds,
+): {
+  destination: BattlePosition;
+  speedMultiplier: number;
+  cohesionDelta: number;
+  label?: string;
+  detail?: string;
+} => {
+  const ridgeZone = terrainZones.find(
+    (zone) => zone.ridgeLine && crossesLine(enemy.position, destination, zone.ridgeLine.start, zone.ridgeLine.end),
+  );
+  if (!ridgeZone?.ridgeLine) {
+    return {
+      destination,
+      speedMultiplier: 1,
+      cohesionDelta: 0,
+    };
+  }
+  const ridgeDistance = distanceToLineSegment(enemy.position, ridgeZone.ridgeLine.start, ridgeZone.ridgeLine.end);
+  const heightPenalty = ridgeZone.ridgeLine.height === "high" ? 0.72 : ridgeZone.ridgeLine.height === "medium" ? 0.82 : 0.9;
+  const probeOffset = ((index % 2) * 2 - 1) * (ridgeZone.ridgeLine.height === "high" ? 7 : 4);
+  const isClose = ridgeDistance <= 7;
+  return {
+    destination: {
+      x: clamp(destination.x + (isClose ? 4 : 1.5), 6, bounds.width - 4),
+      y: clamp(destination.y + probeOffset, 8, bounds.height - 8),
+    },
+    speedMultiplier: isClose ? heightPenalty * 0.72 : heightPenalty,
+    cohesionDelta: ridgeZone.ridgeLine.height === "high" ? -0.009 : -0.005,
+    label: isClose ? "稜線裏滞留" : "稜線越え接近",
+    detail: `${ridgeZone.name}を越える接近で隊列が鈍る`,
+  };
+};
+
 const evaluateEnemyAssaultPhases = (
   enemies: EnemyBattleUnit[],
   segments: FrontlineSegment[],
@@ -1528,6 +1593,7 @@ export const resolveTick = (state: BattleState): BattleState => {
 
     const assaultDestination = enemyAssaultDestination(enemy, index, target, mapBounds);
     const destination = destinationThroughChokePoints(enemy, assaultDestination, chokePoints);
+    const ridgeManeuver = ridgeManeuverForEnemy(enemy, destination, state.terrainZones, index, mapBounds);
     const nearObstacle = structures.some(
       (structure) =>
         (structure.status === "built" || structure.status === "damaged") &&
@@ -1535,10 +1601,11 @@ export const resolveTick = (state: BattleState): BattleState => {
     );
     const moved = moveToward(
       enemy.position,
-      destination,
+      ridgeManeuver.destination,
       enemy.speed *
         enemySlowFactor *
         enemyTerrainMovement *
+        ridgeManeuver.speedMultiplier *
         clamp(0.82 + enemy.assaultPlan.cohesion * 0.24, 0.72, 1.08) *
         enemyCommandFactor(enemy) *
         enemyCommandIntentMovementFactor(enemy) *
@@ -1553,7 +1620,10 @@ export const resolveTick = (state: BattleState): BattleState => {
       currentTargetId: target?.unitId,
       assaultPlan: {
         ...enemy.assaultPlan,
-        vector: normalizeVector(enemy.position, destination),
+        vector: normalizeVector(enemy.position, ridgeManeuver.destination),
+        cohesion: clamp(enemy.assaultPlan.cohesion + ridgeManeuver.cohesionDelta, 0.18, 1),
+        terrainTacticLabel: ridgeManeuver.label,
+        terrainTacticDetail: ridgeManeuver.detail,
       },
     };
   });

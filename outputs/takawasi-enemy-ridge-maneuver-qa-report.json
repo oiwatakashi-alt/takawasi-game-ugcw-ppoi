@@ -1,0 +1,51 @@
+{
+  "id": "takawasi-enemy-ridge-maneuver-qa",
+  "date": "2026-07-06",
+  "target": "http://127.0.0.1:5173/?takawasiTerrainProfile=reverse-slope",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Enemy ridge-line crossing movement tactic labels",
+    "Reverse-slope LOS audit coexistence",
+    "Battle Command map-token terrain tactic display"
+  ],
+  "flow": [
+    "clear localStorage",
+    "Strategic Map -> Camp",
+    "Camp -> Deployment",
+    "Deployment -> Battle",
+    "run 1x for 9 seconds",
+    "stop battle and inspect visible text"
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Vite reported the existing large chunk warning only."
+  },
+  "browserQa": {
+    "status": "passed_with_note",
+    "hasTerrainTactic": true,
+    "selectedEnemyDetailVerified": false,
+    "selectedEnemyDetailNote": "Enemy map token showed the terrain tactic, but the forced Playwright click did not open the selected enemy detail panel in this run. The detail-panel rendering code is present and should be rechecked in a later selection-mode QA pass.",
+    "enemyLines": [
+      "塹壕破砕:塹壕線 / 深0 側107 / 凝集60 / 士気62 / 独走 指揮0% / 陣地突破 / 施設襲撃 / 稜線裏滞留 / 突撃先導 / 第1波塹壕線突撃先導"
+    ],
+    "auditLines": [
+      "射線遮断 森林遮蔽帯/逆斜面稜線 稜線越え 逆斜面稜線/敵稜線 逆斜面稜線 / 距離18 / 戦列距離15 / 有効射程27",
+      "射線遮断 森林遮蔽帯/逆斜面稜線 稜線越え 逆斜面稜線/逆斜面遮蔽 逆斜面稜線 / 距離26 / 戦列距離22 / 有効射程25",
+      "射撃判断: アンデッド銃兵 / 優先最接近 / 減衰 逆斜面稜線 / 稜線越え 逆斜面稜線/逆斜面遮蔽 逆斜面稜線"
+    ],
+    "consoleErrors": [],
+    "brokenImages": [],
+    "visibleNaN": false,
+    "horizontalOverflow": false,
+    "documentWidth": 1440,
+    "viewportWidth": 1440
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current active target."
+  }
+}
