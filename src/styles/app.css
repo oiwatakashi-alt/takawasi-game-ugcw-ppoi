@@ -3395,6 +3395,12 @@ main {
   white-space: nowrap;
 }
 
+.command-queue-summary .command-congestion-warning {
+  border-color: rgba(142, 47, 43, 0.36);
+  background: rgba(252, 222, 206, 0.82);
+  color: #793728;
+}
+
 .pending-order-chip {
   border: 1px solid rgba(67, 57, 44, 0.18);
   border-radius: 999px;

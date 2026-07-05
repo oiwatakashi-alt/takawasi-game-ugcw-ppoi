@@ -143,6 +143,15 @@ export interface CommandTransmissionReport {
   penaltySummary: string;
 }
 
+export interface CommandCongestionReport {
+  commandCount: number;
+  capacity: number;
+  delayPenaltySeconds: number;
+  label: string;
+  detail: string;
+  reasons: string[];
+}
+
 const nearestEnemyDistance = (state: BattleState, position: BattlePosition): number =>
   state.enemyUnits
     .filter((enemy) => enemy.count > 0 && enemy.isSpotted)
@@ -203,6 +212,61 @@ export const commandTransmissionReport = (
     detail: reasons.join(" / "),
     reasons,
     penaltySummary: "到達まで移動0.62倍 / 射撃0.84倍",
+  };
+};
+
+export const commandCongestionReport = (state: BattleState, commandCount: number): CommandCongestionReport => {
+  const commandDoctrineBonus =
+    state.strategicDoctrine?.activeDoctrineIds.includes("command") ||
+    state.fireDiscipline?.activeDoctrineIds.includes("command")
+      ? 1
+      : 0;
+  const organizationBonus = state.strategicDoctrine?.activeDoctrineIds.includes("organization") ? 1 : 0;
+  const capacity = 2 + commandDoctrineBonus + organizationBonus;
+  const overload = Math.max(0, commandCount - capacity);
+  const delayPenaltySeconds = overload <= 0 ? 0 : clamp(Math.ceil(overload / 2), 1, 4);
+  const reasons = [
+    `一括${commandCount}件`,
+    `処理容量${capacity}`,
+    commandDoctrineBonus > 0 ? "指揮幕僚+1" : undefined,
+    organizationBonus > 0 ? "軍団編制+1" : undefined,
+    delayPenaltySeconds > 0 ? `混線+${delayPenaltySeconds}秒` : "混線なし",
+  ].filter(Boolean) as string[];
+  return {
+    commandCount,
+    capacity,
+    delayPenaltySeconds,
+    label: delayPenaltySeconds > 0 ? `一括混線 +${delayPenaltySeconds}秒` : "一括混線なし",
+    detail: reasons.join(" / "),
+    reasons,
+  };
+};
+
+export const applyCommandCongestionToPendingOrders = (
+  state: BattleState,
+  commandCount: number,
+  issuedAt: number,
+): BattleState => {
+  const report = commandCongestionReport(state, commandCount);
+  if (report.delayPenaltySeconds <= 0) {
+    return state;
+  }
+  return {
+    ...state,
+    playerUnits: state.playerUnits.map((unit) =>
+      unit.pendingOrder && Math.abs(unit.pendingOrder.issuedAt - issuedAt) < 0.01
+        ? {
+            ...unit,
+            pendingOrder: {
+              ...unit.pendingOrder,
+              reasons: [...(unit.pendingOrder.reasons ?? [unit.pendingOrder.detail]), ...report.reasons],
+              arrivesAt: unit.pendingOrder.arrivesAt + report.delayPenaltySeconds,
+              delaySeconds: unit.pendingOrder.delaySeconds + report.delayPenaltySeconds,
+            },
+          }
+        : unit,
+    ),
+    log: [`予約指揮混線: ${report.detail}。`, ...state.log].slice(0, 12),
   };
 };
 

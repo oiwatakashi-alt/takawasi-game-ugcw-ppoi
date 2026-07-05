@@ -1586,6 +1586,14 @@ Follow-up implemented:
 - Battle Command shows `伝令予測`, `伝令判断`, and `伝令影響` for the selected brigade before issuing a command, and queued selected-brigade commands show the forecast row before `一括発令`.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle, selected-unit `伝令予測 3秒`, queued `弾性防御` forecast, active `伝令 3秒 / 弾性防御`, arrival log, pending clear, console errors/warnings 0, broken images 0, horizontal overflow false, and no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-forecast-qa-report.json`.
 
+Queue congestion follow-up implemented:
+
+- `orders.ts` now exposes `commandCongestionReport` and `applyCommandCongestionToPendingOrders`.
+- `一括発令` compares queued command count against doctrine-modified command capacity. Excess commands add deterministic `一括混線 +N秒` to pending orders issued at the same battle second.
+- Battle Command shows the congestion forecast in the `予約指揮` summary and appends `+ 混線N秒` to queued selected-brigade transmission previews.
+- Pending orders keep the congestion reasons, for example `一括5件 / 処理容量3 / 指揮幕僚+1 / 混線+1秒`, so the player can see that command doctrine raises capacity but does not make mass re-tasking free.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five selected-brigade commands -> `一括混線 +1秒` -> `一括発令` -> active `伝令 4秒 / 阻止射撃` with congestion reasons -> 1x arrival clearing. Console errors/warnings 0, broken images 0, horizontal overflow false, and no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-queue-congestion-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.

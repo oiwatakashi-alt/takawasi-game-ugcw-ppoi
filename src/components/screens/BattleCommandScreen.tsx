@@ -6,6 +6,7 @@ import { fireDisciplineWithDefaults } from "../../game/doctrine/applyDoctrine";
 import {
   applyFrontlineObjectiveSupport,
   applyFrontlineRotation,
+  applyCommandCongestionToPendingOrders,
   applyFrontlineDoctrinePreset,
   applyFacilityDefenseResponse,
   applyObjectiveNodeResponse,
@@ -14,6 +15,7 @@ import {
   assignFacilityToUnit,
   assignFrontlineSegment,
   clearUnitFocusTarget,
+  commandCongestionReport,
   commandTransmissionReport,
   frontlineDoctrinePresets,
   issueFirePlan,
@@ -34,6 +36,7 @@ import {
   setUnitOrder,
   sketchFrontlineSegmentPolyline,
   standingOrderPresets,
+  type CommandCongestionReport,
   type CommandTransmissionReport,
   type FrontlineDoctrinePreset,
   type FrontlineDoctrinePresetId,
@@ -2712,6 +2715,8 @@ export function BattleCommandScreen({
   const selectedTransmissionPreview = selectedUnit
     ? commandTransmissionReport(battle, selectedUnit, "standard")
     : undefined;
+  const commandCongestionPreview: CommandCongestionReport | undefined =
+    queuedCommands.length > 0 ? commandCongestionReport(battle, queuedCommands.length) : undefined;
   const selectedTargetAudits = selectedUnit ? targetAuditForUnit(battle, selectedUnit).slice(0, 5) : [];
   const selectedAuditTarget = selectedUnit ? selectedTargetAudit(battle, selectedUnit) : undefined;
   const spottedEnemyCount = battle.enemyUnits.filter((enemy) => enemy.isSpotted).length;
@@ -2818,7 +2823,12 @@ export function BattleCommandScreen({
     if (queuedCommands.length === 0) {
       return;
     }
-    const nextBattle = queuedCommands.reduce((currentBattle, command) => command.apply(currentBattle), battle);
+    const issuedAt = battle.elapsedSeconds;
+    const nextBattle = applyCommandCongestionToPendingOrders(
+      queuedCommands.reduce((currentBattle, command) => command.apply(currentBattle), battle),
+      queuedCommands.length,
+      issuedAt,
+    );
     onChange({
       ...nextBattle,
       log: [`予約指揮: ${queuedCommands.length}件を一括発令。`, ...nextBattle.log].slice(0, 12),
@@ -4362,6 +4372,11 @@ export function BattleCommandScreen({
           <strong>予約指揮</strong>
           <span>{commandQueueMode ? "予約中" : "直接発令"}</span>
           <span>{queuedCommands.length}件</span>
+          {commandCongestionPreview && (
+            <span className={commandCongestionPreview.delayPenaltySeconds > 0 ? "command-congestion-warning" : ""}>
+              {commandCongestionPreview.label}
+            </span>
+          )}
           <span>
             {commandQueueMode
               ? "停止中に命令を積み、一括発令後は伝令遅延が発生する"
@@ -4389,7 +4404,11 @@ export function BattleCommandScreen({
                 <small>{command.detail}</small>
                 {command.transmissionPreview && (
                   <small className="command-transmission-preview">
-                    {command.transmissionPreview.label} / {command.transmissionPreview.detail}
+                    {command.transmissionPreview.label}
+                    {commandCongestionPreview?.delayPenaltySeconds
+                      ? ` + 混線${commandCongestionPreview.delayPenaltySeconds}秒`
+                      : ""}{" "}
+                    / {command.transmissionPreview.detail}
                   </small>
                 )}
                 <button type="button" onClick={() => removeQueuedCommand(command.id)}>

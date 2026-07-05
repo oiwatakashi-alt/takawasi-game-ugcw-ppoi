@@ -1,0 +1,44 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": "Battle Command queued-command congestion slice",
+  "steps": [
+    "Opened the app at desktop viewport.",
+    "Reset the campaign.",
+    "Moved from Theater to Army Camp.",
+    "Moved from Deployment to Battle Command.",
+    "Enabled queued command mode.",
+    "Queued five selected-brigade commands.",
+    "Verified queue panel congestion forecast.",
+    "Applied queued commands.",
+    "Verified pending order received the congestion delay and reasons.",
+    "Ran battle at 1x until the order arrived and pending state cleared."
+  ],
+  "results": {
+    "build": "passed",
+    "queueCountVisible": true,
+    "congestionForecastVisible": true,
+    "queuedPreviewIncludesCongestion": true,
+    "activePendingDelayIncludesCongestion": true,
+    "congestionLogVisible": true,
+    "congestionReasonsVisible": true,
+    "pendingClearedAfterArrival": true,
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "hasNaN": false,
+    "mobileQa": "skipped; mobile/cellphone QA is outside the active target"
+  },
+  "evidence": {
+    "queueForecast": "一括混線 +1秒",
+    "queuedCommandPreview": "伝令予測 3秒 + 混線1秒 / 標準命令 基礎3秒 / 接敵余裕 / 即応53で+1秒 / 士気安定 / 指揮幕僚-1秒",
+    "activePendingChip": "伝令 4秒 / 阻止射撃",
+    "activeReason": "伝令判断 標準命令 基礎3秒 / 接敵余裕 / 即応53で+1秒 / 士気安定 / 指揮幕僚-1秒 / 一括5件 / 処理容量3 / 指揮幕僚+1 / 混線+1秒",
+    "congestionLog": "予約指揮混線: 一括5件 / 処理容量3 / 指揮幕僚+1 / 混線+1秒。",
+    "arrivalLog": "第1戦列歩兵大隊へ阻止射撃が到達。"
+  }
+}
