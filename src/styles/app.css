@@ -4675,6 +4675,99 @@ main {
   padding: 4px 8px;
 }
 
+.selected-command-compass {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+  border: 1px solid rgba(67, 57, 44, 0.24);
+  border-left: 5px solid #5d7a46;
+  border-radius: 8px;
+  background: rgba(255, 252, 240, 0.72);
+  padding: 8px;
+}
+
+.command-compass-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.command-compass-status strong {
+  margin-right: 2px;
+}
+
+.command-compass-status span {
+  min-width: 0;
+  border: 1px solid rgba(67, 57, 44, 0.2);
+  border-radius: 6px;
+  background: rgba(248, 239, 207, 0.74);
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  padding: 5px 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-compass-status span:nth-child(3) {
+  flex: 1 1 220px;
+  border-color: rgba(142, 47, 43, 0.24);
+  color: #5a2b24;
+}
+
+.command-compass-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px;
+}
+
+.command-compass-grid button {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 3px;
+  min-height: 74px;
+  border: 1px solid rgba(67, 57, 44, 0.26);
+  border-radius: 7px;
+  background: rgba(236, 226, 198, 0.84);
+  color: #2a241c;
+  padding: 7px 8px;
+  text-align: left;
+}
+
+.command-compass-grid button.active {
+  border-color: rgba(47, 107, 69, 0.72);
+  background: rgba(223, 234, 202, 0.88);
+  box-shadow: inset 0 0 0 1px rgba(47, 107, 69, 0.18);
+}
+
+.command-compass-grid strong,
+.command-compass-grid span,
+.command-compass-grid small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-compass-grid strong {
+  color: #2f4937;
+  font-size: 12px;
+}
+
+.command-compass-grid span {
+  color: #3c3328;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.command-compass-grid small {
+  color: #6b5f4d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .selected-command-summary {
   display: flex;
   flex-wrap: wrap;

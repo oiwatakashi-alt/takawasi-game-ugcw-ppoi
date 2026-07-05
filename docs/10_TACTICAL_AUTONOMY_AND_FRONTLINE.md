@@ -1626,6 +1626,13 @@ Deployment command issue plan follow-up implemented:
 - `BattleCommandScreen` can execute the saved policy directly. `分割発令` adds a `方針通りN件ずつ発令` path and `逐次発令` adds `方針通り1件だけ発令`; both apply only the first allowed batch, calculate congestion from that issued subset, and leave the remaining queued commands waiting.
 - Save normalization backfills the default `標準発令` for older saves without raising the save version. `npm run build` passed; browser QA for this slice was blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-command-issue-plan-qa-report.json` records build-only verification and the blocker. Mobile/cellphone QA is outside the current target.
 
+Selected command compass follow-up implemented:
+
+- `BattleCommandScreen` now shows a `指揮コンパス` inside the selected-brigade command panel. It consolidates the current map-click mode, next action instruction, immediate/queued issue state, anchor, fallback, frontline segment, facility assignment, and focus target.
+- The compass buttons reuse existing map command modes for `基準`, `後退`, `戦線`, `施設`, and `集中`, so the player can enter the same anchor/fallback/frontline/facility/focus-target assignment flows without hunting through the lower command rows.
+- This is intentionally UI-only over existing StandingOrder/order functions. It does not add new save or BattleState fields; it makes the wide-map semi-autonomous control model more legible for desktop tactical play.
+- `npm run build` and `git diff --check` passed. Browser QA remains blocked by the in-app browser URL policy for localhost, so `outputs/takawasi-selected-command-compass-qa-report.json` records build-only verification and manual QA steps. Mobile/cellphone QA is outside the current target.
+
 Deployment warning follow-up implemented:
 
 - Deployment now shows `司令部伝達` in the left briefing ledger using the same `commandPostProfileForCampaign` calculation as Battle creation.

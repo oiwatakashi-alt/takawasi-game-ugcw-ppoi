@@ -1,0 +1,48 @@
+{
+  "id": "takawasi-selected-command-compass-qa",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-brigade command compass UI for existing map command modes",
+  "result": "partial-pass",
+  "verified": [
+    {
+      "check": "production build",
+      "status": "pass",
+      "command": "npm run build",
+      "notes": "TypeScript and Vite production build passed after adding the selected command compass UI."
+    },
+    {
+      "check": "whitespace/static diff check",
+      "status": "pass",
+      "command": "git diff --check",
+      "notes": "No whitespace errors were reported."
+    },
+    {
+      "check": "implementation review",
+      "status": "pass",
+      "notes": "BattleCommandScreen now derives command compass readouts from existing BattleState and selected-unit state. Compass buttons call the existing toggleCommandMode path for anchor, fallback, frontline segment, facility, and focus target assignment, so no new save or battle-state migration is required."
+    }
+  ],
+  "notVerified": [
+    {
+      "check": "desktop browser QA",
+      "status": "blocked",
+      "reason": "In-app browser localhost URL policy blocks the current http://127.0.0.1:5173/ QA path in this thread."
+    },
+    {
+      "check": "mobile/cellphone QA",
+      "status": "out-of-scope",
+      "reason": "Mobile/cellphone QA is currently outside the active Takawasi target."
+    }
+  ],
+  "expectedManualFlow": [
+    "Open Battle Command and select a player brigade.",
+    "Verify the 指揮コンパス appears in the selected-brigade panel and shows current click mode, next action instruction, immediate/queued issue state, anchor, fallback, frontline, facility, and focus target.",
+    "Click 基準, then click the tactical map and verify the selected brigade anchor changes through the existing map command flow.",
+    "Click 後退, then click the tactical map and verify fallback destination changes.",
+    "Click 戦線, then click a frontline segment and verify the selected brigade's assigned segment changes.",
+    "Click 施設, then click a structure and verify facility assignment changes.",
+    "Click 集中, then click a spotted enemy and verify focus target changes.",
+    "Enable 予約指揮 and verify the compass issue state changes from 即時発令 to 予約中 N件 as commands are queued.",
+    "Confirm console error count is 0 and no compass text overlaps or becomes unreadable at desktop 1440px."
+  ]
+}

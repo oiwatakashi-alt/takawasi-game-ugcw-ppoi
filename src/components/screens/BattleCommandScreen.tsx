@@ -142,6 +142,15 @@ interface BattleViewportRange {
   width: number;
 }
 
+const mapCommandModeLabels: Record<MapCommandMode, string> = {
+  none: "通常選択",
+  anchor: "基準位置指定",
+  fallback: "後退地点指定",
+  facility: "施設担当指定",
+  focusTarget: "集中目標指定",
+  segment: "担当戦線指定",
+};
+
 interface FrontlineObjectiveSupportOption {
   node: BattleObjectiveNode;
   distance: number;
@@ -2783,6 +2792,56 @@ export function BattleCommandScreen({
       ? `${battle.chokePoints.map((choke) => `${choke.name} 遅滞${choke.delayPercent}%`).join(" / ")}`
       : "なし";
   const frontlineGeometryLabel = frontlineGeometryDisplayLabel(battle.frontlineGeometry);
+  const selectedCommandInstruction =
+    selectedUnit && commandMode !== "none"
+      ? commandMode === "anchor"
+        ? `${selectedUnit.name}の基準位置を戦術マップでクリック`
+        : commandMode === "fallback"
+          ? `${selectedUnit.name}の後退地点を戦術マップでクリック`
+          : commandMode === "facility"
+            ? `${selectedUnit.name}の担当施設をクリック`
+            : commandMode === "focusTarget"
+              ? `${selectedUnit.name}の集中射撃目標をクリック`
+              : `${selectedUnit.name}の担当戦線区画をクリック`
+      : selectedUnit
+        ? "部隊、敵、施設、戦線を選択して状況を確認"
+        : "旅団を選択";
+  const selectedCommandCompass = selectedUnit
+    ? [
+        {
+          id: "anchor",
+          label: "基準",
+          value: mapCoordinateLabel(selectedUnit.standingOrder.anchor),
+          detail: `半径${selectedUnit.standingOrder.controlRadius} / ${standingPostureLabels[selectedUnit.standingOrder.posture]}`,
+        },
+        {
+          id: "fallback",
+          label: "後退",
+          value: mapCoordinateLabel(selectedUnit.standingOrder.fallback.destination),
+          detail: selectedUnit.standingOrder.fallback.enabled ? fallbackThresholdSummary(selectedUnit) : "自動後退なし",
+        },
+        {
+          id: "segment",
+          label: "戦線",
+          value: segmentName(battle, selectedUnit.standingOrder.frontlineSegmentId),
+          detail: selectedFrontlineSegment?.id === selectedUnit.standingOrder.frontlineSegmentId ? "表示中" : "クリックで再指定",
+        },
+        {
+          id: "facility",
+          label: "施設",
+          value: selectedStructure ? fortificationTypeLabels[selectedStructure.type] : "未指定",
+          detail: selectedStructure
+            ? `${fortificationStatusLabels[selectedStructure.status]} / ${facilityLabel(battle, selectedUnit)}`
+            : "施設クリックで担当",
+        },
+        {
+          id: "focusTarget",
+          label: "集中",
+          value: focusTargetName(battle, selectedUnit.focusTargetId),
+          detail: selectedFocusTarget ? `${Math.round(selectedFocusTarget.count)}体 / ${enemyThreatLabel(selectedFocusTarget)}` : "敵クリックで指名",
+        },
+      ]
+    : [];
   const effectiveMapLayers: Record<TacticalMapLayerId, boolean> = {
     ...tacticalMapLayers,
     frontlines: tacticalMapLayers.frontlines || commandMode === "segment" || !!dragFrontlineHandle,
@@ -5185,6 +5244,31 @@ export function BattleCommandScreen({
             <span>観測所 {observationPostCount} / 未発見 {hiddenEnemyCount}</span>
             <span>隘路 {chokeSummary}</span>
             <span>保存方針 {selectedStandingTemplate ? "あり" : "なし"}</span>
+          </div>
+          <div className="selected-command-compass" aria-label="選択部隊の指揮コンパス">
+            <div className="command-compass-status">
+              <strong>指揮コンパス</strong>
+              <span>現在 {mapCommandModeLabels[commandMode]}</span>
+              <span>{selectedCommandInstruction}</span>
+              <span>{commandQueueMode ? `予約中 ${queuedCommands.length}件` : "即時発令"}</span>
+            </div>
+            <div className="command-compass-grid">
+              {selectedCommandCompass.map((item) => {
+                const mode = item.id as Exclude<MapCommandMode, "none">;
+                return (
+                  <button
+                    key={item.id}
+                    className={commandMode === mode ? "active" : ""}
+                    type="button"
+                    onClick={() => toggleCommandMode(mode)}
+                  >
+                    <strong>{item.label}</strong>
+                    <span>{item.value}</span>
+                    <small>{item.detail}</small>
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <div className="button-row compact">
             <button
