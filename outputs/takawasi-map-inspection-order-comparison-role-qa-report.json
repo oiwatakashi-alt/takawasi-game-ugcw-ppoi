@@ -1,0 +1,40 @@
+{
+  "id": "takawasi-map-inspection-order-comparison-role-qa",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "resetAfterQa": true
+  },
+  "scope": "Battle Command map-selection comparison cards showing recommendation reasons and after-action roles",
+  "steps": [
+    "Opened the local app at the strategic map.",
+    "Clicked `幕舎で準備する`, `出撃配置へ`, and `選抜部隊で戦闘開始`, waiting about 3 seconds after each action.",
+    "Ran the battle at `3倍` until enemy groups spawned, clicked `停止`, and selected a visible enemy map token.",
+    "Verified the comparison cards displayed recommendation text and `戦果役割` labels.",
+    "Clicked `敵前縁へ布陣` and verified the selected brigade command summary still updated anchor/fallback and pending command transmission."
+  ],
+  "verified": {
+    "comparisonCount": 3,
+    "recommendationsVisible": [
+      "推奨: 敵群を基準目標化して前縁を押さえる",
+      "推奨: 既存守備と予備に接続して戦線を固める",
+      "推奨: 施設任務を明確化して防衛/修理教訓を残す"
+    ],
+    "afterActionRolesVisible": [
+      "戦果役割 検査敵前縁布陣",
+      "戦果役割 検査戦線転属",
+      "戦果役割 検査施設基準"
+    ],
+    "orderButtonStillWorks": "After `敵前縁へ布陣`, selected command summary showed anchor `X45 Y48`, fallback `X29 Y48`, and pending `伝令 3秒 / 集中射撃`.",
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "This pass remains UI-only over existing comparison and result-role paths.",
+    "Mobile/cellphone QA remains outside the current target."
+  ]
+}

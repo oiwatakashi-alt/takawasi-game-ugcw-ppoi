@@ -3219,6 +3219,13 @@ export function BattleCommandScreen({
                 tone,
                 title: "比較 敵前縁",
                 actionLabel: "敵前縁へ布陣",
+                resultRole: "戦果役割 検査敵前縁布陣",
+                recommendation:
+                  score >= 58
+                    ? "推奨: 敵群を基準目標化して前縁を押さえる"
+                    : score >= 34
+                      ? "注意: 布陣可能だが移動距離か敵圧が重い"
+                      : "危険: 前縁へ出すと孤立しやすい",
                 score,
                 summary: `距離${Math.round(moveDistance)} / 後退余地${Math.round(fallbackDepth)} / ${
                   selectedEnemy.isSpotted ? "目標指名可" : "未確認"
@@ -3240,6 +3247,13 @@ export function BattleCommandScreen({
                 tone,
                 title: "比較 戦線転属",
                 actionLabel: "選択旅団を戦線へ",
+                resultRole: "戦果役割 検査戦線転属",
+                recommendation:
+                  score >= 58
+                    ? "推奨: 既存守備と予備に接続して戦線を固める"
+                    : score >= 34
+                      ? "注意: 転属は可能だが戦線圧か移動距離に注意"
+                      : "危険: 戦線圧が高く転属先で消耗しやすい",
                 score,
                 summary: `距離${Math.round(moveDistance)} / 敵圧${Math.round(pressure)} / 守備${defenderCount}+予備${reserveCount}`,
                 detail: `${selectedFrontlineSegment.name}の基準/後退線を写す。既存守備と予備が多いほど安定、敵圧が高いほど危険。`,
@@ -3267,6 +3281,13 @@ export function BattleCommandScreen({
                 tone,
                 title: "比較 施設近接",
                 actionLabel: "施設近接へ基準",
+                resultRole: "戦果役割 検査施設基準",
+                recommendation:
+                  score >= 58
+                    ? "推奨: 施設任務を明確化して防衛/修理教訓を残す"
+                    : score >= 34
+                      ? "注意: 施設価値はあるが移動負担がある"
+                      : "危険: 施設近接で孤立または制圧されやすい",
                 score,
                 summary: `距離${Math.round(moveDistance)} / 耐久${Math.round(inspectedOrAssignedStructure.durability)} / 脅威${Math.round(pressure)}`,
                 detail: `${fortificationTypeLabels[inspectedOrAssignedStructure.type]}の近くで任務化。施設価値と損傷が高いほど優先、移動距離が長いほど負担。`,
@@ -3278,6 +3299,8 @@ export function BattleCommandScreen({
           tone: "ready" | "warning" | "danger";
           title: string;
           actionLabel: string;
+          resultRole: string;
+          recommendation: string;
           score: number;
           summary: string;
           detail: string;
@@ -6198,8 +6221,9 @@ export function BattleCommandScreen({
                         <em>評価{candidate.score}</em>
                       </strong>
                       <span>{candidate.summary}</span>
+                      <small className="comparison-recommendation">{candidate.recommendation}</small>
                       <small>
-                        {candidate.actionLabel} / {candidate.detail}
+                        {candidate.actionLabel} / {candidate.resultRole} / {candidate.detail}
                       </small>
                     </article>
                   ))}

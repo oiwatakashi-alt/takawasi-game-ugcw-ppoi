@@ -5262,6 +5262,11 @@ main {
   font-weight: 800;
 }
 
+.map-selection-comparison .comparison-recommendation {
+  color: #425338;
+  font-weight: 950;
+}
+
 .map-selection-actions {
   display: flex;
   flex-wrap: wrap;
