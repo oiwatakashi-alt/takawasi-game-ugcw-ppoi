@@ -294,7 +294,7 @@ interface EnemyCommandGroupReport {
   forecastLabel: string;
   forecastDetail: string;
   forecastTone: "effect" | "cost" | "risk";
-  activeResponseAction?: "fire" | "pursuit" | "reserve";
+  activeResponseAction?: "fire" | "inheritance_cut" | "pursuit" | "reserve";
   responseStatusLabel: string;
   responseStatusDetail: string;
   responseStatusTone: "idle" | "active" | "locked";
@@ -913,6 +913,20 @@ const enemyCommandGroupResponseStatus = (
 > => {
   const unitIds = new Set(units.map((unit) => unit.id));
   const actionUnits = battle.playerUnits.filter((unit) => unit.soldiers > 0 && unit.enemyCommandActionRole);
+  const inheritanceCutUnits = actionUnits.filter(
+    (unit) =>
+      unit.enemyCommandActionRole === "command_inheritance_cut" &&
+      !!unit.focusTargetId &&
+      unitIds.has(unit.focusTargetId),
+  );
+  if (inheritanceCutUnits.length > 0) {
+    return {
+      activeResponseAction: "inheritance_cut",
+      responseStatusLabel: "効果中 継承遮断",
+      responseStatusDetail: `${inheritanceCutUnits.length}旅団が同指揮群の継承源を集中射撃中。再投入不可、遮断結果は戦果で測定する。`,
+      responseStatusTone: "locked",
+    };
+  }
   const fireUnits = actionUnits.filter(
     (unit) => unit.enemyCommandActionRole === "command_node_fire" && !!unit.focusTargetId && unitIds.has(unit.focusTargetId),
   );
@@ -978,6 +992,16 @@ const enemyCommandGroupResponseEffect = (
     (sum, unit) => sum + unit.count * unit.pressure * (0.75 + unit.assaultPlan.commandInfluence),
     0,
   );
+  if (responseStatus.activeResponseAction === "inheritance_cut") {
+    const inheritanceTargets = units.filter(
+      (unit) => unit.assaultPlan.commandTier !== "wave_command" && !!unit.assaultPlan.commandParentId,
+    ).length;
+    return {
+      responseEffectLabel: `効果 継承遮断候補${inheritanceTargets}群 / 孤立${routingCount}群`,
+      responseEffectDetail: `凝集${Math.round(averageCohesion * 100)}%。指揮源が落ちるほど継承先の再集結と突撃連携が崩れる。`,
+      responseEffectTone: routingCount > 0 || averageCohesion < 0.62 ? "effect" : "cost",
+    };
+  }
   if (responseStatus.activeResponseAction === "fire") {
     const averageInfluence =
       units.length > 0 ? units.reduce((sum, unit) => sum + unit.assaultPlan.commandInfluence, 0) / units.length : 0;
@@ -1249,7 +1273,7 @@ const enemyCommandGroupCanPursue = (group: EnemyCommandGroupReport): boolean =>
 const enemyCommandGroupActionLocked = (
   group: EnemyCommandGroupReport,
   action: EnemyCommandGroupReport["recommendedAction"],
-): boolean => group.activeResponseAction === action;
+): boolean => group.activeResponseAction === action || (action === "fire" && group.activeResponseAction === "inheritance_cut");
 
 const frontlineResponseType = (
   level: FrontlinePressureReport["level"],
@@ -4658,7 +4682,7 @@ export function BattleCommandScreen({
     scrollToPosition(group.leadThreat.position);
   };
 
-  const applyEnemyCommandGroupFire = (group: EnemyCommandGroupReport) => {
+  const applyEnemyCommandGroupFire = (group: EnemyCommandGroupReport, actionRole: "command_node_fire" | "command_inheritance_cut" = "command_node_fire") => {
     const currentTarget = enemyCommandGroupPrimaryTarget(battle, group, "command_node");
     if (!currentTarget) {
       return;
@@ -4669,9 +4693,9 @@ export function BattleCommandScreen({
       setSelectedUnitId(initialUnits[0].unitId);
     }
     issueOrQueueBattleCommand(
-      `enemy-command-fire:${group.id}`,
+      actionRole === "command_inheritance_cut" ? `enemy-command-inheritance-cut:${group.id}` : `enemy-command-fire:${group.id}`,
       group.label,
-      "指揮核射撃",
+      actionRole === "command_inheritance_cut" ? "継承遮断" : "指揮核射撃",
       `${mapEnemyDisplayName(currentTarget)} / ${initialUnits.length}旅団 / ${group.targetSegment?.name ?? group.targetName}`,
       (state) => {
         const target = enemyCommandGroupPrimaryTarget(state, group, "command_node");
@@ -4695,10 +4719,10 @@ export function BattleCommandScreen({
         return {
           ...nextBattle,
           playerUnits: nextBattle.playerUnits.map((unit) =>
-            responseUnitIds.has(unit.unitId) ? { ...unit, enemyCommandActionRole: "command_node_fire" } : unit,
+            responseUnitIds.has(unit.unitId) ? { ...unit, enemyCommandActionRole: actionRole } : unit,
           ),
           log: [
-            `敵指揮網対応: ${group.label}へ指揮核射撃。${responseUnits.length}旅団が${mapEnemyDisplayName(target)}を優先。`,
+            `敵指揮網対応: ${group.label}へ${actionRole === "command_inheritance_cut" ? "継承遮断" : "指揮核射撃"}。${responseUnits.length}旅団が${mapEnemyDisplayName(target)}を優先。`,
             ...nextBattle.log,
           ].slice(0, 12),
         };
@@ -4828,7 +4852,7 @@ export function BattleCommandScreen({
       return;
     }
     if (group.recommendedAction === "fire") {
-      applyEnemyCommandGroupFire(group);
+      applyEnemyCommandGroupFire(group, group.recommendationLabel === "継承遮断" ? "command_inheritance_cut" : "command_node_fire");
       return;
     }
     applyEnemyCommandGroupReserveCommit(group);

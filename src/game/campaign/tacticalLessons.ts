@@ -26,6 +26,7 @@ export interface TacticalLessonProfile {
   failedAdvisoryCount: number;
   heldAdvisoryCount: number;
   enemyCommandNodeFireCount: number;
+  enemyCommandInheritanceCutCount: number;
   enemyCollapsePursuitCount: number;
   enemyCommandReserveCount: number;
   enemyCommandActionCount: number;
@@ -69,14 +70,15 @@ const preferredDoctrineFromCounts = (
 
 const enemyCommandDoctrinePreference = (profile: {
   enemyCommandNodeFireCount: number;
+  enemyCommandInheritanceCutCount: number;
   enemyCollapsePursuitCount: number;
   enemyCommandReserveCount: number;
 }): FrontlineDoctrinePresetId | undefined => {
   // Enemy command-action lessons reuse the closest existing frontline doctrines.
   if (
-    profile.enemyCommandNodeFireCount >= profile.enemyCollapsePursuitCount &&
-    profile.enemyCommandNodeFireCount >= profile.enemyCommandReserveCount &&
-    profile.enemyCommandNodeFireCount > 0
+    profile.enemyCommandNodeFireCount + profile.enemyCommandInheritanceCutCount >= profile.enemyCollapsePursuitCount &&
+    profile.enemyCommandNodeFireCount + profile.enemyCommandInheritanceCutCount >= profile.enemyCommandReserveCount &&
+    profile.enemyCommandNodeFireCount + profile.enemyCommandInheritanceCutCount > 0
   ) {
     return "ammo_delay";
   }
@@ -144,9 +146,11 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
   const heldAdvisoryCount = countHistoryEntries(unit.battleHistory, "戦線維持に寄与");
   const withdrawalSupportCount = countHistoryEntries(unit.battleHistory, "撤退支援");
   const enemyCommandNodeFireCount = countHistoryEntries(unit.battleHistory, "敵指揮核制圧");
+  const enemyCommandInheritanceCutCount = countHistoryEntries(unit.battleHistory, "敵継承遮断");
   const enemyCollapsePursuitCount = countHistoryEntries(unit.battleHistory, "敵崩壊追撃");
   const enemyCommandReserveCount = countHistoryEntries(unit.battleHistory, "指揮網予備投入");
-  const enemyCommandActionCount = enemyCommandNodeFireCount + enemyCollapsePursuitCount + enemyCommandReserveCount;
+  const enemyCommandActionCount =
+    enemyCommandNodeFireCount + enemyCommandInheritanceCutCount + enemyCollapsePursuitCount + enemyCommandReserveCount;
   const enemyCommandEffectCount = countHistoryEntries(unit.battleHistory, "指揮網効果");
   const objectiveEventResponseCount = countHistoryEntries(unit.battleHistory, "目標イベント対応");
   const objectiveEventRecoveredCount = unit.battleHistory.filter(
@@ -174,6 +178,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     preferredDoctrineFromCounts(doctrineLessonCounts) ??
     enemyCommandDoctrinePreference({
       enemyCommandNodeFireCount,
+      enemyCommandInheritanceCutCount,
       enemyCollapsePursuitCount,
       enemyCommandReserveCount,
     }) ??
@@ -186,6 +191,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
       heldAdvisoryCount * 2 +
       withdrawalSupportCount +
       enemyCommandReserveCount * 5 +
+      enemyCommandInheritanceCutCount * 2 +
       enemyCommandActionCount +
       enemyCommandEffectCount * 2 +
       objectiveEventResponseCount * 2 +
@@ -197,6 +203,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     advisoryCount +
       heldAdvisoryCount +
       enemyCommandNodeFireCount * 2 +
+      enemyCommandInheritanceCutCount * 2 +
       enemyCollapsePursuitCount +
       enemyCommandEffectCount +
       objectiveEventRecoveredCount +
@@ -217,6 +224,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
   const lessonParts = [
     advisoryCount > 0 ? `参謀警告${advisoryCount}件` : undefined,
     enemyCommandNodeFireCount > 0 ? `敵指揮核制圧${enemyCommandNodeFireCount}件` : undefined,
+    enemyCommandInheritanceCutCount > 0 ? `敵継承遮断${enemyCommandInheritanceCutCount}件` : undefined,
     enemyCollapsePursuitCount > 0 ? `敵崩壊追撃${enemyCollapsePursuitCount}件` : undefined,
     enemyCommandReserveCount > 0 ? `指揮網予備投入${enemyCommandReserveCount}件` : undefined,
     enemyCommandEffectCount > 0 ? `指揮網効果${enemyCommandEffectCount}件` : undefined,
@@ -236,6 +244,7 @@ export const tacticalLessonProfileForUnit = (unit: ArmyUnit): TacticalLessonProf
     failedAdvisoryCount,
     heldAdvisoryCount,
     enemyCommandNodeFireCount,
+    enemyCommandInheritanceCutCount,
     enemyCollapsePursuitCount,
     enemyCommandReserveCount,
     enemyCommandActionCount,
@@ -272,6 +281,7 @@ export const tacticalLessonPreviewForEnemyCommandEffects = (
   const strongCount = unitOutcomes.filter(
     (outcome) =>
       outcome.resultLabel === "制圧完了" ||
+      outcome.resultLabel === "継承遮断" ||
       outcome.resultLabel === "指揮低下" ||
       outcome.resultLabel === "掃討" ||
       outcome.resultLabel === "再集結抑止" ||

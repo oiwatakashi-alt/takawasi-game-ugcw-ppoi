@@ -182,7 +182,11 @@ export type ObjectiveResponseRole =
   | "visibility_secure"
   | "visibility_retake";
 
-export type EnemyCommandActionRole = "command_node_fire" | "collapse_pursuit" | "command_reserve_commit";
+export type EnemyCommandActionRole =
+  | "command_node_fire"
+  | "command_inheritance_cut"
+  | "collapse_pursuit"
+  | "command_reserve_commit";
 
 export type FrontlineRotationRole = "rotated_out" | "rear_guard_cover";
 
@@ -687,8 +691,18 @@ export interface BattleResult {
     id: string;
     unitIds: string[];
     unitNames: string[];
-    roleLabel: "敵指揮核制圧" | "敵崩壊追撃" | "指揮網予備投入";
-    resultLabel: "指揮低下" | "制圧完了" | "効果限定" | "再集結抑止" | "掃討" | "追撃継続" | "封鎖安定" | "戦線保持" | "圧力過大";
+    roleLabel: "敵指揮核制圧" | "敵継承遮断" | "敵崩壊追撃" | "指揮網予備投入";
+    resultLabel:
+      | "指揮低下"
+      | "制圧完了"
+      | "継承遮断"
+      | "効果限定"
+      | "再集結抑止"
+      | "掃討"
+      | "追撃継続"
+      | "封鎖安定"
+      | "戦線保持"
+      | "圧力過大";
     effectLabel: string;
     metricLabel: string;
     lessonTag: string;

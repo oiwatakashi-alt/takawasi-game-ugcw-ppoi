@@ -1,0 +1,45 @@
+{
+  "title": "Enemy command inheritance carryover QA",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobileQa": "out_of_scope",
+  "flow": [
+    "Strategic Map",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "3x command-wave advance",
+    "stop",
+    "execute recommended 継承遮断",
+    "withdraw",
+    "After Action",
+    "apply result",
+    "Army Camp unit history"
+  ],
+  "verified": {
+    "battleRecommendation": "推奨 継承遮断 / 崩壊リスク44 / 孤立2",
+    "battleForecast": "予測 継承遮断 / 2旅団 / 弾薬高",
+    "battleActiveStatus": "効果中 継承遮断",
+    "battleMeasuredEffect": "効果 継承遮断候補2群",
+    "afterActionRole": "敵継承遮断",
+    "afterActionEnemyCommandEffect": "敵指揮網対応評価: 敵継承遮断",
+    "unitRole": "任務 敵継承遮断",
+    "unitHistory": "東方辺境防衛線防衛戦: 戦闘撤退、敵継承遮断",
+    "tacticalLesson": "戦術教訓 敵継承遮断1件 / 指揮網効果1件"
+  },
+  "health": {
+    "npmRunBuild": "passed",
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "The QA run ended in tactical withdrawal because the battle line was already collapsing, but the inheritance-cut action had been executed before result generation.",
+    "The result was applied to campaign state and verified in the selected brigade detail panel."
+  ]
+}

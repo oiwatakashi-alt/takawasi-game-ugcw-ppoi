@@ -104,6 +104,9 @@ const battleRoleForUnit = (unit: BattleState["playerUnits"][number]): string => 
   if (unit.enemyCommandActionRole === "command_node_fire") {
     return "敵指揮核制圧";
   }
+  if (unit.enemyCommandActionRole === "command_inheritance_cut") {
+    return "敵継承遮断";
+  }
   if (unit.enemyCommandActionRole === "collapse_pursuit") {
     return "敵崩壊追撃";
   }
@@ -168,6 +171,9 @@ const roleXpBonusForUnit = (unit: BattleState["playerUnits"][number], outcome: B
   }
   if (role === "敵指揮核制圧") {
     return 3 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "敵継承遮断") {
+    return 3 + outcomeBonus + (unit.focusTargetId ? 1 : 0) + (unit.standingOrder.targetPriority === "officer" ? 1 : 0);
   }
   if (role === "敵崩壊追撃") {
     return 3 + outcomeBonus + (unit.xpGained >= 2 || casualtyRatio > 0.015 ? 1 : 0);
@@ -412,6 +418,12 @@ const commendationsForUnit = (
     commendations.push("敵指揮核を射撃制圧");
     if (unit.fireMissionId || unit.volleyUntilSeconds) {
       commendations.push("戦線斉射に参加");
+    }
+  }
+  if (role === "敵継承遮断") {
+    commendations.push("敵指揮継承線を遮断");
+    if (unit.standingOrder.targetPriority === "officer") {
+      commendations.push("指揮源を優先射撃");
     }
   }
   if (role === "敵崩壊追撃") {
@@ -757,6 +769,11 @@ const enemyCommandEffectOutcomesForBattle = (
       (unit.enemyCommandActionRole === "command_node_fire" || battleRoleByUnit[unit.unitId] === "敵指揮核制圧") &&
       unit.soldiers > 0,
   );
+  const inheritanceCutUnits = state.playerUnits.filter(
+    (unit) =>
+      (unit.enemyCommandActionRole === "command_inheritance_cut" || battleRoleByUnit[unit.unitId] === "敵継承遮断") &&
+      unit.soldiers > 0,
+  );
   const pursuitUnits = state.playerUnits.filter(
     (unit) =>
       (unit.enemyCommandActionRole === "collapse_pursuit" || battleRoleByUnit[unit.unitId] === "敵崩壊追撃") &&
@@ -768,6 +785,56 @@ const enemyCommandEffectOutcomesForBattle = (
       unit.soldiers > 0,
   );
   const outcomes: BattleResult["enemyCommandEffectOutcomes"] = [];
+
+  const groupedInheritanceCut = new Map<string, typeof inheritanceCutUnits>();
+  for (const unit of inheritanceCutUnits) {
+    const targetId = unit.focusTargetId ?? "unknown-inheritance-target";
+    groupedInheritanceCut.set(targetId, [...(groupedInheritanceCut.get(targetId) ?? []), unit]);
+  }
+  for (const [targetId, units] of groupedInheritanceCut.entries()) {
+    const target = enemyById[targetId];
+    const dependentUnits = state.enemyUnits.filter(
+      (enemy) =>
+        enemy.id !== targetId &&
+        (enemy.assaultPlan.commandParentId === targetId || enemy.assaultPlan.commandSourceId === targetId),
+    );
+    const liveDependentCount = dependentUnits.filter((enemy) => enemy.count > 0).length;
+    const unstableDependentCount = dependentUnits.filter(
+      (enemy) =>
+        enemy.count > 0 &&
+        (enemy.assaultPlan.commandState === "disrupted" ||
+          enemy.assaultPlan.moraleState === "routing" ||
+          enemy.assaultPlan.moraleState === "regrouping" ||
+          enemy.assaultPlan.cohesion <= 0.58),
+    ).length;
+    const influence = target ? clamp(target.assaultPlan.commandInfluence, 0, 1) : 0;
+    const cohesion = target ? clamp(target.assaultPlan.cohesion, 0, 1) : 0;
+    const resultLabel =
+      !target || target.count <= 0 || unstableDependentCount >= Math.max(1, Math.ceil(liveDependentCount * 0.5))
+        ? "継承遮断"
+        : target.assaultPlan.commandState === "disrupted" || influence <= 0.45
+          ? "指揮低下"
+          : "効果限定";
+    outcomes.push({
+      id: `enemy-command-inheritance-cut-${targetId}`,
+      unitIds: units.map((unit) => unit.unitId),
+      unitNames: units.map((unit) => unit.name),
+      roleLabel: "敵継承遮断",
+      resultLabel,
+      effectLabel:
+        resultLabel === "継承遮断"
+          ? "指揮継承線を断ち、従属群の再集結を崩した"
+          : resultLabel === "指揮低下"
+            ? "継承源の指揮影響を低下させた"
+            : "継承源を射撃したが従属群の連携は残った",
+      metricLabel: target
+        ? `継承先${liveDependentCount}群 / 不安定${unstableDependentCount}群 / 影響${Math.round(influence * 100)}% / 凝集${Math.round(cohesion * 100)}%`
+        : `継承源消滅 / 継承先${liveDependentCount}群 / 不安定${unstableDependentCount}群`,
+      lessonTag:
+        resultLabel === "継承遮断" ? "継承遮断成功" : resultLabel === "指揮低下" ? "継承源制圧" : "継承射撃効果限定",
+      assessmentReason: `${units.length}旅団が${target?.name ?? "敵継承源"}へ射撃を集中。`,
+    });
+  }
 
   const groupedCommandFire = new Map<string, typeof commandFireUnits>();
   for (const unit of commandFireUnits) {
@@ -942,6 +1009,7 @@ const officerXpForUnit = (
             role === "補給点奪回" ||
             role === "視界点奪回" ||
           role === "敵指揮核制圧" ||
+          role === "敵継承遮断" ||
           role === "敵崩壊追撃" ||
           role === "指揮網予備投入" ||
           role === "検査敵群対応" ||
