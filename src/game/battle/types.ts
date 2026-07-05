@@ -370,6 +370,14 @@ export interface BattleUnit {
   fireMissionId?: string;
   volleyUntilSeconds?: number;
   volleyCooldownUntilSeconds?: number;
+  pendingOrder?: {
+    id: string;
+    label: string;
+    detail: string;
+    issuedAt: number;
+    arrivesAt: number;
+    delaySeconds: number;
+  };
   reserveReadiness: number;
   currentTargetId?: string;
   actionReason: BattleActionReason;

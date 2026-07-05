@@ -1,0 +1,34 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "steps": [
+    "open app",
+    "reset campaign",
+    "open camp",
+    "open deployment",
+    "start selected-unit battle",
+    "issue selected brigade posture command",
+    "run battle at 1x until command arrival"
+  ],
+  "results": {
+    "build": "passed",
+    "hasDirectCommandTransmissionCopy": true,
+    "pendingOrderChipAfterCommand": "伝令 4秒 / 弾性防御",
+    "pendingOrderClearedAfterArrival": true,
+    "arrivalLogVisible": true,
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "hasNaN": false,
+    "mobileQa": "skipped-current-target-excludes-mobile"
+  },
+  "evidence": [
+    "発令後は部隊ごとに数秒の伝令遅延が発生する",
+    "伝令 4秒 / 弾性防御",
+    "第1戦列歩兵大隊へ弾性防御が到達。"
+  ]
+}

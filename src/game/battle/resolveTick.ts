@@ -706,6 +706,7 @@ const applyEnemyDamage = (
 const playerFireDamage = (unit: BattleUnit, target: EnemyBattleUnit, terrainZones: BattleTerrainZone[]): number => {
   const terrain = localTerrainEffect(unit.position, terrainZones);
   const sight = lineOfSightBlockage(unit.position, target.position, terrainZones);
+  const commandTransmissionFactor = unit.pendingOrder && unit.pendingOrder.arrivesAt > unit.pendingOrder.issuedAt ? 0.84 : 1;
   const soldierFactor = Math.max(0.1, unit.soldiers / 720);
   const moraleFactor = clamp(unit.morale / 100, 0.18, 1.15);
   const conditionFactor = clamp(unit.condition / 100, 0.24, 1.05);
@@ -723,7 +724,8 @@ const playerFireDamage = (unit: BattleUnit, target: EnemyBattleUnit, terrainZone
     ammoPolicyFireMultiplier[unit.standingOrder.ammoPolicy] *
     formationFireMultiplier(unit) *
     terrain.fireMultiplier *
-    sight.fireMultiplier
+    sight.fireMultiplier *
+    commandTransmissionFactor
   );
 };
 
@@ -775,7 +777,9 @@ const movePlayerUnit = (
     return { ...unit, isMoving: false, actionReason: "destroyed" };
   }
 
-  const movementMultiplier = localTerrainEffect(unit.position, terrainZones).movement;
+  const movementMultiplier =
+    localTerrainEffect(unit.position, terrainZones).movement *
+    (unit.pendingOrder && unit.pendingOrder.arrivesAt > unit.pendingOrder.issuedAt ? 0.62 : 1);
   const closestEnemy = nearestEnemy(unit.position, enemies);
   if (shouldUseFallback(unit) && unit.order !== "advance" && unit.order !== "flank") {
     const moved = moveToward(unit.position, unit.standingOrder.fallback.destination, 1.05 * movementMultiplier, bounds);
@@ -1856,6 +1860,18 @@ export const resolveTick = (state: BattleState): BattleState => {
         },
   );
   playerUnits = playerUnits.map((unit) => updateReserveReadinessForUnit(unit, enemyUnits, state.reserveDoctrine));
+  const arrivedOrderLogs = playerUnits
+    .filter((unit) => unit.pendingOrder && unit.pendingOrder.arrivesAt <= elapsedSeconds)
+    .map((unit) => `${unit.name}へ${unit.pendingOrder?.label}が到達。`)
+    .slice(0, 3);
+  playerUnits = playerUnits.map((unit) =>
+    unit.pendingOrder && unit.pendingOrder.arrivesAt <= elapsedSeconds
+      ? { ...unit, pendingOrder: undefined }
+      : unit,
+  );
+  if (arrivedOrderLogs.length > 0) {
+    log = [...arrivedOrderLogs, ...log];
+  }
 
   const totalCasualties = playerUnits.reduce((sum, unit) => sum + unit.casualtiesThisBattle, 0);
   const penetrationPressure = enemyUnits.reduce(

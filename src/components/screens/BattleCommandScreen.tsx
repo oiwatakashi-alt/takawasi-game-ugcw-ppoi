@@ -1908,6 +1908,14 @@ const facilityAuditLabel = (battle: BattleState, unit: BattleUnit): string => {
   )} / 耐久${Math.round(structure.durability)}`;
 };
 
+const commandTransmissionLabel = (battle: BattleState, unit: BattleUnit): string => {
+  if (!unit.pendingOrder) {
+    return "伝令 待機";
+  }
+  const remaining = Math.max(0, Math.ceil(unit.pendingOrder.arrivesAt - battle.elapsedSeconds));
+  return `伝令 ${remaining}秒 / ${unit.pendingOrder.label}`;
+};
+
 const formationLabel = (unit: BattleUnit): string => formationSummary(unit);
 
 const activeFacingDegForUnit = (unit: BattleUnit): number =>
@@ -4339,7 +4347,11 @@ export function BattleCommandScreen({
           <strong>予約指揮</strong>
           <span>{commandQueueMode ? "予約中" : "直接発令"}</span>
           <span>{queuedCommands.length}件</span>
-          <span>{commandQueueMode ? "停止中に命令を積み、一括発令する" : "各ボタンは即時に反映される"}</span>
+          <span>
+            {commandQueueMode
+              ? "停止中に命令を積み、一括発令後は伝令遅延が発生する"
+              : "発令後は部隊ごとに数秒の伝令遅延が発生する"}
+          </span>
         </div>
         <div className="button-row compact">
           <button className={commandQueueMode ? "active" : ""} type="button" disabled={finished} onClick={toggleCommandQueueMode}>
@@ -5029,6 +5041,9 @@ export function BattleCommandScreen({
             <span>施設 {selectedStructure ? fortificationTypeLabels[selectedStructure.type] : "未指定"}</span>
             <span>優先 {targetPriorityLabels[selectedUnit.standingOrder.targetPriority]}</span>
             <span>弾薬 {ammoPolicyLabels[selectedUnit.standingOrder.ammoPolicy]}</span>
+            <span className={selectedUnit.pendingOrder ? "pending-order-chip active" : "pending-order-chip"}>
+              {commandTransmissionLabel(battle, selectedUnit)}
+            </span>
             <span>集中 {focusTargetName(battle, selectedUnit.focusTargetId)}</span>
             <span>火力 {fireMissionStatus(battle, selectedUnit)}</span>
             <span>目標補給 斉射弾薬x{objectiveEffects.fireMissionAmmoMultiplier.toFixed(2)}</span>
@@ -5113,6 +5128,7 @@ export function BattleCommandScreen({
               {selectedUnit.standingOrder.fallback.enabled ? "自動後退あり" : "自動後退なし"}
             </span>
             <span>現在行動 {battleActionReasonLabels[selectedUnit.actionReason]}</span>
+            <span>{commandTransmissionLabel(battle, selectedUnit)}</span>
             <span className="autonomy-reason-detail">判断理由 {actionReasonDetail(battle, selectedUnit)}</span>
           </div>
           <div className="target-audit-panel" aria-label="選択部隊の射撃判断監査">
@@ -6057,6 +6073,9 @@ export function BattleCommandScreen({
               <p className="action-reason-line">行動: {battleActionReasonLabels[unit.actionReason]}</p>
               <p className="action-reason-detail">{actionReasonDetail(battle, unit)}</p>
               <div className="standing-order-panel">
+                <span className={unit.pendingOrder ? "pending-order-chip active" : "pending-order-chip"}>
+                  {commandTransmissionLabel(battle, unit)}
+                </span>
                 <span>戦線 {segmentName(battle, unit.standingOrder.frontlineSegmentId)}</span>
                 <span>地形 {terrainLabelForPosition(battle, unit.position)}</span>
                 <span>射線 {lineOfSightLabelForUnit(battle, unit)}</span>

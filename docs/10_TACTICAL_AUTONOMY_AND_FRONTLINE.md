@@ -1565,6 +1565,19 @@ Implemented:
 - Tactical-map command queue follow-up: the same queue now accepts `基準位置を指定`, `後退地点を指定`, `戦線をクリック`, `施設をクリック`, `敵を指名`, and selected-brigade anchor/fallback handle drag completion. Direct mode still applies map commands immediately. Queue mode creates readable order cards and applies through existing `orders.ts` functions, preserving a single command model.
 - Desktop 1440px browser QA verified Strategic Map -> Camp -> Deployment -> Battle -> `停止して予約`; queued a map anchor command `基準 X48 Y35 / マップ指定`, queued a frontline click command `戦線 塹壕補修線`, applied both with `一括発令`, then queued and applied a facility click command `塹壕線担当`. Logs showed `予約指揮: 2件を一括発令`, `第1戦列歩兵大隊を塹壕補修線へ配置転換`, `第1戦列歩兵大隊の基準位置をX48 Y35へ指定`, `予約指揮: 1件を一括発令`, and `第1戦列歩兵大隊を塹壕線の担当に指定`. Console errors 0, broken images 0, horizontal overflow false, and QA campaign reset. QA report: `outputs/takawasi-map-command-queue-qa-report.json`.
 
+## Implemented Command Transmission Delay Slice - 2026-07-05
+
+Battle orders now have a light command-friction layer instead of feeling fully instant in a large brigade battle.
+
+Implemented:
+
+- `BattleUnit` carries a battle-only `pendingOrder` with label, detail, issued time, arrival time, and delay seconds.
+- Player-facing command functions in `orders.ts` mark selected-brigade order changes, StandingOrder presets, target/ammo/facing changes, focus-target changes, frontline reassignment, anchor/fallback assignment, and facility assignment as transmitted orders.
+- Delay is deterministic and derived from local enemy contact, reserve readiness, morale, movement, and command-overload summary, keeping QA reproducible while making pressured units slower to cleanly execute new instructions.
+- `resolveTick` clears arrived orders, writes arrival logs such as `第1戦列歩兵大隊へ弾性防御が到達。`, and applies small movement/fire penalties while a command is still in transit.
+- Battle Command selected-unit panels and brigade cards show `伝令 待機` or active `伝令 N秒 / ...` chips, and the `予約指揮` copy now states that queued/direct commands produce command-transmission delay after issue.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> issue selected brigade `弾性防御` -> run 1x until arrival. The selected panel showed `伝令 4秒 / 弾性防御` immediately after issue, then cleared to `伝令 待機` after 1x ticks and logged `第1戦列歩兵大隊へ弾性防御が到達。`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-delay-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.

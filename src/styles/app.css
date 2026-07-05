@@ -3395,6 +3395,20 @@ main {
   white-space: nowrap;
 }
 
+.pending-order-chip {
+  border: 1px solid rgba(67, 57, 44, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 252, 240, 0.62);
+  color: #665d4f;
+  font-weight: 800;
+}
+
+.pending-order-chip.active {
+  border-color: rgba(176, 113, 34, 0.56);
+  background: rgba(255, 236, 178, 0.86);
+  color: #6f4212;
+}
+
 .command-queue-list {
   display: flex;
   gap: 7px;

@@ -133,6 +133,60 @@ const distance = (from: BattlePosition, to: BattlePosition): number => {
   return Math.sqrt(x * x + y * y);
 };
 
+type CommandTransmissionIntensity = "minor" | "standard" | "major";
+
+const nearestEnemyDistance = (state: BattleState, position: BattlePosition): number =>
+  state.enemyUnits
+    .filter((enemy) => enemy.count > 0 && enemy.isSpotted)
+    .reduce((minimum, enemy) => Math.min(minimum, distance(position, enemy.position)), Number.POSITIVE_INFINITY);
+
+const commandTransmissionDelaySeconds = (
+  state: BattleState,
+  unit: BattleState["playerUnits"][number],
+  intensity: CommandTransmissionIntensity,
+): number => {
+  const baseDelay = intensity === "major" ? 5 : intensity === "standard" ? 3 : 2;
+  const enemyDistance = nearestEnemyDistance(state, unit.position);
+  const pressureDelay = enemyDistance <= 16 ? 3 : enemyDistance <= 30 ? 2 : enemyDistance <= 44 ? 1 : 0;
+  const readinessDelay = unit.reserveReadiness < 32 ? 2 : unit.reserveReadiness < 58 ? 1 : 0;
+  const moraleDelay = unit.morale < 42 ? 2 : unit.morale < 62 ? 1 : 0;
+  const movementDelay = unit.isMoving ? 1 : 0;
+  const commanderDelay = unit.officerCommandSummary?.includes("指揮過負荷") ? 2 : 0;
+  return clamp(baseDelay + pressureDelay + readinessDelay + moraleDelay + movementDelay + commanderDelay, 1, 12);
+};
+
+const markCommandTransmission = (
+  state: BattleState,
+  unitId: string,
+  label: string,
+  detail: string,
+  intensity: CommandTransmissionIntensity = "standard",
+): BattleState => {
+  const unit = state.playerUnits.find((candidate) => candidate.unitId === unitId);
+  if (!unit || unit.soldiers <= 0) {
+    return state;
+  }
+  const delaySeconds = commandTransmissionDelaySeconds(state, unit, intensity);
+  return {
+    ...state,
+    playerUnits: state.playerUnits.map((candidate) =>
+      candidate.unitId === unitId
+        ? {
+            ...candidate,
+            pendingOrder: {
+              id: `order-${state.elapsedSeconds}-${unitId}-${label}`,
+              label,
+              detail,
+              issuedAt: state.elapsedSeconds,
+              arrivesAt: state.elapsedSeconds + delaySeconds,
+              delaySeconds,
+            },
+          }
+        : candidate,
+    ),
+  };
+};
+
 const segmentAtPosition = (state: BattleState, position: BattlePosition) =>
   state.frontlineSegments.find(
     (segment) =>
@@ -167,7 +221,7 @@ const fireMissionCandidateUnits = (
   });
 };
 
-export const setUnitOrder = (state: BattleState, unitId: string, order: UnitOrder): BattleState => ({
+export const setUnitOrder = (state: BattleState, unitId: string, order: UnitOrder): BattleState => markCommandTransmission({
   ...state,
   playerUnits: state.playerUnits.map((unit) =>
     unit.unitId === unitId ? { ...unit, order, actionReason: order === "retreat" ? "retreating" : unit.actionReason } : unit,
@@ -176,7 +230,7 @@ export const setUnitOrder = (state: BattleState, unitId: string, order: UnitOrde
     `${state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊"}に${orderLabel(order)}を命令。`,
     ...state.log,
   ].slice(0, 12),
-});
+}, unitId, orderLabel(order), "即時命令", order === "retreat" || order === "advance" || order === "flank" ? "major" : "minor");
 
 export interface StandingOrderPreset {
   id: StandingPosture;
@@ -358,7 +412,7 @@ export const assignFrontlineSegment = (state: BattleState, unitId: string, segme
   if (!segment) {
     return state;
   }
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       anchor: segment.anchor,
@@ -371,7 +425,7 @@ export const assignFrontlineSegment = (state: BattleState, unitId: string, segme
       },
     })),
     log: [`${unitName}を${segment.name}へ配置転換。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, `戦線 ${segment.name}`, "担当戦線変更", "major");
 };
 
 const structureInsideSegment = (structure: BattleState["structures"][number], segment: FrontlineSegment): boolean =>
@@ -1276,13 +1330,13 @@ export const resizeFrontlineSegmentControl = (
 export const setStandingOrderFacing = (state: BattleState, unitId: string, facingDeg: number): BattleState => {
   const normalizedFacing = normalizeFormationFacingDeg(facingDeg);
   const unitName = state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊";
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       facingDeg: normalizedFacing,
     })),
     log: [`${unitName}の射界を${formationFacingDisplayLabel(normalizedFacing)}へ変更。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, "射界変更", formationFacingDisplayLabel(normalizedFacing), "minor");
 };
 
 export const setStandingOrderTargetPriority = (
@@ -1291,13 +1345,13 @@ export const setStandingOrderTargetPriority = (
   targetPriority: TargetPriority,
 ): BattleState => {
   const unitName = state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊";
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       targetPriority,
     })),
     log: [`${unitName}の優先目標を${targetPriorityLabel(targetPriority)}へ変更。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, "優先目標", targetPriorityLabel(targetPriority), "minor");
 };
 
 export const setStandingOrderAmmoPolicy = (
@@ -1306,13 +1360,13 @@ export const setStandingOrderAmmoPolicy = (
   ammoPolicy: AmmoPolicy,
 ): BattleState => {
   const unitName = state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊";
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       ammoPolicy,
     })),
     log: [`${unitName}の弾薬方針を${ammoPolicyLabel(ammoPolicy)}へ変更。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, "弾薬方針", ammoPolicyLabel(ammoPolicy), "minor");
 };
 
 export const setUnitFocusTarget = (state: BattleState, unitId: string, enemyId: string): BattleState => {
@@ -1325,7 +1379,7 @@ export const setUnitFocusTarget = (state: BattleState, unitId: string, enemyId: 
     };
   }
 
-  return {
+  return markCommandTransmission({
     ...state,
     playerUnits: state.playerUnits.map((unit) =>
       unit.unitId === unitId
@@ -1339,12 +1393,12 @@ export const setUnitFocusTarget = (state: BattleState, unitId: string, enemyId: 
       `${unitName}の集中射撃目標を${enemyLabel(enemy)} ${Math.round(enemy.count)}体へ指定。`,
       ...state.log,
     ].slice(0, 12),
-  };
+  }, unitId, "集中射撃", enemyLabel(enemy), "standard");
 };
 
 export const clearUnitFocusTarget = (state: BattleState, unitId: string): BattleState => {
   const unitName = state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊";
-  return {
+  return markCommandTransmission({
     ...state,
     playerUnits: state.playerUnits.map((unit) =>
       unit.unitId === unitId
@@ -1355,7 +1409,7 @@ export const clearUnitFocusTarget = (state: BattleState, unitId: string): Battle
         : unit,
     ),
     log: [`${unitName}の集中射撃指定を解除。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, "指名解除", "集中射撃解除", "minor");
 };
 
 export const issueFireMission = (
@@ -1502,7 +1556,7 @@ export const applyStandingOrderPreset = (
   if (!preset) {
     return state;
   }
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       posture: preset.id,
@@ -1516,7 +1570,7 @@ export const applyStandingOrderPreset = (
       },
     })),
     log: [`${unitName}の自律方針を${presetLabel(presetId)}へ変更。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, presetLabel(presetId), "自律方針変更", "standard");
 };
 
 export const assignFacilityToUnit = (
@@ -1535,7 +1589,7 @@ export const assignFacilityToUnit = (
     facilityAssignment: { structureId, mode },
     anchor: structure.position,
   }));
-  return {
+  return markCommandTransmission({
     ...nextState,
     playerUnits: nextState.playerUnits.map((unit) =>
       unit.unitId === unitId
@@ -1547,7 +1601,7 @@ export const assignFacilityToUnit = (
         : unit,
     ),
     log: [`${unitName}を${structureLabel(structure.type)}の担当に指定。`, ...state.log].slice(0, 12),
-  };
+  }, unitId, `${structureLabel(structure.type)}担当`, "施設担当変更", "standard");
 };
 
 const nearestSegmentForStructure = (state: BattleState, structure: BattleStructure): FrontlineSegment | undefined =>
@@ -1700,7 +1754,7 @@ export const setStandingOrderAnchor = (
     frontlineSegmentId: segment?.id ?? standingOrder.frontlineSegmentId,
     controlRadius: segment?.controlRadius ?? standingOrder.controlRadius,
   }));
-  return {
+  return markCommandTransmission({
     ...nextState,
     playerUnits: nextState.playerUnits.map((unit) =>
       unit.unitId === unitId ? { ...unit, actionReason: "returning_anchor" } : unit,
@@ -1709,7 +1763,7 @@ export const setStandingOrderAnchor = (
       `${unitName}の基準位置をX${Math.round(anchor.x)} Y${Math.round(anchor.y)}へ指定。`,
       ...state.log,
     ].slice(0, 12),
-  };
+  }, unitId, "基準位置", `X${Math.round(anchor.x)} Y${Math.round(anchor.y)}`, "standard");
 };
 
 export const setStandingOrderFallbackDestination = (
@@ -1719,7 +1773,7 @@ export const setStandingOrderFallbackDestination = (
 ): BattleState => {
   const destination = clampPosition(state, position);
   const unitName = state.playerUnits.find((unit) => unit.unitId === unitId)?.name ?? "部隊";
-  return {
+  return markCommandTransmission({
     ...withUnitStandingOrder(state, unitId, (standingOrder) => ({
       ...standingOrder,
       fallback: {
@@ -1732,7 +1786,7 @@ export const setStandingOrderFallbackDestination = (
       `${unitName}の後退地点をX${Math.round(destination.x)} Y${Math.round(destination.y)}へ指定。`,
       ...state.log,
     ].slice(0, 12),
-  };
+  }, unitId, "後退地点", `X${Math.round(destination.x)} Y${Math.round(destination.y)}`, "standard");
 };
 
 export const applySavedStandingOrderTemplate = (
