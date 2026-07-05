@@ -1578,6 +1578,14 @@ Implemented:
 - Battle Command selected-unit panels and brigade cards show `伝令 待機` or active `伝令 N秒 / ...` chips, and the `予約指揮` copy now states that queued/direct commands produce command-transmission delay after issue.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> issue selected brigade `弾性防御` -> run 1x until arrival. The selected panel showed `伝令 4秒 / 弾性防御` immediately after issue, then cleared to `伝令 待機` after 1x ticks and logged `第1戦列歩兵大隊へ弾性防御が到達。`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-delay-qa-report.json`.
 
+Follow-up implemented:
+
+- `orders.ts` now exposes `commandTransmissionReport`, so the same deterministic delay calculation can be used for actual pending orders and UI forecasts.
+- Command and organization doctrine can reduce transmission delay, making `指揮幕僚` and army organization visible in tactical command speed instead of only side-operation/support math.
+- Pending orders retain Japanese delay reasons such as base order size, contact pressure, readiness, morale, command overload, and doctrine reductions.
+- Battle Command shows `伝令予測`, `伝令判断`, and `伝令影響` for the selected brigade before issuing a command, and queued selected-brigade commands show the forecast row before `一括発令`.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle, selected-unit `伝令予測 3秒`, queued `弾性防御` forecast, active `伝令 3秒 / 弾性防御`, arrival log, pending clear, console errors/warnings 0, broken images 0, horizontal overflow false, and no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-command-transmission-forecast-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.

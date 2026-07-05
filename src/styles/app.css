@@ -3409,6 +3409,12 @@ main {
   color: #6f4212;
 }
 
+.pending-order-chip.forecast {
+  border-color: rgba(75, 97, 126, 0.38);
+  background: rgba(224, 235, 246, 0.78);
+  color: #2e4960;
+}
+
 .command-queue-list {
   display: flex;
   gap: 7px;
@@ -3463,8 +3469,15 @@ main {
   font-size: 11px;
 }
 
+.command-queue-item .command-transmission-preview {
+  grid-column: 1 / 3;
+  color: #2e4960;
+  font-weight: 800;
+  white-space: normal;
+}
+
 .command-queue-item button {
-  grid-row: 1 / span 3;
+  grid-row: 1 / span 4;
   grid-column: 3;
   align-self: stretch;
   border-color: rgba(142, 47, 43, 0.28);

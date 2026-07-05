@@ -1,0 +1,40 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "date": "2026-07-05",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": "Battle Command command-transmission forecast/reason slice",
+  "steps": [
+    "Opened the app at desktop viewport.",
+    "Reset the campaign.",
+    "Moved from Theater to Army Camp.",
+    "Moved from Deployment to Battle Command.",
+    "Verified selected-unit command-transmission forecast, reason, and penalty text.",
+    "Enabled queued command mode, queued Elastic Defense, and verified queued transmission forecast.",
+    "Applied queued commands, verified active messenger chip and detailed reasons.",
+    "Ran the battle at 1x until the order arrived, then verified pending state cleared and arrival log appeared."
+  ],
+  "results": {
+    "build": "passed",
+    "selectedUnitForecastVisible": true,
+    "queuedForecastVisible": true,
+    "activeMessengerChipVisible": true,
+    "arrivalLogVisible": true,
+    "pendingClearedAfterArrival": true,
+    "doctrineReductionVisible": true,
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "hasNaN": false,
+    "mobileQa": "skipped; mobile/cellphone QA is outside the active target"
+  },
+  "evidence": {
+    "initialForecast": "伝令予測 3秒 / 標準命令 基礎3秒 / 接敵余裕 / 即応53で+1秒 / 士気安定 / 指揮幕僚-1秒",
+    "activeChip": "伝令 3秒 / 弾性防御",
+    "activeReason": "伝令判断 標準命令 基礎3秒 / 接敵余裕 / 即応53で+1秒 / 士気安定 / 指揮幕僚-1秒",
+    "arrivalLog": "第1戦列歩兵大隊へ弾性防御が到達。",
+    "postArrivalForecast": "伝令予測 2秒 / 標準命令 基礎3秒 / 接敵余裕 / 即応良好 / 士気安定 / 指揮幕僚-1秒"
+  }
+}

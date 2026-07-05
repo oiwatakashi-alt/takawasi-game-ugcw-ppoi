@@ -133,18 +133,35 @@ const distance = (from: BattlePosition, to: BattlePosition): number => {
   return Math.sqrt(x * x + y * y);
 };
 
-type CommandTransmissionIntensity = "minor" | "standard" | "major";
+export type CommandTransmissionIntensity = "minor" | "standard" | "major";
+
+export interface CommandTransmissionReport {
+  delaySeconds: number;
+  label: string;
+  detail: string;
+  reasons: string[];
+  penaltySummary: string;
+}
 
 const nearestEnemyDistance = (state: BattleState, position: BattlePosition): number =>
   state.enemyUnits
     .filter((enemy) => enemy.count > 0 && enemy.isSpotted)
     .reduce((minimum, enemy) => Math.min(minimum, distance(position, enemy.position)), Number.POSITIVE_INFINITY);
 
-const commandTransmissionDelaySeconds = (
+const commandTransmissionIntensityLabel = (intensity: CommandTransmissionIntensity): string => {
+  const labels: Record<CommandTransmissionIntensity, string> = {
+    minor: "小命令",
+    standard: "標準命令",
+    major: "大命令",
+  };
+  return labels[intensity];
+};
+
+export const commandTransmissionReport = (
   state: BattleState,
   unit: BattleState["playerUnits"][number],
   intensity: CommandTransmissionIntensity,
-): number => {
+): CommandTransmissionReport => {
   const baseDelay = intensity === "major" ? 5 : intensity === "standard" ? 3 : 2;
   const enemyDistance = nearestEnemyDistance(state, unit.position);
   const pressureDelay = enemyDistance <= 16 ? 3 : enemyDistance <= 30 ? 2 : enemyDistance <= 44 ? 1 : 0;
@@ -152,7 +169,41 @@ const commandTransmissionDelaySeconds = (
   const moraleDelay = unit.morale < 42 ? 2 : unit.morale < 62 ? 1 : 0;
   const movementDelay = unit.isMoving ? 1 : 0;
   const commanderDelay = unit.officerCommandSummary?.includes("指揮過負荷") ? 2 : 0;
-  return clamp(baseDelay + pressureDelay + readinessDelay + moraleDelay + movementDelay + commanderDelay, 1, 12);
+  const commandDoctrineReduction =
+    state.strategicDoctrine?.activeDoctrineIds.includes("command") ||
+    state.fireDiscipline?.activeDoctrineIds.includes("command")
+      ? 1
+      : 0;
+  const organizationReduction = state.strategicDoctrine?.activeDoctrineIds.includes("organization") ? 1 : 0;
+  const rawDelay =
+    baseDelay +
+    pressureDelay +
+    readinessDelay +
+    moraleDelay +
+    movementDelay +
+    commanderDelay -
+    commandDoctrineReduction -
+    organizationReduction;
+  const delaySeconds = clamp(rawDelay, 1, 12);
+  const reasons = [
+    `${commandTransmissionIntensityLabel(intensity)} 基礎${baseDelay}秒`,
+    pressureDelay > 0
+      ? `接敵${Number.isFinite(enemyDistance) ? Math.round(enemyDistance) : "不明"}で+${pressureDelay}秒`
+      : "接敵余裕",
+    readinessDelay > 0 ? `即応${Math.round(unit.reserveReadiness ?? 0)}で+${readinessDelay}秒` : "即応良好",
+    moraleDelay > 0 ? `士気${Math.round(unit.morale)}で+${moraleDelay}秒` : "士気安定",
+    movementDelay > 0 ? "移動中+1秒" : undefined,
+    commanderDelay > 0 ? "指揮過負荷+2秒" : undefined,
+    commandDoctrineReduction > 0 ? "指揮幕僚-1秒" : undefined,
+    organizationReduction > 0 ? "軍団編制-1秒" : undefined,
+  ].filter(Boolean) as string[];
+  return {
+    delaySeconds,
+    label: `伝令予測 ${delaySeconds}秒`,
+    detail: reasons.join(" / "),
+    reasons,
+    penaltySummary: "到達まで移動0.62倍 / 射撃0.84倍",
+  };
 };
 
 const markCommandTransmission = (
@@ -166,7 +217,7 @@ const markCommandTransmission = (
   if (!unit || unit.soldiers <= 0) {
     return state;
   }
-  const delaySeconds = commandTransmissionDelaySeconds(state, unit, intensity);
+  const report = commandTransmissionReport(state, unit, intensity);
   return {
     ...state,
     playerUnits: state.playerUnits.map((candidate) =>
@@ -177,9 +228,10 @@ const markCommandTransmission = (
               id: `order-${state.elapsedSeconds}-${unitId}-${label}`,
               label,
               detail,
+              reasons: report.reasons,
               issuedAt: state.elapsedSeconds,
-              arrivesAt: state.elapsedSeconds + delaySeconds,
-              delaySeconds,
+              arrivesAt: state.elapsedSeconds + report.delaySeconds,
+              delaySeconds: report.delaySeconds,
             },
           }
         : candidate,

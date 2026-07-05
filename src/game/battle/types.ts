@@ -374,6 +374,7 @@ export interface BattleUnit {
     id: string;
     label: string;
     detail: string;
+    reasons?: string[];
     issuedAt: number;
     arrivesAt: number;
     delaySeconds: number;

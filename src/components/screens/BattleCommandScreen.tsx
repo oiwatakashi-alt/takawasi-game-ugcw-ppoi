@@ -14,6 +14,7 @@ import {
   assignFacilityToUnit,
   assignFrontlineSegment,
   clearUnitFocusTarget,
+  commandTransmissionReport,
   frontlineDoctrinePresets,
   issueFirePlan,
   issueFireMission,
@@ -33,6 +34,7 @@ import {
   setUnitOrder,
   sketchFrontlineSegmentPolyline,
   standingOrderPresets,
+  type CommandTransmissionReport,
   type FrontlineDoctrinePreset,
   type FrontlineDoctrinePresetId,
 } from "../../game/battle/orders";
@@ -302,6 +304,7 @@ interface QueuedBattleCommand {
   subjectName: string;
   summary: string;
   detail: string;
+  transmissionPreview?: CommandTransmissionReport;
   apply: (state: BattleState) => BattleState;
 }
 
@@ -1916,6 +1919,13 @@ const commandTransmissionLabel = (battle: BattleState, unit: BattleUnit): string
   return `伝令 ${remaining}秒 / ${unit.pendingOrder.label}`;
 };
 
+const commandTransmissionDetail = (unit: BattleUnit): string =>
+  unit.pendingOrder?.reasons?.length
+    ? unit.pendingOrder.reasons.join(" / ")
+    : unit.pendingOrder?.detail
+      ? unit.pendingOrder.detail
+      : "発令待機。";
+
 const formationLabel = (unit: BattleUnit): string => formationSummary(unit);
 
 const activeFacingDegForUnit = (unit: BattleUnit): number =>
@@ -2699,6 +2709,9 @@ export function BattleCommandScreen({
       )
     : undefined;
   const selectedFacingDeg = selectedUnit ? activeFacingDegForUnit(selectedUnit) : 0;
+  const selectedTransmissionPreview = selectedUnit
+    ? commandTransmissionReport(battle, selectedUnit, "standard")
+    : undefined;
   const selectedTargetAudits = selectedUnit ? targetAuditForUnit(battle, selectedUnit).slice(0, 5) : [];
   const selectedAuditTarget = selectedUnit ? selectedTargetAudit(battle, selectedUnit) : undefined;
   const spottedEnemyCount = battle.enemyUnits.filter((enemy) => enemy.isSpotted).length;
@@ -2754,6 +2767,7 @@ export function BattleCommandScreen({
     detail: string,
     apply: (state: BattleState) => BattleState,
   ) => {
+    const transmissionPreview = commandTransmissionReport(battle, unit, "standard");
     if (!commandQueueMode) {
       onChange(apply(battle));
       return;
@@ -2767,6 +2781,7 @@ export function BattleCommandScreen({
           subjectName: unit.name,
           summary,
           detail,
+          transmissionPreview,
           apply,
         },
       ].slice(-16),
@@ -4372,6 +4387,11 @@ export function BattleCommandScreen({
                 <strong>{command.subjectName}</strong>
                 <em>{command.summary}</em>
                 <small>{command.detail}</small>
+                {command.transmissionPreview && (
+                  <small className="command-transmission-preview">
+                    {command.transmissionPreview.label} / {command.transmissionPreview.detail}
+                  </small>
+                )}
                 <button type="button" onClick={() => removeQueuedCommand(command.id)}>
                   削除
                 </button>
@@ -5044,6 +5064,9 @@ export function BattleCommandScreen({
             <span className={selectedUnit.pendingOrder ? "pending-order-chip active" : "pending-order-chip"}>
               {commandTransmissionLabel(battle, selectedUnit)}
             </span>
+            {selectedTransmissionPreview && !selectedUnit.pendingOrder && (
+              <span className="pending-order-chip forecast">{selectedTransmissionPreview.label}</span>
+            )}
             <span>集中 {focusTargetName(battle, selectedUnit.focusTargetId)}</span>
             <span>火力 {fireMissionStatus(battle, selectedUnit)}</span>
             <span>目標補給 斉射弾薬x{objectiveEffects.fireMissionAmmoMultiplier.toFixed(2)}</span>
@@ -5129,6 +5152,12 @@ export function BattleCommandScreen({
             </span>
             <span>現在行動 {battleActionReasonLabels[selectedUnit.actionReason]}</span>
             <span>{commandTransmissionLabel(battle, selectedUnit)}</span>
+            <span className="autonomy-reason-detail">
+              伝令判断 {selectedUnit.pendingOrder ? commandTransmissionDetail(selectedUnit) : selectedTransmissionPreview?.detail}
+            </span>
+            <span className="autonomy-reason-detail">
+              伝令影響 {selectedUnit.pendingOrder ? "到達まで移動/射撃低下中" : selectedTransmissionPreview?.penaltySummary}
+            </span>
             <span className="autonomy-reason-detail">判断理由 {actionReasonDetail(battle, selectedUnit)}</span>
           </div>
           <div className="target-audit-panel" aria-label="選択部隊の射撃判断監査">
