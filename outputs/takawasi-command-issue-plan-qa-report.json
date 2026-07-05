@@ -1,7 +1,7 @@
 {
   "id": "takawasi-command-issue-plan-qa",
   "date": "2026-07-05",
-  "scope": "Deployment command issue plan persistence, advisor, and Battle Command queue congestion policy",
+  "scope": "Deployment command issue plan persistence, advisor, Battle Command compliance display, and queue congestion policy",
   "result": "partial-pass",
   "verified": [
     {
@@ -23,6 +23,11 @@
       "check": "advisor logic review",
       "status": "pass",
       "notes": "DeploymentScreen derives command issue advice from expected batch size, command/organization doctrine capacity, and command-post fatigue. It recommends standard_queue, split_batches, or strict_direct and exposes a one-click adoption path through the existing save function."
+    },
+    {
+      "check": "battle compliance display review",
+      "status": "pass",
+      "notes": "BattleCommandScreen derives a live compliance line from queued command count, commandIssuePlan, and commandCongestionReport. It distinguishes waiting, compliant, split-batch handling, congestion warning, and strict-direct violations before batch issue."
     }
   ],
   "notVerified": [
@@ -44,6 +49,7 @@
     "If the recommendation differs from the saved plan, click 推奨運用を採用 and verify the selected plan updates and persists.",
     "Switch 伝令運用 to 分割発令 and verify the ledger changes to 2件単位.",
     "Start the mandatory battle and verify Battle Command 予約指揮 shows 分割発令 2件単位.",
+    "Verify Battle Command shows 方針待機 with an empty queue, 方針適合 or 分割適用 when queued commands match the saved policy, and 逐次違反 when multiple commands are queued under 逐次発令.",
     "Queue five selected-brigade commands and verify 一括混線 is reduced compared with 標準発令 under the same command-post capacity.",
     "Repeat with 逐次発令 and verify batching multiple commands creates the policy-violation delay reason."
   ]

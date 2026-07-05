@@ -3483,6 +3483,39 @@ main {
   color: #793728;
 }
 
+.command-issue-compliance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 8px;
+  border: 1px solid rgba(70, 112, 76, 0.24);
+  background: rgba(233, 243, 218, 0.68);
+  color: #384f31;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.command-issue-compliance.warning {
+  border-color: rgba(176, 113, 34, 0.34);
+  background: rgba(255, 236, 178, 0.72);
+  color: #6f4212;
+}
+
+.command-issue-compliance.danger {
+  border-color: rgba(142, 47, 43, 0.36);
+  background: rgba(252, 222, 206, 0.82);
+  color: #793728;
+}
+
+.command-issue-compliance strong {
+  color: inherit;
+}
+
+.command-issue-compliance span {
+  min-width: min(100%, 280px);
+}
+
 .pending-order-chip {
   border: 1px solid rgba(67, 57, 44, 0.18);
   border-radius: 999px;

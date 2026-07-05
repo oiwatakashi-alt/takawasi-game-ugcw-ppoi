@@ -2723,6 +2723,41 @@ export function BattleCommandScreen({
     : undefined;
   const commandCongestionPreview: CommandCongestionReport | undefined =
     queuedCommands.length > 0 ? commandCongestionReport(battle, queuedCommands.length) : undefined;
+  const commandIssueCompliance = (() => {
+    if (queuedCommands.length === 0) {
+      return {
+        tone: "stable",
+        label: "方針待機",
+        detail: "予約命令なし。方針に合わせて命令を積む。",
+      };
+    }
+    if (commandIssuePlan.mode === "strict_direct" && queuedCommands.length > 1) {
+      return {
+        tone: "danger",
+        label: "逐次違反",
+        detail: `逐次発令方針で${queuedCommands.length}件を一括発令しようとしている。分けて発令するか方針変更が必要。`,
+      };
+    }
+    if (commandIssuePlan.mode === "split_batches" && queuedCommands.length > commandIssuePlan.maxBatchSize) {
+      return {
+        tone: commandCongestionPreview?.delayPenaltySeconds ? "warning" : "stable",
+        label: "分割適用",
+        detail: `${queuedCommands.length}件を${commandIssuePlan.maxBatchSize}件単位として扱う。混線計算は分割後の有効件数で見る。`,
+      };
+    }
+    if (commandCongestionPreview?.delayPenaltySeconds) {
+      return {
+        tone: "warning",
+        label: "混線注意",
+        detail: commandCongestionPreview.detail,
+      };
+    }
+    return {
+      tone: "stable",
+      label: "方針適合",
+      detail: `${commandIssuePlanLabels[commandIssuePlan.mode]}で処理可能。${commandCongestionPreview?.detail ?? "混線なし"}`,
+    };
+  })();
   const selectedTargetAudits = selectedUnit ? targetAuditForUnit(battle, selectedUnit).slice(0, 5) : [];
   const selectedAuditTarget = selectedUnit ? selectedTargetAudit(battle, selectedUnit) : undefined;
   const spottedEnemyCount = battle.enemyUnits.filter((enemy) => enemy.isSpotted).length;
@@ -4403,6 +4438,10 @@ export function BattleCommandScreen({
               ? "停止中に命令を積み、一括発令後は伝令遅延が発生する"
               : "発令後は部隊ごとに数秒の伝令遅延が発生する"}
           </span>
+        </div>
+        <div className={`command-issue-compliance ${commandIssueCompliance.tone}`}>
+          <strong>{commandIssueCompliance.label}</strong>
+          <span>{commandIssueCompliance.detail}</span>
         </div>
         <div className="button-row compact">
           <button className={commandQueueMode ? "active" : ""} type="button" disabled={finished} onClick={toggleCommandQueueMode}>
