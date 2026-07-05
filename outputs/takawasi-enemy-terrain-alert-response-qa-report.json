@@ -1,0 +1,65 @@
+{
+  "id": "takawasi-enemy-terrain-alert-response-qa",
+  "date": "2026-07-06",
+  "target": "http://127.0.0.1:5173/?takawasiTerrainProfile=reverse-slope",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "scope": [
+    "Enemy terrain maneuver alert",
+    "Alert-driven enemy inspection",
+    "Alert recommendation response for ridge maneuver enemies"
+  ],
+  "flow": [
+    "clear localStorage",
+    "Strategic Map -> Camp",
+    "Camp -> Deployment",
+    "Deployment -> Battle",
+    "run 1x for 9 seconds",
+    "stop battle",
+    "click enemy terrain maneuver alert",
+    "apply terrain-alert recommendation"
+  ],
+  "build": {
+    "command": "npm run build",
+    "status": "passed",
+    "notes": "Vite reported the existing large chunk warning only."
+  },
+  "browserQa": {
+    "status": "passed",
+    "terrainAlertCount": 1,
+    "alertTextsBefore": [
+      "敵地形機動: 稜線裏滞留 / 群集 44体 / 逆斜面稜線を越える接近で隊列が鈍る / 戦線で封鎖 / 地形敵2旅団",
+      "森林左翼線圧迫 / 敵圧 731 / 弾性防御へ",
+      "敵波接近 / 群集 44体 / 塹壕破砕:塹壕線"
+    ],
+    "afterClick": {
+      "inspectedEnemies": 1,
+      "bodyHasTerrainAction": true,
+      "selectedEnemyText": "群集44 / 交戦 / 維持 / 施設襲撃 / 稜線裏滞留",
+      "panelExcerpt": "地形行動 稜線裏滞留 / 逆斜面稜線を越える接近で隊列が鈍る"
+    },
+    "afterRecommendation": {
+      "bodyHasAlertResponse": true,
+      "focusedEnemies": 1,
+      "selectedUnitText": "第4歩兵 / 弾防 / 施設判断: 塹壕線",
+      "logExcerpts": [
+        "警報対応: 第4戦列歩兵大隊へ戦線封鎖/集中を適用。",
+        "第4戦列歩兵大隊の集中射撃目標をアンデッド群集 44体へ指定。",
+        "第4戦列歩兵大隊の優先目標を最大集団へ変更。",
+        "第4戦列歩兵大隊の自律方針を弾性防御へ変更。"
+      ]
+    },
+    "consoleErrors": [],
+    "brokenImages": [],
+    "visibleNaN": false,
+    "horizontalOverflow": false,
+    "documentWidth": 1440,
+    "viewportWidth": 1440
+  },
+  "mobileQa": {
+    "status": "skipped",
+    "reason": "Mobile/cellphone QA is outside the current active target."
+  }
+}

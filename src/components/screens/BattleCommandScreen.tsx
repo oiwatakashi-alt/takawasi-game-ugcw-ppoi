@@ -202,6 +202,7 @@ interface BattleAlert {
   unitId?: string;
   structureId?: string;
   segmentId?: string;
+  enemyId?: string;
   objectiveNodeId?: string;
   recommendation?: string;
 }
@@ -225,7 +226,7 @@ const battleAlertPriority = (alert: BattleAlert): number => {
   if (alert.segmentId) {
     return 5;
   }
-  if (alert.id === "enemy-wave" || alert.id === "enemy-command") {
+  if (alert.enemyId || alert.id === "enemy-wave" || alert.id === "enemy-command") {
     return 6;
   }
   return alert.severity === "warning" ? 7 : 8;
@@ -2528,6 +2529,28 @@ const createBattleAlerts = (battle: BattleState): BattleAlert[] => {
         title: "敵指揮崩壊",
         detail: `${disruptedEnemies.length}群の凝集低下 / ${mapEnemyDisplayName(leadDisrupted)}`,
         position: leadDisrupted.position,
+      });
+    }
+
+    const terrainManeuverEnemies = battle.enemyUnits.filter((enemy) => enemy.isSpotted && enemy.assaultPlan.terrainTacticLabel);
+    if (terrainManeuverEnemies.length > 0) {
+      const leadTerrainEnemy = [...terrainManeuverEnemies].sort(
+        (a, b) =>
+          (a.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? -12 : 0) -
+            (b.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? -12 : 0) ||
+          a.position.x - b.position.x,
+      )[0];
+      alerts.push({
+        id: `enemy-terrain-${leadTerrainEnemy.id}`,
+        severity: leadTerrainEnemy.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "warning" : "info",
+        title: `敵地形機動: ${leadTerrainEnemy.assaultPlan.terrainTacticLabel}`,
+        detail: `${mapEnemyDisplayName(leadTerrainEnemy)} ${Math.round(leadTerrainEnemy.count)}体 / ${
+          leadTerrainEnemy.assaultPlan.terrainTacticDetail ?? leadTerrainEnemy.assaultPlan.targetName
+        }`,
+        position: leadTerrainEnemy.position,
+        enemyId: leadTerrainEnemy.id,
+        segmentId: leadTerrainEnemy.assaultPlan.targetSegmentId,
+        recommendation: leadTerrainEnemy.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "戦線で封鎖" : "阻止射撃へ",
       });
     }
 
@@ -4927,10 +4950,22 @@ export function BattleCommandScreen({
   };
 
   const handleAlertClick = (alert: BattleAlert) => {
+    const alertEnemy = alert.enemyId ? battle.enemyUnits.find((enemy) => enemy.id === alert.enemyId) : undefined;
+    if (alertEnemy) {
+      setSelectedEnemyId(alertEnemy.id);
+      setInspectedStructureId("");
+      if (alertEnemy.assaultPlan.targetSegmentId) {
+        setSelectedFrontlineSegmentId(alertEnemy.assaultPlan.targetSegmentId);
+      }
+      const responseUnit = enemyResponseUnits(battle, alertEnemy)[0];
+      if (responseUnit && !alert.unitId) {
+        setSelectedUnitId(responseUnit.unitId);
+      }
+    }
     if (alert.unitId) {
       setSelectedUnitId(alert.unitId);
     }
-    if (alert.segmentId && !alert.unitId) {
+    if (alert.segmentId && !alert.unitId && !alert.enemyId) {
       const segmentUnit = battle.playerUnits
         .filter((unit) => unit.standingOrder.frontlineSegmentId === alert.segmentId)
         .sort((a, b) => a.morale - b.morale || a.soldiers - b.soldiers)[0];
@@ -4938,7 +4973,7 @@ export function BattleCommandScreen({
         setSelectedUnitId(segmentUnit.unitId);
       }
     }
-    if (alert.structureId && !alert.unitId) {
+    if (alert.structureId && !alert.unitId && !alert.enemyId) {
       const assignedUnit =
         battle.playerUnits.find((unit) => unit.standingOrder.facilityAssignment?.structureId === alert.structureId) ??
         battle.playerUnits
@@ -4954,7 +4989,7 @@ export function BattleCommandScreen({
         setSelectedUnitId(assignedUnit.unitId);
       }
     }
-    if (alert.objectiveNodeId && !alert.unitId) {
+    if (alert.objectiveNodeId && !alert.unitId && !alert.enemyId) {
       const node = battle.objectiveNodes.find((candidate) => candidate.id === alert.objectiveNodeId);
       const assignedUnit = node
         ? [...battle.playerUnits]
@@ -4968,6 +5003,7 @@ export function BattleCommandScreen({
     const target =
       alert.position ??
       battle.playerUnits.find((unit) => unit.unitId === alert.unitId)?.position ??
+      alertEnemy?.position ??
       battle.structures.find((structure) => structure.id === alert.structureId)?.position ??
       battle.objectiveNodes.find((node) => node.id === alert.objectiveNodeId)?.position;
     if (target) {
@@ -4978,6 +5014,10 @@ export function BattleCommandScreen({
   const unitForAlert = (alert: BattleAlert): BattleUnit | undefined => {
     if (alert.unitId) {
       return battle.playerUnits.find((unit) => unit.unitId === alert.unitId);
+    }
+    if (alert.enemyId) {
+      const enemy = battle.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+      return enemy ? enemyResponseUnits(battle, enemy)[0] : selectedUnit;
     }
     if (alert.segmentId) {
       return battle.playerUnits
@@ -5013,6 +5053,10 @@ export function BattleCommandScreen({
   };
 
   const unitsForAlertGroup = (alert: BattleAlert): BattleUnit[] => {
+    if (alert.enemyId) {
+      const enemy = battle.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+      return enemy ? enemyResponseUnits(battle, enemy).slice(0, 3) : [];
+    }
     if (alert.id === "line-integrity") {
       return battle.playerUnits
         .filter((unit) => unit.soldiers > 0 && unit.order !== "retreat")
@@ -5081,11 +5125,14 @@ export function BattleCommandScreen({
     if (count <= 1) {
       return undefined;
     }
-    if (alert.segmentId) {
-      return `戦線${count}旅団`;
-    }
     if (alert.id === "line-integrity") {
       return `全線${count}旅団`;
+    }
+    if (alert.enemyId) {
+      return `地形敵${count}旅団`;
+    }
+    if (alert.segmentId) {
+      return `戦線${count}旅団`;
     }
     if (alert.structureId) {
       return `施設即応${count}部隊`;
@@ -5119,6 +5166,9 @@ export function BattleCommandScreen({
       appliedRecommendation = "後退守備";
     } else if (alert.id === "enemy-command") {
       appliedRecommendation = "阻止射撃/敵指揮優先";
+    } else if (alert.enemyId) {
+      const enemy = battle.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+      appliedRecommendation = enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "戦線封鎖/集中" : "阻止射撃/集中";
     } else if (alert.id === "enemy-wave") {
       appliedRecommendation = "阻止射撃";
     } else if (alert.segmentId || alert.id.startsWith("choke-") || alert.id.startsWith("formation-")) {
@@ -5144,6 +5194,17 @@ export function BattleCommandScreen({
       } else if (alert.id === "enemy-command") {
         nextBattle = applyStandingOrderPreset(nextBattle, unit.unitId, "aggressive_screen");
         nextBattle = setStandingOrderTargetPriority(nextBattle, unit.unitId, "officer");
+      } else if (alert.enemyId) {
+        const enemy = state.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+        nextBattle = applyStandingOrderPreset(
+          nextBattle,
+          unit.unitId,
+          enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "elastic_defense" : "aggressive_screen",
+        );
+        nextBattle = setStandingOrderTargetPriority(nextBattle, unit.unitId, enemy ? enemyResponsePriority(enemy) : "nearest");
+        if (enemy?.isSpotted) {
+          nextBattle = setUnitFocusTarget(nextBattle, unit.unitId, enemy.id);
+        }
       } else if (alert.id === "enemy-wave") {
         nextBattle = applyStandingOrderPreset(nextBattle, unit.unitId, "aggressive_screen");
       } else if (alert.segmentId || alert.id.startsWith("choke-") || alert.id.startsWith("formation-")) {
@@ -5166,6 +5227,7 @@ export function BattleCommandScreen({
     const target =
       alert.position ??
       battle.playerUnits.find((candidate) => candidate.unitId === unit.unitId)?.position ??
+      battle.enemyUnits.find((enemy) => enemy.id === alert.enemyId)?.position ??
       battle.structures.find((structure) => structure.id === alert.structureId)?.position ??
       battle.objectiveNodes.find((node) => node.id === alert.objectiveNodeId)?.position;
     if (target) {
@@ -5213,6 +5275,9 @@ export function BattleCommandScreen({
         return;
       }
       appliedRecommendation = alert.recommendation === "修理担当" ? "施設修理/防衛" : "施設即応";
+    } else if (alert.enemyId) {
+      const enemy = battle.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+      appliedRecommendation = enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "地形敵封鎖" : "地形敵阻止";
     } else if (alert.segmentId) {
       appliedRecommendation = alert.severity === "danger" ? "後退守備" : "弾性防御";
     } else if (alert.id === "line-integrity") {
@@ -5228,6 +5293,16 @@ export function BattleCommandScreen({
           unitIds: units.map((unit) => unit.unitId),
           forceRepair: alert.recommendation === "修理担当",
         });
+      } else if (alert.enemyId) {
+        const enemy = state.enemyUnits.find((candidate) => candidate.id === alert.enemyId);
+        const preset = enemy?.assaultPlan.terrainTacticLabel === "稜線裏滞留" ? "elastic_defense" : "aggressive_screen";
+        for (const unit of units) {
+          nextBattle = applyStandingOrderPreset(nextBattle, unit.unitId, preset);
+          nextBattle = setStandingOrderTargetPriority(nextBattle, unit.unitId, enemy ? enemyResponsePriority(enemy) : "nearest");
+          if (enemy?.isSpotted) {
+            nextBattle = setUnitFocusTarget(nextBattle, unit.unitId, enemy.id);
+          }
+        }
       } else if (alert.segmentId) {
         const preset = alert.severity === "danger" ? "fallback_guard" : "elastic_defense";
         for (const unit of units) {
@@ -5251,7 +5326,15 @@ export function BattleCommandScreen({
     setCommandMode("none");
     issueOrQueueBattleCommand(
       `alert-group:${alert.id}`,
-      alert.segmentId ? segmentName(battle, alert.segmentId) : alert.structureId ? "施設警報" : alert.objectiveNodeId ? "目標警報" : "戦場警報",
+      alert.enemyId
+        ? "敵地形機動"
+        : alert.segmentId
+          ? segmentName(battle, alert.segmentId)
+          : alert.structureId
+            ? "施設警報"
+            : alert.objectiveNodeId
+              ? "目標警報"
+              : "戦場警報",
       `一括 ${appliedRecommendation}`,
       `${alert.title} / ${units.length}部隊`,
       applyGroupRecommendation,
