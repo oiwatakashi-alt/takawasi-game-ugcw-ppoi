@@ -47,6 +47,24 @@ const equipmentWearForUnit = (
 };
 
 const battleRoleForUnit = (unit: BattleState["playerUnits"][number]): string => {
+  if (unit.mapInspectionResponseRole === "enemy_response") {
+    return "検査敵群対応";
+  }
+  if (unit.mapInspectionResponseRole === "enemy_volley") {
+    return "検査戦線斉射";
+  }
+  if (unit.mapInspectionResponseRole === "enemy_focus") {
+    return "検査集中射撃";
+  }
+  if (unit.mapInspectionResponseRole === "facility_defense") {
+    return "検査施設防衛";
+  }
+  if (unit.mapInspectionResponseRole === "facility_repair") {
+    return "検査施設修理";
+  }
+  if (unit.mapInspectionResponseRole === "frontline_response") {
+    return "検査戦線対応";
+  }
   if (unit.deploymentMitigationRole === "weak_line_focus") {
     return "弱線是正";
   }
@@ -144,6 +162,24 @@ const roleXpBonusForUnit = (unit: BattleState["playerUnits"][number], outcome: B
   }
   if (role === "指揮網予備投入") {
     return 2 + outcomeBonus + (readiness >= 35 ? 1 : 0);
+  }
+  if (role === "検査敵群対応") {
+    return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "検査戦線斉射") {
+    return 2 + outcomeBonus + (unit.fireMissionId || unit.volleyUntilSeconds ? 1 : 0);
+  }
+  if (role === "検査集中射撃") {
+    return 1 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "検査施設防衛") {
+    return 2 + outcomeBonus + (unit.focusTargetId ? 1 : 0);
+  }
+  if (role === "検査施設修理") {
+    return 2 + outcomeBonus + (unit.actionReason === "repairing_structure" || unit.actionReason === "moving_to_repair" ? 1 : 0);
+  }
+  if (role === "検査戦線対応") {
+    return 2 + outcomeBonus + (readiness <= 55 || casualtyRatio > 0.015 ? 1 : 0);
   }
   if (role === "戦闘交代") {
     return 1 + (unit.soldiers > 0 ? 1 : 0);
@@ -367,6 +403,39 @@ const commendationsForUnit = (
     commendations.push("敵指揮網への予備投入");
     if ((unit.reserveReadiness ?? 0) <= 40) {
       commendations.push("即応予備を消費");
+    }
+  }
+  if (role === "検査敵群対応") {
+    commendations.push("検査敵群へ即応");
+    if (unit.focusTargetId) {
+      commendations.push("確認敵群を指名");
+    }
+  }
+  if (role === "検査戦線斉射") {
+    commendations.push("検査敵群へ戦線斉射");
+    if (unit.fireMissionId || unit.volleyUntilSeconds) {
+      commendations.push("斉射指揮を実行");
+    }
+  }
+  if (role === "検査集中射撃") {
+    commendations.push("検査敵群へ集中射撃");
+  }
+  if (role === "検査施設防衛") {
+    commendations.push("検査施設へ即応防衛");
+    if (unit.focusTargetId) {
+      commendations.push("施設襲撃群を指名");
+    }
+  }
+  if (role === "検査施設修理") {
+    commendations.push("検査施設を修理優先");
+    if (unit.type === "engineer") {
+      commendations.push("工兵修理を担当");
+    }
+  }
+  if (role === "検査戦線対応") {
+    commendations.push("検査戦線へ圧力対応");
+    if ((unit.reserveReadiness ?? 0) <= 55) {
+      commendations.push("即応予備を投入");
     }
   }
   if (role === "戦闘交代") {
@@ -827,9 +896,15 @@ const officerXpForUnit = (
             role === "勝利点奪回" ||
             role === "補給点奪回" ||
             role === "視界点奪回" ||
-            role === "敵指揮核制圧" ||
-            role === "敵崩壊追撃" ||
-            role === "指揮網予備投入"
+          role === "敵指揮核制圧" ||
+          role === "敵崩壊追撃" ||
+          role === "指揮網予備投入" ||
+          role === "検査敵群対応" ||
+          role === "検査戦線斉射" ||
+          role === "検査集中射撃" ||
+          role === "検査施設防衛" ||
+          role === "検査施設修理" ||
+          role === "検査戦線対応"
           ? 3
           : 1;
   const outcomeBonus = outcome === "hold" ? 2 : outcome === "withdraw" ? 1 : 0;

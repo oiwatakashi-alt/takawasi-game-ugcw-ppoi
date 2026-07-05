@@ -308,20 +308,30 @@ export const tacticalLessonPreviewForFacilityDuties = (
   unitId: string,
 ): string | undefined => {
   const role = battleRoleByUnit[unitId];
-  if (role !== "施設防衛" && role !== "施設修理" && role !== "補給拠点勤務") {
+  if (
+    role !== "施設防衛" &&
+    role !== "施設修理" &&
+    role !== "補給拠点勤務" &&
+    role !== "検査施設防衛" &&
+    role !== "検査施設修理"
+  ) {
     return undefined;
   }
   const commendations = commendationsByUnit[unitId] ?? [];
-  const preferredDoctrineLabel = role === "施設修理" || role === "補給拠点勤務" ? "工兵修理線" : "戦線固守";
-  const reserveReadinessBonus = role === "施設防衛" ? 2 : 1;
-  const controlRadiusBonus = role === "施設防衛" || role === "施設修理" ? 1 : 0;
-  const fallbackMoraleModifier = role === "施設修理" ? 1 : 0;
+  const isRepairRole = role === "施設修理" || role === "検査施設修理";
+  const isDefenseRole = role === "施設防衛" || role === "検査施設防衛";
+  const preferredDoctrineLabel = isRepairRole || role === "補給拠点勤務" ? "工兵修理線" : "戦線固守";
+  const reserveReadinessBonus = isDefenseRole ? 2 : 1;
+  const controlRadiusBonus = isDefenseRole || isRepairRole ? 1 : 0;
+  const fallbackMoraleModifier = isRepairRole ? 1 : 0;
   const reason =
-    role === "施設防衛"
+    isDefenseRole
       ? commendations.includes("施設襲撃群を指名")
         ? "施設襲撃対応"
-        : "施設防衛"
-      : role === "施設修理"
+        : role === "検査施設防衛"
+          ? "検査施設防衛"
+          : "施設防衛"
+      : isRepairRole
         ? "損傷施設修理"
         : "補給拠点維持";
   return `次戦教訓 ${reason} / 得意${preferredDoctrineLabel} / 即応+${reserveReadinessBonus}${

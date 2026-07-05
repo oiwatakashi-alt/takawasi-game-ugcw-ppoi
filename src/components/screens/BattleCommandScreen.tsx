@@ -92,6 +92,7 @@ import type {
   EnemyCommandTier,
   EnemyMoraleState,
   FireMissionScope,
+  MapInspectionResponseRole,
   TargetPriority,
 } from "../../game/battle/types";
 import type { StandingOrderTemplate } from "../../game/battle/types";
@@ -3183,6 +3184,25 @@ export function BattleCommandScreen({
         .sort((a, b) => b.relevance - a.relevance)
         .slice(0, 3)
     : [];
+
+  const withMapInspectionResponseRole = (
+    state: BattleState,
+    unitIds: string[],
+    role: MapInspectionResponseRole,
+  ): BattleState => {
+    const unitIdSet = new Set(unitIds);
+    return {
+      ...state,
+      playerUnits: state.playerUnits.map((unit) =>
+        unitIdSet.has(unit.unitId)
+          ? {
+              ...unit,
+              mapInspectionResponseRole: role,
+            }
+          : unit,
+      ),
+    };
+  };
   const effectiveMapLayers: Record<TacticalMapLayerId, boolean> = {
     ...tacticalMapLayers,
     frontlines: tacticalMapLayers.frontlines || commandMode === "segment" || commandMode === "select" || !!dragFrontlineHandle,
@@ -3877,7 +3897,7 @@ export function BattleCommandScreen({
       selectedUnit,
       `集中 ${mapEnemyDisplayName(selectedEnemy)}`,
       `${Math.round(selectedEnemy.count)}体 / ${enemyAssaultPhaseLabels[selectedEnemy.assaultPlan.phase]} / 敵パネル指定`,
-      (state) => setUnitFocusTarget(state, selectedUnit.unitId, selectedEnemy.id),
+      (state) => withMapInspectionResponseRole(setUnitFocusTarget(state, selectedUnit.unitId, selectedEnemy.id), [selectedUnit.unitId], "enemy_focus"),
     );
   };
 
@@ -3960,6 +3980,7 @@ export function BattleCommandScreen({
         nextBattle = setStandingOrderTargetPriority(nextBattle, unitId, priority);
         nextBattle = setUnitFocusTarget(nextBattle, unitId, selectedEnemy.id);
       }
+      nextBattle = withMapInspectionResponseRole(nextBattle, responseUnitIds, "enemy_response");
       return {
         ...nextBattle,
         log: [
@@ -3996,7 +4017,7 @@ export function BattleCommandScreen({
     scrollToPosition(report.segment.anchor);
   };
 
-  const applyFrontlinePressureResponse = (report: FrontlinePressureReport) => {
+  const applyFrontlinePressureResponse = (report: FrontlinePressureReport, fromMapInspection = false) => {
     if ((report.defenders.length === 0 && report.reserves.length === 0) || report.level === "quiet") {
       inspectFrontlinePressure(report);
       return;
@@ -4065,6 +4086,15 @@ export function BattleCommandScreen({
               : unit,
           ),
         };
+      }
+      if (fromMapInspection) {
+        const mapInspectionUnitIds =
+          report.responseType === "counterstroke"
+            ? [...report.defenders, ...report.reserves]
+                .slice(0, Math.max(2, Math.min(3, report.defenders.length + report.reserves.length)))
+                .map((unit) => unit.unitId)
+            : [...report.defenders, ...report.reserves].map((unit) => unit.unitId);
+        nextBattle = withMapInspectionResponseRole(nextBattle, mapInspectionUnitIds, "frontline_response");
       }
 
       return {
@@ -4261,6 +4291,7 @@ export function BattleCommandScreen({
       (state) => {
         let nextBattle = setUnitFocusTarget(state, issuer.unitId, selectedEnemy.id);
         nextBattle = issueFireMission(nextBattle, issuer.unitId, "frontline_segment");
+        nextBattle = withMapInspectionResponseRole(nextBattle, [issuer.unitId], "enemy_volley");
         return {
           ...nextBattle,
           log: [
@@ -4876,10 +4907,14 @@ export function BattleCommandScreen({
       forceRepair ? "施設修理" : "施設即応",
       `${fortificationStatusLabels[structure.status]} / ${structure.facilityStateLabel} / ${responseUnits.length}部隊`,
       (state) =>
-        applyFacilityDefenseResponse(state, structure.id, {
-          unitIds: responseUnits.map((unit) => unit.unitId),
-          forceRepair,
-        }),
+        withMapInspectionResponseRole(
+          applyFacilityDefenseResponse(state, structure.id, {
+            unitIds: responseUnits.map((unit) => unit.unitId),
+            forceRepair,
+          }),
+          responseUnits.map((unit) => unit.unitId),
+          forceRepair ? "facility_repair" : "facility_defense",
+        ),
     );
   };
 
@@ -4887,7 +4922,7 @@ export function BattleCommandScreen({
     if (!selectedFrontlinePressure || finished) {
       return;
     }
-    applyFrontlinePressureResponse(selectedFrontlinePressure);
+    applyFrontlinePressureResponse(selectedFrontlinePressure, true);
   };
 
   const addFirePlanStage = (scope: FireMissionScope) => {

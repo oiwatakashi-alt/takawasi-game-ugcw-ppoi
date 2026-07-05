@@ -1,0 +1,49 @@
+{
+  "id": "takawasi-map-selection-after-action-carryover-qa",
+  "date": "2026-07-05",
+  "target": "Map selection response role carryover into After Action",
+  "url": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "status": "pass",
+  "commands": {
+    "build": "npm run build",
+    "diffCheck": "git diff --check"
+  },
+  "flow": [
+    "Theater Command",
+    "Army Camp",
+    "Deployment",
+    "Battle Command",
+    "3x enemy spawn",
+    "Select mode enemy inspection",
+    "Enemy group response",
+    "Withdraw",
+    "After Action"
+  ],
+  "implementationVerified": {
+    "enemyResponseForecast": "敵群対応予測2旅団 / 中央塹壕線 / 弾性防御 / 最大集団",
+    "enemyResponseLog": "敵群対応: 2旅団を中央塹壕線で弾性防御 / 最大集団へ移行。",
+    "afterActionRole": "任務 検査敵群対応",
+    "afterActionCommendations": [
+      "検査敵群へ即応",
+      "確認敵群を指名"
+    ],
+    "officerEvents": [
+      "第4戦列歩兵大隊指揮官: 検査敵群対応、指揮経験+5、危険度21、負傷なし",
+      "第6塹壕歩兵大隊指揮官: 検査敵群対応、指揮経験+5、危険度21、負傷なし"
+    ]
+  },
+  "browserHealth": {
+    "consoleErrorsWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "visibleNaN": false
+  },
+  "notes": [
+    "This pass verifies enemy inspection response carryover. Facility and frontline inspection roles use the same battleRoleByUnit/commendations path and are build-verified.",
+    "Mobile/cellphone QA remains outside the current active target."
+  ]
+}

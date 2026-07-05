@@ -188,6 +188,14 @@ export type FrontlineRotationRole = "rotated_out" | "rear_guard_cover";
 
 export type FacilityResponseRole = "facility_defense" | "facility_repair" | "facility_resupply";
 
+export type MapInspectionResponseRole =
+  | "enemy_response"
+  | "enemy_volley"
+  | "enemy_focus"
+  | "facility_defense"
+  | "facility_repair"
+  | "frontline_response";
+
 export type BattleActionReason =
   | "awaiting_orders"
   | "holding_anchor"
@@ -357,6 +365,7 @@ export interface BattleUnit {
   enemyCommandActionRole?: EnemyCommandActionRole;
   frontlineRotationRole?: FrontlineRotationRole;
   facilityResponseRole?: FacilityResponseRole;
+  mapInspectionResponseRole?: MapInspectionResponseRole;
   order: UnitOrder;
   casualtiesThisBattle: number;
   xpGained: number;
