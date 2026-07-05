@@ -77,6 +77,7 @@ export function App() {
   const [screen, setScreen] = useState<ScreenId>("campaign-map");
   const [battle, setBattle] = useState<BattleState | null>(null);
   const [lastResult, setLastResult] = useState<BattleResult | null>(null);
+  const activeTacticalTerrainProfile = tacticalTerrainProfileFromUrl();
 
   useEffect(() => {
     saveCampaign(campaign);
@@ -97,7 +98,7 @@ export function App() {
   ) => {
     const operation = campaign.theater.mandatoryBattle ?? campaign.activeStrategicTurn.mandatoryBattle;
     const scenario = createBattleScenario(campaign, operation, {
-      tacticalTerrainProfile: tacticalTerrainProfileFromUrl(),
+      tacticalTerrainProfile: activeTacticalTerrainProfile,
     });
     const battleCampaign = frontlineGeometry || reserveDoctrine || commandIssuePlan || reserveUnitIds || rearGuardUnitIds
       ? saveDeploymentBattlePlan(
@@ -116,7 +117,7 @@ export function App() {
     }
     setBattle(createBattleState(battleCampaign, scenario, deployedUnitIds));
     setScreen("battle");
-  }, [campaign]);
+  }, [activeTacticalTerrainProfile, campaign]);
 
   const completeBattle = useCallback(() => {
     if (!battle) {
@@ -537,6 +538,7 @@ export function App() {
       return (
         <DeploymentScreen
           campaign={campaign}
+          tacticalTerrainProfile={activeTacticalTerrainProfile}
           onBackToCamp={() => setScreen("camp-army")}
           onOpenOfficerManagement={() => setScreen("camp-officers")}
           onStartBattle={startMainBattle}

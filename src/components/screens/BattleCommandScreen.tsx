@@ -6071,7 +6071,8 @@ export function BattleCommandScreen({
               <span>
                 火力{selectedFrontlineTerrainAssessment.fireAdvantage} / 遮蔽
                 {selectedFrontlineTerrainAssessment.coverValue} / 機動リスク
-                {selectedFrontlineTerrainAssessment.mobilityRisk} / 施設
+                {selectedFrontlineTerrainAssessment.mobilityRisk} / 稜線
+                {selectedFrontlineTerrainAssessment.ridgeRisk} / 施設
                 {selectedFrontlineTerrainAssessment.supportValue}
               </span>
               <em>{selectedFrontlineTerrainAssessment.reason}</em>

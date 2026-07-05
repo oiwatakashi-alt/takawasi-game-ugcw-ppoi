@@ -9,7 +9,7 @@ export interface CreateBattleScenarioOptions {
 
 const uniqueTerrainTags = (terrainTags: string[]): string[] => Array.from(new Set(terrainTags));
 
-const terrainTagsForProfile = (
+export const terrainTagsForBattleProfile = (
   terrainTags: string[],
   profile: CreateBattleScenarioOptions["tacticalTerrainProfile"],
 ): string[] => {
@@ -22,7 +22,7 @@ const terrainTagsForProfile = (
   return terrainTags;
 };
 
-const terrainProfileLabel = (
+export const terrainProfileLabel = (
   profile: CreateBattleScenarioOptions["tacticalTerrainProfile"],
 ): string | undefined => {
   if (profile === "high_ground_los_drill") {
@@ -34,7 +34,7 @@ const terrainProfileLabel = (
   return undefined;
 };
 
-const terrainProfileSummary = (
+export const terrainProfileSummary = (
   profile: CreateBattleScenarioOptions["tacticalTerrainProfile"],
 ): string | undefined => {
   if (profile === "high_ground_los_drill") {
@@ -55,7 +55,7 @@ export const createBattleScenario = (
   if (!sector) {
     throw new Error(`Unknown sector: ${operation.sectorId}`);
   }
-  const terrainTags = terrainTagsForProfile(sector.terrainTags, options.tacticalTerrainProfile);
+  const terrainTags = terrainTagsForBattleProfile(sector.terrainTags, options.tacticalTerrainProfile);
   const waveBudget = Math.max(
     70,
     sector.enemyPressure + campaign.theater.enemyMomentum + (operation.victoryEffects.waveBudgetDelta ?? 0),

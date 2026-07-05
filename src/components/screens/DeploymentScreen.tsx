@@ -34,6 +34,11 @@ import { standingOrderPresets } from "../../game/battle/orders";
 import { frontlineDoctrinePresets } from "../../game/battle/orders";
 import { commandPostProfileForCampaign } from "../../game/battle/commandPost";
 import {
+  terrainProfileLabel,
+  terrainProfileSummary,
+  terrainTagsForBattleProfile,
+} from "../../game/battle/createBattleScenario";
+import {
   alignStandingOrderToFrontlineSegments,
   createDeploymentStandingOrderDraft,
   snapStandingOrderToFrontlineSegment,
@@ -49,6 +54,7 @@ import {
 import type {
   AmmoPolicy,
   BattlePosition,
+  BattleScenario,
   BattleWaveTimelineEntry,
   FrontlineSegment,
   FrontlineGeometryAdjustment,
@@ -97,6 +103,7 @@ import { EnemyIntelPanel } from "../shared/EnemyIntelPanel";
 
 interface DeploymentScreenProps {
   campaign: CampaignState;
+  tacticalTerrainProfile?: BattleScenario["tacticalTerrainProfileId"];
   onBackToCamp: () => void;
   onOpenOfficerManagement: () => void;
   onStartBattle: (
@@ -300,6 +307,7 @@ type DeploymentDepthDragState = {
 
 export function DeploymentScreen({
   campaign,
+  tacticalTerrainProfile,
   onBackToCamp,
   onOpenOfficerManagement,
   onStartBattle,
@@ -328,6 +336,12 @@ export function DeploymentScreen({
       : `容量${commandPostProfile.commandCapacityModifier > 0 ? "+" : ""}${commandPostProfile.commandCapacityModifier}`;
   const commandDutyLoads = commandDutyLoadByOfficer(campaign.army);
   const deploymentLimit = baseDeploymentLimit + strategicDoctrine.deploymentSlotBonus + headquartersProfile.deploymentSlotBonus;
+  const deploymentTerrainTags = useMemo(
+    () => terrainTagsForBattleProfile(sector?.terrainTags ?? [], tacticalTerrainProfile),
+    [sector?.terrainTags, tacticalTerrainProfile],
+  );
+  const tacticalTerrainLabel = terrainProfileLabel(tacticalTerrainProfile);
+  const tacticalTerrainSummary = terrainProfileSummary(tacticalTerrainProfile);
   const savedGeometry =
     campaign.deploymentPlan?.operationId === operation.id && campaign.deploymentPlan.sectorId === operation.sectorId
       ? campaign.deploymentPlan.frontlineGeometry
@@ -349,8 +363,8 @@ export function DeploymentScreen({
     [baseFrontlineSegments, frontlineGeometry],
   );
   const frontlineTerrainZones = useMemo(
-    () => createTerrainZonesForBattle(sector?.terrainTags ?? [], frontlineSegments),
-    [frontlineSegments, sector?.terrainTags],
+    () => createTerrainZonesForBattle(deploymentTerrainTags, frontlineSegments),
+    [deploymentTerrainTags, frontlineSegments],
   );
   const frontlineTerrainAssessments = useMemo(
     () =>
@@ -370,14 +384,14 @@ export function DeploymentScreen({
             baseFrontlineSegments,
             frontlineGeometryPresetById(preset.preset),
           );
-          const presetTerrainZones = createTerrainZonesForBattle(sector?.terrainTags ?? [], presetSegments);
+          const presetTerrainZones = createTerrainZonesForBattle(deploymentTerrainTags, presetSegments);
           return [
             preset.preset,
             assessFrontlineGeometryTerrain(presetSegments, presetTerrainZones, sector?.structures ?? []),
           ];
         }),
       ),
-    [baseFrontlineSegments, sector?.structures, sector?.terrainTags],
+    [baseFrontlineSegments, deploymentTerrainTags, sector?.structures],
   );
   const recommendedFrontlineGeometryPreset = useMemo(
     () =>
@@ -385,6 +399,7 @@ export function DeploymentScreen({
         (a, b) =>
           b[1].averageScore - a[1].averageScore ||
           b[1].weakestScore - a[1].weakestScore ||
+          a[1].ridgeRisk - b[1].ridgeRisk ||
           a[1].mobilityRisk - b[1].mobilityRisk,
       )[0]?.[0] ?? defaultFrontlineGeometryAdjustment.preset,
     [frontlineGeometryTerrainAssessments],
@@ -1397,7 +1412,10 @@ export function DeploymentScreen({
       sector?.structures[0];
     const needsSupport = (focusAssessment?.supportValue ?? 0) <= 1 || (focusAssessment?.coverValue ?? 0) <= 2;
     const fireOpportunity = (focusAssessment?.fireAdvantage ?? 0) >= (focusAssessment?.coverValue ?? 0) + 2;
-    const cautiousFallback = (focusAssessment?.score ?? 100) <= 72 || (focusAssessment?.mobilityRisk ?? 0) >= 4;
+    const cautiousFallback =
+      (focusAssessment?.score ?? 100) <= 72 ||
+      (focusAssessment?.mobilityRisk ?? 0) >= 4 ||
+      (focusAssessment?.ridgeRisk ?? 0) >= 2;
     const targetOrder: StandingOrder = {
       ...baseOrder,
       anchor: { ...focusSegment.anchor },
@@ -1813,7 +1831,16 @@ export function DeploymentScreen({
           <dt>戦区</dt>
           <dd>{sector?.name}</dd>
           <dt>地形</dt>
-          <dd>{sector ? formatTerrainTags(sector.terrainTags) : "不明"}</dd>
+          <dd>{deploymentTerrainTags.length > 0 ? formatTerrainTags(deploymentTerrainTags) : "不明"}</dd>
+          {tacticalTerrainLabel && (
+            <>
+              <dt>戦術地形</dt>
+              <dd>
+                {tacticalTerrainLabel}
+                {tacticalTerrainSummary ? ` / ${tacticalTerrainSummary}` : ""}
+              </dd>
+            </>
+          )}
           <dt>敵圧</dt>
           <dd>{sector?.enemyPressure ?? 0}</dd>
           <dt>敵波予測</dt>
@@ -2467,7 +2494,8 @@ export function DeploymentScreen({
                         <span>{assessment?.summary ?? "標準地形 / 評価45"}</span>
                         <small>
                           火力{assessment?.fireAdvantage ?? 0} / 遮蔽{assessment?.coverValue ?? 0} / 機動リスク
-                          {assessment?.mobilityRisk ?? 0} / 施設{assessment?.supportValue ?? 0}
+                          {assessment?.mobilityRisk ?? 0} / 稜線{assessment?.ridgeRisk ?? 0} / 施設
+                          {assessment?.supportValue ?? 0}
                         </small>
                         <em>推奨 {assessment?.suggestedDoctrine ?? "弾性拒止"}</em>
                       </button>
@@ -2496,6 +2524,7 @@ export function DeploymentScreen({
                     {activeTerrainAssessment && (
                       <span>
                         地形評価 {activeTerrainAssessment.score} / 推奨{activeTerrainAssessment.suggestedDoctrine}
+                        {activeTerrainAssessment.ridgeRisk > 0 ? ` / 稜線リスク${activeTerrainAssessment.ridgeRisk}` : ""}
                       </span>
                     )}
                     <span>{activeSegmentSketchLine && activeSegmentSketchLine.length > 1 ? `形状${activeSegmentSketchLine.length}点` : "形状未保存"}</span>

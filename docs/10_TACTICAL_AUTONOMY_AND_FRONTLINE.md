@@ -1418,6 +1418,19 @@ Implemented:
 - Direct logic QA invoked `lineOfSightBlockage({x:32,y:25}, {x:58,y:25}, reverseSlopeDrillTerrain)` and returned modifiers `稜線越え 逆斜面稜線` plus `逆斜面遮蔽 逆斜面稜線`, blockage `0.378`, fire multiplier `0.792`, and range multiplier `0.9024`.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> 1x. Battle Command showed `逆斜面稜線 移動84% / 高地射界 / 稜線`, one rendered `.terrain-ridge` line, and target-audit/action-reason rows including `稜線越え 逆斜面稜線/逆斜面遮蔽 逆斜面稜線` with `有効射程25`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-line-ridge-los-qa-report.json`.
 
+## Implemented Deployment Ridge Terrain Assessment Slice - 2026-07-06
+
+Deployment now previews ridge opportunities and ridge-crossing risks before the battle starts.
+
+Implemented:
+
+- `createBattleScenario.ts` exports the tactical-terrain profile tag/label/summary helpers. App passes the active URL-gated terrain profile into Deployment, so `?takawasiTerrainProfile=reverse-slope` affects the pre-battle terrain assessment as well as Battle creation.
+- Deployment's terrain ledger shows `戦術地形` when a deterministic QA profile is active.
+- `frontlineTerrainAssessment.ts` now scores explicit `ridgeLine` geometry as `稜線射界` or `稜線支配` when a segment is close enough to use the crest, and as `稜線越え` when the expected east-side enemy approach crosses the crest from the segment anchor.
+- Assessments expose a new `ridgeRisk` value. Geometry recommendation compares ridge risk before generic mobility risk, and weak-line mitigation treats high ridge risk as a cautious fallback trigger.
+- Deployment terrain cards show `稜線N`, active handle summaries show `稜線リスクN`, and Battle Command's selected-frontline `地形判断` shows the same `稜線` metric so pre-battle and live battle reads match.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> 1x on `?takawasiTerrainProfile=reverse-slope`. Deployment showed `戦術地形 逆斜面射線検証`, cards with `高地火線 / 稜線射界`, `稜線越え`, and `稜線リスク2`; Battle Command showed `地形判断 火力10 / 遮蔽9 / 機動リスク2 / 稜線2 / 施設2`; live target audit still showed `稜線越え 逆斜面稜線` with `有効射程25`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-deployment-ridge-terrain-assessment-qa-report.json`.
+
 ## Implemented Frontline Terrain Assessment Slice - 2026-07-04
 
 Frontline placement now has a readable tactical evaluation before and during battle.

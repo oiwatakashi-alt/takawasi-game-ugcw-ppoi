@@ -13,6 +13,7 @@ export interface FrontlineTerrainAssessment {
   coverValue: number;
   mobilityRisk: number;
   supportValue: number;
+  ridgeRisk: number;
   terrainNames: string[];
   tags: string[];
   suggestedDoctrine: "戦線固守" | "弾性拒止" | "殺傷地帯" | "遅滞節約" | "工兵修理線";
@@ -27,6 +28,7 @@ export interface FrontlineGeometryTerrainAssessment {
   coverValue: number;
   mobilityRisk: number;
   supportValue: number;
+  ridgeRisk: number;
   tags: string[];
   recommendedDoctrine: FrontlineTerrainAssessment["suggestedDoctrine"];
   tone: "recommended" | "stable" | "caution";
@@ -91,6 +93,37 @@ const terrainTagLabel = (terrainTag: string): string => {
 
 const unique = (values: string[]): string[] => Array.from(new Set(values));
 
+const sideOfLine = (point: BattlePosition, start: BattlePosition, end: BattlePosition): number =>
+  (end.x - start.x) * (point.y - start.y) - (end.y - start.y) * (point.x - start.x);
+
+const crossesLine = (from: BattlePosition, to: BattlePosition, start: BattlePosition, end: BattlePosition): boolean => {
+  const fromSide = sideOfLine(from, start, end);
+  const toSide = sideOfLine(to, start, end);
+  if (Math.abs(fromSide) < 0.001 || Math.abs(toSide) < 0.001) {
+    return false;
+  }
+  return fromSide * toSide < 0;
+};
+
+const distanceToLineSegment = (point: BattlePosition, start: BattlePosition, end: BattlePosition): number => {
+  const lineX = end.x - start.x;
+  const lineY = end.y - start.y;
+  const lengthSquared = lineX * lineX + lineY * lineY;
+  if (lengthSquared <= 0.001) {
+    return distance(point, start);
+  }
+  const ratio = clamp(((point.x - start.x) * lineX + (point.y - start.y) * lineY) / lengthSquared, 0, 1);
+  return distance(point, {
+    x: start.x + lineX * ratio,
+    y: start.y + lineY * ratio,
+  });
+};
+
+const expectedEnemyApproachPoint = (segment: FrontlineSegment): BattlePosition => ({
+  x: 132,
+  y: clamp(segment.anchor.y, 10, 90),
+});
+
 export const assessFrontlineTerrain = (
   segment: FrontlineSegment,
   terrainZones: BattleTerrainZone[],
@@ -116,6 +149,7 @@ export const assessFrontlineTerrain = (
   let coverValue = 0;
   let mobilityRisk = 0;
   let supportValue = 0;
+  let ridgeRisk = 0;
   const tags: string[] = [];
   const reasons: string[] = [];
 
@@ -125,6 +159,15 @@ export const assessFrontlineTerrain = (
       fireAdvantage += 3 * weight;
       tags.push("高地火線");
       reasons.push(`${zone.name}から長射界を取りやすい`);
+      if (zone.ridgeLine) {
+        const ridgeDistance = distanceToLineSegment(segment.anchor, zone.ridgeLine.start, zone.ridgeLine.end);
+        const ridgeWeight = zone.ridgeLine.height === "high" ? 1.4 : zone.ridgeLine.height === "medium" ? 1.1 : 0.8;
+        if (ridgeDistance <= segment.controlRadius + 6) {
+          fireAdvantage += 1.2 * ridgeWeight;
+          tags.push("稜線射界");
+          reasons.push(`${zone.name}の稜線を射撃基準にできる`);
+        }
+      }
     } else if (zone.terrainTag === "trench") {
       coverValue += 3 * weight;
       supportValue += 1 * weight;
@@ -149,6 +192,27 @@ export const assessFrontlineTerrain = (
       fireAdvantage += 1 * weight;
       tags.push("開豁射界");
       reasons.push(`${zone.name}で射界を確保しやすい`);
+    }
+  }
+
+  for (const zone of terrainZones) {
+    if (!zone.ridgeLine) {
+      continue;
+    }
+    const approachPoint = expectedEnemyApproachPoint(segment);
+    const crossesRidge = crossesLine(segment.anchor, approachPoint, zone.ridgeLine.start, zone.ridgeLine.end);
+    const ridgeDistance = distanceToLineSegment(segment.anchor, zone.ridgeLine.start, zone.ridgeLine.end);
+    if (crossesRidge) {
+      const riskWeight = zone.ridgeLine.height === "high" ? 2.2 : zone.ridgeLine.height === "medium" ? 1.6 : 1.1;
+      ridgeRisk += riskWeight;
+      mobilityRisk += 0.9 * riskWeight;
+      tags.push("稜線越え");
+      reasons.push(`${zone.name}越しの射撃は減衰し、敵が裏斜面に隠れやすい`);
+    } else if (ridgeDistance <= segment.controlRadius + 8) {
+      const fireWeight = zone.ridgeLine.height === "high" ? 1.2 : 0.8;
+      fireAdvantage += fireWeight;
+      tags.push("稜線支配");
+      reasons.push(`${zone.name}近くに主線を置き、稜線の手前側を支配できる`);
     }
   }
 
@@ -178,10 +242,17 @@ export const assessFrontlineTerrain = (
   const roundedCover = Math.round(coverValue);
   const roundedRisk = Math.round(mobilityRisk);
   const roundedSupport = Math.round(supportValue);
-  const score = clamp(Math.round(45 + fireAdvantage * 7 + coverValue * 6 + supportValue * 5 - mobilityRisk * 4), 12, 96);
+  const roundedRidgeRisk = Math.round(ridgeRisk);
+  const score = clamp(
+    Math.round(45 + fireAdvantage * 7 + coverValue * 6 + supportValue * 5 - mobilityRisk * 4 - ridgeRisk * 5),
+    12,
+    96,
+  );
   const suggestedDoctrine =
     roundedSupport >= 3 && nearbyStructures.some((structure) => structure.status === "damaged")
       ? "工兵修理線"
+      : roundedRidgeRisk >= 2 && roundedCover <= 3
+        ? "遅滞節約"
       : roundedFire >= roundedCover + 2
         ? "殺傷地帯"
         : roundedRisk >= 4
@@ -199,6 +270,7 @@ export const assessFrontlineTerrain = (
     coverValue: roundedCover,
     mobilityRisk: roundedRisk,
     supportValue: roundedSupport,
+    ridgeRisk: roundedRidgeRisk,
     terrainNames,
     tags: summaryTags,
     suggestedDoctrine,
@@ -233,12 +305,13 @@ export const assessFrontlineGeometryTerrain = (
   const coverValue = Math.round(assessments.reduce((sum, assessment) => sum + assessment.coverValue, 0) / count);
   const mobilityRisk = Math.round(assessments.reduce((sum, assessment) => sum + assessment.mobilityRisk, 0) / count);
   const supportValue = Math.round(assessments.reduce((sum, assessment) => sum + assessment.supportValue, 0) / count);
+  const ridgeRisk = Math.round(assessments.reduce((sum, assessment) => sum + assessment.ridgeRisk, 0) / count);
   const tags = unique(assessments.flatMap((assessment) => assessment.tags)).slice(0, 4);
   const recommendedDoctrine = mostFrequentDoctrine(assessments);
   const tone =
-    averageScore >= 82 && mobilityRisk <= 2
+    averageScore >= 82 && mobilityRisk <= 2 && ridgeRisk <= 1
       ? "recommended"
-      : weakestScore <= 48 || mobilityRisk >= 5
+      : weakestScore <= 48 || mobilityRisk >= 5 || ridgeRisk >= 3
         ? "caution"
         : "stable";
   const weakSegments = assessments
@@ -258,6 +331,7 @@ export const assessFrontlineGeometryTerrain = (
     coverValue,
     mobilityRisk,
     supportValue,
+    ridgeRisk,
     tags,
     recommendedDoctrine,
     tone,
