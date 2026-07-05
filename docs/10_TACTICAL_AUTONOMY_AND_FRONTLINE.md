@@ -1607,6 +1607,14 @@ Officer/staff carryover follow-up implemented:
 - The assigned `参謀長` also receives an army-level warning when the command queue produces transmission congestion, recording `参謀長 警告、伝令混線、全軍発令...`. This deliberately reuses the existing staff-accountability history shape so Army Camp `参謀部推奨` can surface the problem through `前戦評価` without adding a parallel recommendation system.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> `停止して予約` -> queue `弾性防御`, `北へ15度`, `敵指揮`, `弾薬節約`, `阻止射撃` -> `一括混線 +1秒` -> `一括発令` -> 1x tick -> `撤退実行` -> After Action -> apply result -> Officers tab. After Action showed `伝令評価 発令5件 / 遅延5件 / 混線5件 / 最長4秒`; Officers showed `伝令混線 第1戦列歩兵大隊...経験+1、疲労+5` and `参謀長 警告、伝令混線...疲労+6`; Army Camp staff recommendations showed `前戦評価`; console errors 0, broken images 0, and the QA campaign was reset afterward. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-command-transmission-officer-staff-qa-report.json`.
 
+Command-post fatigue follow-up implemented:
+
+- `BattleState.commandPost` is generated at battle creation from the assigned `参謀長` status and persistent command fatigue.
+- Active but tired staff now reduce queued-command handling capacity and add command-transmission delay; an inactive/wounded/missing chief of staff is treated as severe command-post fatigue.
+- `commandTransmissionReport` adds reasons such as `司令部疲労+2秒`, and `commandCongestionReport` folds the command-post capacity modifier into `一括混線 +N秒`.
+- Battle Command shows the command-post label in the top HUD and the detailed `参謀長 ... / 指揮疲労...` reason inside `予約指揮`, so the next-battle effect of staff exhaustion or absence is visible before issuing orders.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> queue five selected-brigade commands with initial `指揮疲労0で支障なし` and `一括混線 +1秒` -> After Action -> apply result -> next battle. The next battle showed `司令部 参謀長 アルンハイム 疲労100`, `参謀長不在扱い / 指揮疲労100で伝達+2秒/処理容量-2`, queued transmission previews with `司令部疲労+2秒`, and `一括混線 +2秒`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`, viewport reset, and QA campaign reset. Mobile/cellphone QA is outside the current target. QA report: `outputs/takawasi-command-post-fatigue-qa-report.json`.
+
 ## Implemented Enemy Command Response Queue Slice - 2026-07-04
 
 - The enemy-intent panel is no longer a direct-only command surface. `選択旅団の集中目標`, `担当戦線で対応`, and `担当戦線斉射` route through `予約指揮` when queue mode is active.

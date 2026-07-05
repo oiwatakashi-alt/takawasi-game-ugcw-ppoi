@@ -184,6 +184,7 @@ export const commandTransmissionReport = (
       ? 1
       : 0;
   const organizationReduction = state.strategicDoctrine?.activeDoctrineIds.includes("organization") ? 1 : 0;
+  const commandPostDelay = state.commandPost?.transmissionDelayModifier ?? 0;
   const rawDelay =
     baseDelay +
     pressureDelay +
@@ -192,7 +193,8 @@ export const commandTransmissionReport = (
     movementDelay +
     commanderDelay -
     commandDoctrineReduction -
-    organizationReduction;
+    organizationReduction +
+    commandPostDelay;
   const delaySeconds = clamp(rawDelay, 1, 12);
   const reasons = [
     `${commandTransmissionIntensityLabel(intensity)} 基礎${baseDelay}秒`,
@@ -205,6 +207,7 @@ export const commandTransmissionReport = (
     commanderDelay > 0 ? "指揮過負荷+2秒" : undefined,
     commandDoctrineReduction > 0 ? "指揮幕僚-1秒" : undefined,
     organizationReduction > 0 ? "軍団編制-1秒" : undefined,
+    commandPostDelay > 0 ? `司令部疲労+${commandPostDelay}秒` : undefined,
   ].filter(Boolean) as string[];
   return {
     delaySeconds,
@@ -222,7 +225,8 @@ export const commandCongestionReport = (state: BattleState, commandCount: number
       ? 1
       : 0;
   const organizationBonus = state.strategicDoctrine?.activeDoctrineIds.includes("organization") ? 1 : 0;
-  const capacity = 2 + commandDoctrineBonus + organizationBonus;
+  const commandPostModifier = state.commandPost?.commandCapacityModifier ?? 0;
+  const capacity = Math.max(1, 2 + commandDoctrineBonus + organizationBonus + commandPostModifier);
   const overload = Math.max(0, commandCount - capacity);
   const delayPenaltySeconds = overload <= 0 ? 0 : clamp(Math.ceil(overload / 2), 1, 4);
   const reasons = [
@@ -230,6 +234,7 @@ export const commandCongestionReport = (state: BattleState, commandCount: number
     `処理容量${capacity}`,
     commandDoctrineBonus > 0 ? "指揮幕僚+1" : undefined,
     organizationBonus > 0 ? "軍団編制+1" : undefined,
+    commandPostModifier < 0 ? `司令部疲労${commandPostModifier}` : commandPostModifier > 0 ? `司令部+${commandPostModifier}` : undefined,
     delayPenaltySeconds > 0 ? `混線+${delayPenaltySeconds}秒` : "混線なし",
   ].filter(Boolean) as string[];
   return {

@@ -616,6 +616,14 @@ export interface BattleState {
   fireDiscipline?: FireDisciplineProfile;
   strategicDoctrine?: StrategicDoctrineProfile;
   reserveDoctrine?: ReserveDoctrinePlan;
+  commandPost?: {
+    label: string;
+    chiefOfStaffName?: string;
+    chiefOfStaffFatigue: number;
+    commandCapacityModifier: number;
+    transmissionDelayModifier: number;
+    reasons: string[];
+  };
   fireMissions?: BattleFireMission[];
   firePlans?: BattleFirePlan[];
   staffAccountabilityContext: BattleStaffAccountabilityContext[];

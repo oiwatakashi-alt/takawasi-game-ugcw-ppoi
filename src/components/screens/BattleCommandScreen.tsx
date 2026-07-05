@@ -4320,6 +4320,7 @@ export function BattleCommandScreen({
           <span>視界 {spottingRange}</span>
           <span>発見 {spottedEnemyCount}/{battle.enemyUnits.length}</span>
           <span>隘路 {chokeSummary}</span>
+          {battle.commandPost && <span>司令部 {battle.commandPost.label}</span>}
         </div>
         <div className="button-row">
           {[0, 1, 2, 3].map((speed) => (
@@ -4375,6 +4376,17 @@ export function BattleCommandScreen({
           {commandCongestionPreview && (
             <span className={commandCongestionPreview.delayPenaltySeconds > 0 ? "command-congestion-warning" : ""}>
               {commandCongestionPreview.label}
+            </span>
+          )}
+          {battle.commandPost && (
+            <span
+              className={
+                battle.commandPost.commandCapacityModifier < 0 || battle.commandPost.transmissionDelayModifier > 0
+                  ? "command-congestion-warning"
+                  : ""
+              }
+            >
+              {battle.commandPost.reasons.join(" / ")}
             </span>
           )}
           <span>

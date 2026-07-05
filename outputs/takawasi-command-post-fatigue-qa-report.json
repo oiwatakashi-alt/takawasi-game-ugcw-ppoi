@@ -1,0 +1,46 @@
+{
+  "id": "takawasi-command-post-fatigue-qa",
+  "date": "2026-07-05",
+  "target": "http://127.0.0.1:5173/",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scope": [
+    "BattleState.commandPost generation from chief-of-staff status/fatigue",
+    "commandPost transmission-delay modifier",
+    "commandPost queued-command capacity modifier",
+    "Battle Command top HUD and queue-summary display"
+  ],
+  "steps": [
+    "npm run build",
+    "Reset campaign",
+    "Camp -> Deployment -> Battle",
+    "Enable queue mode and queue five selected-brigade commands",
+    "Verify initial command post shows chief-of-staff fatigue 0 and queue congestion +1 second",
+    "Issue queued commands, run 1x, withdraw, open After Action, and apply result",
+    "Start the next mandatory battle",
+    "Verify command post shows chief-of-staff unavailable/fatigue 100 and reason text",
+    "Enable queue mode and queue five selected-brigade commands again",
+    "Verify queued transmission previews include command-post fatigue delay and queue congestion increases",
+    "Reset QA campaign and reset browser viewport"
+  ],
+  "observations": {
+    "firstBattleQueue": "予約指揮予約中5件一括混線 +1秒 / 参謀長 アルンハイム / 指揮疲労0で支障なし",
+    "afterAction": "伝令評価 発令5件 / 遅延5件 / 混線5件 / 最長4秒",
+    "secondBattleTopbar": "司令部 参謀長 アルンハイム 疲労100",
+    "secondBattleQueueReason": "参謀長 アルンハイム / 参謀長不在扱い / 指揮疲労100で伝達+2秒/処理容量-2",
+    "secondBattleTransmissionPreview": "伝令予測 5秒 + 混線2秒 / ... / 司令部疲労+2秒",
+    "secondBattleCongestion": "一括混線 +2秒"
+  },
+  "checks": {
+    "build": "pass",
+    "desktopBrowserQa": "pass",
+    "consoleErrorsOrWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "containsNaN": false,
+    "campaignResetAfterQa": true,
+    "mobileQa": "skipped: mobile/cellphone is outside the active target"
+  }
+}

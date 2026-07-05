@@ -740,6 +740,27 @@ export const createBattleState = (
   const headquartersProfile = armyHeadquartersProfile(campaign.army, campaign.officers);
   const commandDutyLoads = commandDutyLoadByOfficer(campaign.army);
   const staffAssignments = normalizeStaffAssignments(campaign.army.formations[0]?.staffAssignments);
+  const chiefOfStaffOfficerId = staffAssignments.find((assignment) => assignment.slotId === "chiefOfStaff")?.officerId;
+  const chiefOfStaff = campaign.officers.find((candidate) => candidate.id === chiefOfStaffOfficerId);
+  const chiefFatigue = chiefOfStaff?.status === "active" ? chiefOfStaff.commandFatigue ?? 0 : 100;
+  const commandPost = {
+    label: chiefOfStaff
+      ? `参謀長 ${chiefOfStaff.name} 疲労${chiefFatigue}`
+      : "参謀長未任命",
+    chiefOfStaffName: chiefOfStaff?.name,
+    chiefOfStaffFatigue: chiefFatigue,
+    commandCapacityModifier: !chiefOfStaff ? -1 : chiefFatigue >= 65 ? -2 : chiefFatigue >= 20 ? -1 : 0,
+    transmissionDelayModifier: !chiefOfStaff ? 1 : chiefFatigue >= 70 ? 2 : chiefFatigue >= 20 ? 1 : 0,
+    reasons: [
+      chiefOfStaff ? `参謀長 ${chiefOfStaff.name}` : "参謀長未任命",
+      chiefOfStaff?.status && chiefOfStaff.status !== "active" ? "参謀長不在扱い" : undefined,
+      chiefFatigue >= 70
+        ? `指揮疲労${chiefFatigue}で伝達+2秒/処理容量-2`
+        : chiefFatigue >= 20
+          ? `指揮疲労${chiefFatigue}で伝達+1秒/処理容量-1`
+          : `指揮疲労${chiefFatigue}で支障なし`,
+    ].filter(Boolean) as string[],
+  };
   const staffAccountabilityContext = staffSlotDefinitions.map((slot) => {
     const officerId = staffAssignments.find((assignment) => assignment.slotId === slot.id)?.officerId;
     const officer = campaign.officers.find((candidate) => candidate.id === officerId);
@@ -945,6 +966,7 @@ export const createBattleState = (
     fireDiscipline,
     strategicDoctrine,
     reserveDoctrine,
+    commandPost,
     staffAdvisoryResponses: [],
     staffAccountabilityContext,
     withdrawalRearGuardPlanAssessments,
@@ -952,6 +974,7 @@ export const createBattleState = (
     log: [
       `火力規律: ${fireDiscipline.label}（${fireDiscipline.summary}）。`,
       `参謀支援: ${strategicDoctrine.label}（${strategicDoctrine.summary}）。`,
+      `司令部: ${commandPost.label}（${commandPost.reasons.join(" / ")}）。`,
       `予備運用: ${reserveDoctrine.notes}`,
       ...(playerUnits.some((unit) => unit.tacticalLessonSummary && unit.tacticalLessonSummary !== "戦術教訓なし")
         ? [
