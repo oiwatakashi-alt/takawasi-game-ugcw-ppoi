@@ -6549,10 +6549,17 @@ main {
   color: #ffd7ad;
 }
 
-.battle-minimap {
+.battle-minimap-panel {
   position: absolute;
   right: 12px;
   bottom: 12px;
+  display: grid;
+  gap: 5px;
+  z-index: 6;
+}
+
+.battle-minimap {
+  position: relative;
   width: 150px;
   height: 104px;
   border: 2px solid #2f3528;
@@ -6560,11 +6567,16 @@ main {
     linear-gradient(90deg, rgba(85, 112, 78, 0.5), rgba(171, 151, 104, 0.5)),
     #d2c49d;
   cursor: pointer;
-  z-index: 6;
+}
+
+.battle-minimap:focus-visible {
+  outline: 3px solid rgba(248, 239, 207, 0.92);
+  outline-offset: 2px;
 }
 
 .battle-minimap i,
-.mini-front {
+.mini-front,
+.mini-focus {
   position: absolute;
   display: block;
 }
@@ -6582,6 +6594,15 @@ main {
   bottom: 4px;
   border: 1px solid rgba(47, 53, 40, 0.72);
   background: rgba(248, 239, 207, 0.18);
+}
+
+.mini-focus {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #f8efcf;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(122, 47, 44, 0.76);
+  transform: translate(-50%, -50%);
 }
 
 .battle-minimap i {
@@ -6622,6 +6643,41 @@ main {
 .mini-structure.damaged,
 .mini-structure.overrun {
   background: #8e2f2b;
+}
+
+.battle-minimap-jumps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.battle-minimap-jumps button {
+  min-width: 0;
+  border: 1px solid rgba(47, 53, 40, 0.5);
+  border-radius: 4px;
+  background: rgba(248, 239, 207, 0.92);
+  color: #2f3528;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 2px;
+}
+
+.battle-minimap-jumps button.active {
+  border-color: rgba(142, 47, 43, 0.74);
+  background: rgba(122, 47, 44, 0.92);
+  color: #f8efcf;
+}
+
+.battle-minimap-readout {
+  border: 1px solid rgba(47, 53, 40, 0.42);
+  border-radius: 5px;
+  background: rgba(47, 53, 40, 0.86);
+  color: #f8efcf;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1.25;
+  padding: 5px 6px;
+  text-align: center;
 }
 
 .battle-hud {

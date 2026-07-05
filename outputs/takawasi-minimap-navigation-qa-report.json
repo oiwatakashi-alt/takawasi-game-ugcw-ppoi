@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-minimap-navigation",
+  "date": "2026-07-05",
+  "scope": "Battle Command minimap navigation and frontline jump controls",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "npm run build",
+      "status": "pass",
+      "notes": "TypeScript project build and Vite production build completed successfully."
+    },
+    {
+      "name": "git diff --check",
+      "status": "pass",
+      "notes": "No whitespace errors reported."
+    },
+    {
+      "name": "desktop browser QA",
+      "status": "pass",
+      "notes": "In-app browser reached Battle Command at http://127.0.0.1:5173/ after starting the local Vite server."
+    }
+  ],
+  "qaFlow": [
+    "Theater Command -> Army Camp -> Deployment -> Battle Command.",
+    "Verified `.battle-minimap-panel`, `.battle-minimap`, `.battle-map-scroll`, and five `.battle-minimap-jumps button` controls exist.",
+    "Clicked/focused the minimap and pressed ArrowRight. The tactical map scrollLeft changed to 268, focus marker appeared, and readout became `視界 16-100% / X105 Y50`.",
+    "Pressed the third frontline jump button. The active jump became `右翼`, readout became `視界 0-84% / X35 Y71`, and the selected-frontline text included `右翼泥濘線`.",
+    "Console errors/warnings: 0.",
+    "Broken images: 0.",
+    "Document horizontal overflow: false.",
+    "Visible `NaN`: false."
+  ],
+  "implementedBehavior": [
+    "Battle Command minimap now sits in a navigation panel with a visible readout.",
+    "The minimap click target records both X and Y battle coordinates for the focus marker/readout.",
+    "ArrowLeft/ArrowRight/Home/End on the focused minimap pan the wide battle map horizontally.",
+    "Five frontline jump buttons select a frontline segment and scroll to its anchor.",
+    "The last minimap/navigation target is shown as a focus marker and coordinate label."
+  ],
+  "outOfScope": [
+    "No save or BattleState schema fields were added.",
+    "Mobile/cellphone QA remains outside the current active target.",
+    "The battle map still scrolls horizontally; vertical minimap clicks are represented as focus/readout coordinates rather than vertical map scroll."
+  ]
+}

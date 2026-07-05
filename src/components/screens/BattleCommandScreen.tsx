@@ -1,4 +1,13 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+} from "react";
 import { battleAssetUrls } from "../../assets/manifest";
 import type { UnitOrder } from "../../game/army/types";
 import {
@@ -2541,6 +2550,7 @@ export function BattleCommandScreen({
   const [selectedUnitId, setSelectedUnitId] = useState(() => battle.playerUnits[0]?.unitId ?? "");
   const [commandMode, setCommandMode] = useState<MapCommandMode>("none");
   const [viewportRange, setViewportRange] = useState<BattleViewportRange>({ left: 0, width: 100 });
+  const [minimapFocusPosition, setMinimapFocusPosition] = useState<BattlePosition | null>(null);
   const [firePlanDraft, setFirePlanDraft] = useState<FirePlanDraftStage[]>([]);
   const [dragOrderHandle, setDragOrderHandle] = useState<DragOrderHandleState | null>(null);
   const [dragFrontlineHandle, setDragFrontlineHandle] = useState<DragFrontlineHandleState | null>(null);
@@ -3208,12 +3218,28 @@ export function BattleCommandScreen({
     if (!scroll) {
       return;
     }
+    setMinimapFocusPosition(position);
     const ratio = position.x / battle.mapBounds.width;
     scroll.scrollTo({
       left: Math.max(0, ratio * scroll.scrollWidth - scroll.clientWidth / 2),
       behavior: "smooth",
     });
     window.setTimeout(updateViewportRange, 250);
+  };
+
+  const currentViewportCenterPosition = (): BattlePosition => {
+    const scroll = mapScrollRef.current;
+    if (!scroll || scroll.scrollWidth <= 0) {
+      return {
+        x: ((viewportRange.left + viewportRange.width / 2) / 100) * battle.mapBounds.width,
+        y: battle.mapBounds.height / 2,
+      };
+    }
+    const xRatio = Math.max(0, Math.min(1, (scroll.scrollLeft + scroll.clientWidth / 2) / scroll.scrollWidth));
+    return {
+      x: xRatio * battle.mapBounds.width,
+      y: minimapFocusPosition?.y ?? battle.mapBounds.height / 2,
+    };
   };
 
   const positionFromClientPoint = (clientX: number, clientY: number): BattlePosition | null => {
@@ -4295,15 +4321,42 @@ export function BattleCommandScreen({
     const minimap = event.currentTarget;
     const rect = minimap.getBoundingClientRect();
     const xRatio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-    const scroll = mapScrollRef.current;
-    if (!scroll) {
+    const yRatio = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+    scrollToPosition({
+      x: xRatio * battle.mapBounds.width,
+      y: yRatio * battle.mapBounds.height,
+    });
+  };
+
+  const handleMinimapKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const current = currentViewportCenterPosition();
+    const horizontalStep = battle.mapBounds.width * 0.18;
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      scrollToPosition({
+        ...current,
+        x: Math.max(
+          0,
+          Math.min(
+            battle.mapBounds.width,
+            current.x + (event.key === "ArrowLeft" ? -horizontalStep : horizontalStep),
+          ),
+        ),
+      });
       return;
     }
-    scroll.scrollTo({
-      left: Math.max(0, xRatio * scroll.scrollWidth - scroll.clientWidth / 2),
-      behavior: "smooth",
-    });
-    window.setTimeout(updateViewportRange, 250);
+    if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      scrollToPosition({
+        ...current,
+        x: event.key === "Home" ? 0 : battle.mapBounds.width,
+      });
+      return;
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setMinimapFocusPosition(current);
+    }
   };
 
   const handleAlertClick = (alert: BattleAlert) => {
@@ -6678,55 +6731,93 @@ export function BattleCommandScreen({
             </span>
           ))}
         </div>
-        <div className="battle-minimap" role="button" tabIndex={0} onClick={handleMinimapClick}>
-          <span className="mini-front" />
-          <span
-            className="mini-viewport"
-            style={{
-              left: `${viewportRange.left}%`,
-              width: `${viewportRange.width}%`,
-            }}
-          />
-          {battle.structures.map((structure) => (
-            <i
-              key={structure.id}
-              className={`mini-structure ${structure.status}`}
+        <div className="battle-minimap-panel" aria-label="戦術ミニマップ操作">
+          <div
+            className="battle-minimap"
+            role="button"
+            tabIndex={0}
+            title="クリックで戦術マップを移動。左右キー/Home/Endでも移動。"
+            onClick={handleMinimapClick}
+            onKeyDown={handleMinimapKeyDown}
+          >
+            <span className="mini-front" />
+            <span
+              className="mini-viewport"
               style={{
-                left: `${(structure.position.x / battle.mapBounds.width) * 100}%`,
-                top: `${(structure.position.y / battle.mapBounds.height) * 100}%`,
+                left: `${viewportRange.left}%`,
+                width: `${viewportRange.width}%`,
               }}
             />
-          ))}
-          {(battle.chokePoints ?? []).map((choke) => (
-            <i
-              key={choke.id}
-              className="mini-choke"
-              style={{
-                left: `${(choke.position.x / battle.mapBounds.width) * 100}%`,
-                top: `${(choke.position.y / battle.mapBounds.height) * 100}%`,
-              }}
-            />
-          ))}
-          {battle.playerUnits.slice(0, 10).map((unit) => (
-            <i
-              key={unit.unitId}
-              className={unit.unitId === selectedUnit?.unitId ? "mini-player selected" : "mini-player"}
-              style={{
-                left: `${(unit.position.x / battle.mapBounds.width) * 100}%`,
-                top: `${(unit.position.y / battle.mapBounds.height) * 100}%`,
-              }}
-            />
-          ))}
-          {battle.enemyUnits.slice(0, 8).map((unit) => (
-            <i
-              key={unit.id}
-              className={unit.isSpotted ? "mini-enemy" : "mini-enemy hidden"}
-              style={{
-                left: `${(unit.position.x / battle.mapBounds.width) * 100}%`,
-                top: `${(unit.position.y / battle.mapBounds.height) * 100}%`,
-              }}
-            />
-          ))}
+            {minimapFocusPosition && (
+              <span
+                className="mini-focus"
+                style={{
+                  left: `${(minimapFocusPosition.x / battle.mapBounds.width) * 100}%`,
+                  top: `${(minimapFocusPosition.y / battle.mapBounds.height) * 100}%`,
+                }}
+              />
+            )}
+            {battle.structures.map((structure) => (
+              <i
+                key={structure.id}
+                className={`mini-structure ${structure.status}`}
+                style={{
+                  left: `${(structure.position.x / battle.mapBounds.width) * 100}%`,
+                  top: `${(structure.position.y / battle.mapBounds.height) * 100}%`,
+                }}
+              />
+            ))}
+            {(battle.chokePoints ?? []).map((choke) => (
+              <i
+                key={choke.id}
+                className="mini-choke"
+                style={{
+                  left: `${(choke.position.x / battle.mapBounds.width) * 100}%`,
+                  top: `${(choke.position.y / battle.mapBounds.height) * 100}%`,
+                }}
+              />
+            ))}
+            {battle.playerUnits.slice(0, 10).map((unit) => (
+              <i
+                key={unit.unitId}
+                className={unit.unitId === selectedUnit?.unitId ? "mini-player selected" : "mini-player"}
+                style={{
+                  left: `${(unit.position.x / battle.mapBounds.width) * 100}%`,
+                  top: `${(unit.position.y / battle.mapBounds.height) * 100}%`,
+                }}
+              />
+            ))}
+            {battle.enemyUnits.slice(0, 8).map((unit) => (
+              <i
+                key={unit.id}
+                className={unit.isSpotted ? "mini-enemy" : "mini-enemy hidden"}
+                style={{
+                  left: `${(unit.position.x / battle.mapBounds.width) * 100}%`,
+                  top: `${(unit.position.y / battle.mapBounds.height) * 100}%`,
+                }}
+              />
+            ))}
+          </div>
+          <div className="battle-minimap-jumps">
+            {battle.frontlineSegments.map((segment) => (
+              <button
+                key={segment.id}
+                className={selectedFrontlineSegment?.id === segment.id ? "active" : ""}
+                type="button"
+                title={`${segment.name}へ移動`}
+                onClick={() => {
+                  setSelectedFrontlineSegmentId(segment.id);
+                  scrollToPosition(segment.anchor);
+                }}
+              >
+                {segment.name.slice(0, 2)}
+              </button>
+            ))}
+          </div>
+          <span className="battle-minimap-readout">
+            視界 {Math.round(viewportRange.left)}-{Math.round(viewportRange.left + viewportRange.width)}%
+            {minimapFocusPosition ? ` / ${mapCoordinateLabel(minimapFocusPosition)}` : ""}
+          </span>
         </div>
         </div>
       </div>
