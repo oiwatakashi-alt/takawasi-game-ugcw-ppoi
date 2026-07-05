@@ -529,6 +529,12 @@ const objectiveEventAssessmentDetail = (
 ): { assessmentReason: string; lessonTag: string } => {
   const distanceToObjective = distance(unit.position, node.position);
   const soldierRatio = unit.maxSoldiers > 0 ? unit.soldiers / unit.maxSoldiers : 0;
+  if (node.eventState.chainStage >= 2 && resultLabel !== "再確保") {
+    return { assessmentReason: `${node.eventState.chainLabel}まで連鎖悪化した`, lessonTag: "連鎖悪化" };
+  }
+  if (node.eventState.chainStage >= 1 && resultLabel === "未回復") {
+    return { assessmentReason: `${node.eventState.chainLabel}を止めきれなかった`, lessonTag: "連鎖抑止失敗" };
+  }
   if (resultLabel === "再確保") {
     if (unit.ammo <= 24) {
       return { assessmentReason: "弾薬限界でも目標を戻した", lessonTag: "弾薬限界再確保" };
@@ -576,6 +582,7 @@ const objectiveEventResponseOutcomesForBattle = (state: BattleState): BattleResu
             : "未回復";
       const objectiveLabel = `${objectiveTypeLabel[objectiveType]}/${node.scenario.label}`;
       const eventLabel = node.eventState.label;
+      const eventChainLabel = node.eventState.chainStage > 0 ? node.eventState.chainLabel : "連鎖なし";
       const { assessmentReason, lessonTag } = objectiveEventAssessmentDetail(unit, node, resultLabel);
       return {
         id: `${unit.unitId}-${node.id}-${unit.objectiveResponseRole}`,
@@ -585,12 +592,14 @@ const objectiveEventResponseOutcomesForBattle = (state: BattleState): BattleResu
         objectiveLabel,
         roleLabel,
         eventLabel,
+        eventChainLabel,
+        eventChainStage: node.eventState.chainStage,
         finalControl,
         finalSeverity,
         resultLabel,
         assessmentReason,
         lessonTag,
-        summary: `${unit.name}: ${objectiveLabel}で${eventLabel}に対応、${resultLabel}（支配${finalControl}%、${assessmentReason}）`,
+        summary: `${unit.name}: ${objectiveLabel}で${eventLabel}/${eventChainLabel}に対応、${resultLabel}（支配${finalControl}%、${assessmentReason}）`,
       };
     })
     .filter((outcome): outcome is BattleResult["objectiveEventResponseOutcomes"][number] => Boolean(outcome));

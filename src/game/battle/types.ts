@@ -455,6 +455,11 @@ export interface BattleObjectiveEventState {
   detail: string;
   severity: BattleObjectiveEventSeverity;
   effectSummary: string;
+  degradationSeconds: number;
+  chainStage: number;
+  chainLabel: string;
+  chainDetail: string;
+  chainEffectSummary: string;
 }
 
 export interface BattleObjectiveNode {
@@ -504,6 +509,8 @@ export interface ObjectiveEventResponseOutcome {
   objectiveLabel: string;
   roleLabel: string;
   eventLabel: string;
+  eventChainLabel: string;
+  eventChainStage: number;
   finalControl: number;
   finalSeverity: BattleObjectiveEventSeverity;
   resultLabel: "再確保" | "遅滞" | "未回復";

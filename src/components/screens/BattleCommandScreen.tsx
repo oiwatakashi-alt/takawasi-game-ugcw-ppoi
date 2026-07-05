@@ -2258,8 +2258,10 @@ const createBattleAlerts = (battle: BattleState): BattleAlert[] => {
     alerts.push({
       id: `objective-event-${node.id}-${node.eventState.id}`,
       severity: node.eventState.severity === "critical" ? "danger" : "warning",
-      title: `${node.label}: ${node.eventState.label}`,
-      detail: `${node.scenario.label} / ${node.eventState.effectSummary} / ${objectiveControlLabels[node.control]} ${Math.round(
+      title: `${node.label}: ${node.eventState.label}${node.eventState.chainStage > 0 ? ` / ${node.eventState.chainLabel}` : ""}`,
+      detail: `${node.scenario.label} / ${node.eventState.effectSummary}${
+        node.eventState.chainStage > 0 ? ` / ${node.eventState.chainEffectSummary}` : ""
+      } / ${objectiveControlLabels[node.control]} ${Math.round(
         node.controlProgress,
       )}%`,
       position: node.position,
@@ -4838,7 +4840,10 @@ export function BattleCommandScreen({
                     <strong>{option.node.label}</strong>
                     <span>{option.node.scenario.label}</span>
                     <small className={`objective-event-text ${option.node.eventState.severity}`}>
-                      {option.node.eventState.label} / {option.node.eventState.effectSummary}
+                      {option.node.eventState.label}
+                      {option.node.eventState.chainStage > 0 ? ` / ${option.node.eventState.chainLabel}` : ""} /{" "}
+                      {option.node.eventState.effectSummary}
+                      {option.node.eventState.chainStage > 0 ? ` / ${option.node.eventState.chainEffectSummary}` : ""}
                     </small>
                     <small>{objectiveResponseTacticalProfile(option.node, battle.structures).intentLabel}</small>
                     <span>
@@ -5813,13 +5818,16 @@ export function BattleCommandScreen({
             key={node.id}
             className={`objective-node ${objectiveNodeClassNames[node.type]} control-${node.control}`}
             style={fieldStyle(battle, node.position)}
-            title={`${node.label} ${node.scenario.label}: ${node.scenario.effectSummary} / ${node.eventState.label} ${node.eventState.effectSummary} / ${objectiveControlLabels[node.control]} ${Math.round(node.controlProgress)}%`}
+            title={`${node.label} ${node.scenario.label}: ${node.scenario.effectSummary} / ${node.eventState.label} ${node.eventState.effectSummary}${
+              node.eventState.chainStage > 0 ? ` / ${node.eventState.chainLabel} ${node.eventState.chainEffectSummary}` : ""
+            } / ${objectiveControlLabels[node.control]} ${Math.round(node.controlProgress)}%`}
           >
             <img src={objectiveNodeAssets[node.type]} alt="" aria-hidden="true" />
             <strong>{node.label}</strong>
             <small>{node.scenario.label}</small>
             <small className={`objective-event-text ${node.eventState.severity}`}>
               {node.eventState.label}
+              {node.eventState.chainStage > 0 ? ` / ${node.eventState.chainLabel}` : ""}
             </small>
             <span>
               {objectiveControlLabels[node.control]} {Math.round(node.controlProgress)}%

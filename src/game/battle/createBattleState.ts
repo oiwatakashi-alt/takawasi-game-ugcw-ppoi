@@ -337,6 +337,11 @@ const stableObjectiveEventState = (
       detail: `${scenario.label}の指揮信号は維持されています。`,
       severity: "stable",
       effectSummary: "追加影響なし",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "指揮線はまだ連鎖崩壊していません。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   if (type === "supply") {
@@ -346,6 +351,11 @@ const stableObjectiveEventState = (
       detail: `${scenario.label}の補給路は使用可能です。`,
       severity: "stable",
       effectSummary: "追加影響なし",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "補給路はまだ連鎖崩壊していません。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   return {
@@ -354,6 +364,11 @@ const stableObjectiveEventState = (
     detail: `${scenario.label}は観測機能を保っています。`,
     severity: "stable",
     effectSummary: "追加影響なし",
+    degradationSeconds: 0,
+    chainStage: 0,
+    chainLabel: "連鎖なし",
+    chainDetail: "観測線はまだ連鎖崩壊していません。",
+    chainEffectSummary: "追加悪化なし",
   };
 };
 

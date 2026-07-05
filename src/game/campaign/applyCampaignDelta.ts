@@ -59,7 +59,7 @@ export const applyBattleResult = (campaign: CampaignState, result: BattleResult)
       .filter((outcome) => outcome.unitId === unit.id)
       .map(
         (outcome) =>
-          `目標イベント対応 ${outcome.objectiveLabel}/${outcome.eventLabel}/${outcome.resultLabel}/${outcome.lessonTag}/支配${outcome.finalControl}%`,
+          `目標イベント対応 ${outcome.objectiveLabel}/${outcome.eventLabel}/${outcome.eventChainLabel}/${outcome.resultLabel}/${outcome.lessonTag}/支配${outcome.finalControl}%`,
       );
     const enemyCommandEffectEntries = result.enemyCommandEffectOutcomes
       .filter((outcome) => outcome.unitIds.includes(unit.id))

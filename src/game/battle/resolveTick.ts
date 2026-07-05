@@ -32,6 +32,7 @@ import type {
   EnemyMoraleState,
   FrontlineSegment,
   BattleObjectiveEventState,
+  BattleObjectiveEventSeverity,
 } from "./types";
 import { lineOfSightBlockage, localTerrainEffect } from "./terrainEffects";
 import { updateEnemyVisibility } from "./visibility";
@@ -925,6 +926,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
         detail: `${node.scenario.label}が敵圧で切断されています。`,
         severity: "critical",
         effectSummary: "戦線維持-4",
+        degradationSeconds: 0,
+        chainStage: 0,
+        chainLabel: "連鎖なし",
+        chainDetail: "指揮線の二次崩壊はまだ発生していません。",
+        chainEffectSummary: "追加悪化なし",
       };
     }
     if (progress <= 42) {
@@ -934,6 +940,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
         detail: `${node.scenario.label}の信号線が乱れています。`,
         severity: "strained",
         effectSummary: "戦線維持-2",
+        degradationSeconds: 0,
+        chainStage: 0,
+        chainLabel: "連鎖なし",
+        chainDetail: "指揮線の二次崩壊はまだ発生していません。",
+        chainEffectSummary: "追加悪化なし",
       };
     }
     return {
@@ -942,6 +953,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
       detail: `${node.scenario.label}の指揮信号は維持されています。`,
       severity: "stable",
       effectSummary: "追加影響なし",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "指揮線は安定しています。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   if (node.type === "supply") {
@@ -952,6 +968,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
         detail: `${node.scenario.label}の補給物資が敵圧で燃えています。`,
         severity: "critical",
         effectSummary: "弾薬回復-0.08",
+        degradationSeconds: 0,
+        chainStage: 0,
+        chainLabel: "連鎖なし",
+        chainDetail: "補給崩壊の二次被害はまだ発生していません。",
+        chainEffectSummary: "追加悪化なし",
       };
     }
     if (progress <= 42) {
@@ -961,6 +982,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
         detail: `${node.scenario.label}への連絡路が乱れています。`,
         severity: "strained",
         effectSummary: "弾薬回復-0.04",
+        degradationSeconds: 0,
+        chainStage: 0,
+        chainLabel: "連鎖なし",
+        chainDetail: "補給崩壊の二次被害はまだ発生していません。",
+        chainEffectSummary: "追加悪化なし",
       };
     }
     return {
@@ -969,6 +995,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
       detail: `${node.scenario.label}の補給路は使用可能です。`,
       severity: "stable",
       effectSummary: "追加影響なし",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "補給路は安定しています。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   if (progress <= 28) {
@@ -978,6 +1009,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
       detail: `${node.scenario.label}が沈黙し、敵群の接近が読みにくくなっています。`,
       severity: "critical",
       effectSummary: "視界-8",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "観測崩壊の二次被害はまだ発生していません。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   if (progress <= 42) {
@@ -987,6 +1023,11 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
       detail: `${node.scenario.label}の観測線が乱れています。`,
       severity: "strained",
       effectSummary: "視界-4",
+      degradationSeconds: 0,
+      chainStage: 0,
+      chainLabel: "連鎖なし",
+      chainDetail: "観測崩壊の二次被害はまだ発生していません。",
+      chainEffectSummary: "追加悪化なし",
     };
   }
   return {
@@ -995,7 +1036,107 @@ const objectiveEventForNode = (node: BattleObjectiveNode): BattleObjectiveEventS
     detail: `${node.scenario.label}は観測機能を保っています。`,
     severity: "stable",
     effectSummary: "追加影響なし",
+    degradationSeconds: 0,
+    chainStage: 0,
+    chainLabel: "連鎖なし",
+    chainDetail: "観測線は安定しています。",
+    chainEffectSummary: "追加悪化なし",
   };
+};
+
+const objectiveEventChainStage = (severity: BattleObjectiveEventSeverity, degradationSeconds: number): number => {
+  if (severity === "stable") {
+    return 0;
+  }
+  if (severity === "critical" && degradationSeconds >= 24) {
+    return 2;
+  }
+  if (degradationSeconds >= 12) {
+    return 1;
+  }
+  return 0;
+};
+
+const objectiveEventChainLabels = (
+  type: BattleObjectiveNode["type"],
+  chainStage: number,
+): { chainLabel: string; chainDetail: string; chainEffectSummary: string } => {
+  if (chainStage <= 0) {
+    return {
+      chainLabel: "連鎖なし",
+      chainDetail: "二次被害はまだ発生していません。",
+      chainEffectSummary: "追加悪化なし",
+    };
+  }
+  if (type === "victory") {
+    return chainStage >= 2
+      ? {
+          chainLabel: "指揮崩壊拡大",
+          chainDetail: "命令の遅延が隣接戦線へ波及しています。",
+          chainEffectSummary: "連鎖 戦線維持-4",
+        }
+      : {
+          chainLabel: "命令混線",
+          chainDetail: "予備と前線の命令伝達が遅れています。",
+          chainEffectSummary: "連鎖 戦線維持-2",
+        };
+  }
+  if (type === "supply") {
+    return chainStage >= 2
+      ? {
+          chainLabel: "弾薬誘爆",
+          chainDetail: "補給点の損傷が周辺弾薬と搬送路へ広がっています。",
+          chainEffectSummary: "連鎖 弾薬回復-0.06",
+        }
+      : {
+          chainLabel: "補給路寸断",
+          chainDetail: "前線への弾薬搬送が滞り始めています。",
+          chainEffectSummary: "連鎖 弾薬回復-0.03",
+        };
+  }
+  return chainStage >= 2
+    ? {
+        chainLabel: "霧中突破",
+        chainDetail: "敵群が観測死角を使って前進しています。",
+        chainEffectSummary: "連鎖 視界-6",
+      }
+    : {
+        chainLabel: "死角拡大",
+        chainDetail: "観測線の穴が広がり、敵接近の判読が遅れています。",
+        chainEffectSummary: "連鎖 視界-3",
+      };
+};
+
+const objectiveEventWithChain = (
+  node: BattleObjectiveNode,
+  baseEventState: BattleObjectiveEventState,
+): BattleObjectiveEventState => {
+  if (baseEventState.severity === "stable") {
+    return baseEventState;
+  }
+  const previousSeconds = node.eventState.id === baseEventState.id ? node.eventState.degradationSeconds : 0;
+  const degradationSeconds = previousSeconds + 1;
+  const chainStage = objectiveEventChainStage(baseEventState.severity, degradationSeconds);
+  const chain = objectiveEventChainLabels(node.type, chainStage);
+  return {
+    ...baseEventState,
+    degradationSeconds,
+    chainStage,
+    ...chain,
+  };
+};
+
+const objectiveEventChainModifier = (node: BattleObjectiveNode): number => {
+  if (node.eventState.chainStage <= 0) {
+    return 0;
+  }
+  if (node.type === "victory") {
+    return node.eventState.chainStage >= 2 ? -4 : -2;
+  }
+  if (node.type === "supply") {
+    return node.eventState.chainStage >= 2 ? -0.06 : -0.03;
+  }
+  return node.eventState.chainStage >= 2 ? -6 : -3;
 };
 
 const objectiveTacticalEffects = (
@@ -1008,19 +1149,19 @@ const objectiveTacticalEffects = (
     if (node.type !== "victory") {
       return sum;
     }
-    return sum + (node.eventState.id === "signal-cut" ? -4 : node.eventState.id === "signal-disrupted" ? -2 : 0);
+    return sum + (node.eventState.id === "signal-cut" ? -4 : node.eventState.id === "signal-disrupted" ? -2 : 0) + objectiveEventChainModifier(node);
   }, 0);
   const eventAmmoRecoveryModifier = objectiveNodes.reduce((sum, node) => {
     if (node.type !== "supply") {
       return sum;
     }
-    return sum + (node.eventState.id === "supply-burning" ? -0.08 : node.eventState.id === "supply-disrupted" ? -0.04 : 0);
+    return sum + (node.eventState.id === "supply-burning" ? -0.08 : node.eventState.id === "supply-disrupted" ? -0.04 : 0) + objectiveEventChainModifier(node);
   }, 0);
   const eventSpottingModifier = objectiveNodes.reduce((sum, node) => {
     if (node.type !== "visibility") {
       return sum;
     }
-    return sum + (node.eventState.id === "visibility-silenced" ? -8 : node.eventState.id === "visibility-disrupted" ? -4 : 0);
+    return sum + (node.eventState.id === "visibility-silenced" ? -8 : node.eventState.id === "visibility-disrupted" ? -4 : 0) + objectiveEventChainModifier(node);
   }, 0);
   const victoryBaseModifier =
     victoryControl >= 70 ? 4 : victoryControl >= 62 ? 2 : victoryControl <= 28 ? -10 : victoryControl <= 38 ? -6 : 0;
@@ -1041,7 +1182,7 @@ const objectiveTacticalEffects = (
   const activeEvents = objectiveNodes
     .map((node) => node.eventState)
     .filter((event) => event.severity !== "stable")
-    .map((event) => event.label);
+    .map((event) => (event.chainStage > 0 ? `${event.label}:${event.chainLabel}` : event.label));
   const eventSummary = activeEvents.length > 0 ? activeEvents.join(" / ") : "安定";
   const summary = [
     `勝利点${victoryLineIntegrityModifier >= 0 ? "+" : ""}${victoryLineIntegrityModifier}戦線`,
@@ -1107,13 +1248,16 @@ const updateObjectiveNodes = (
     const previousEventId = node.eventState.id;
     const controlProgress = clamp(node.controlProgress + drift, 0, 100);
     const control = objectiveControlForProgress(controlProgress);
-    const eventState = objectiveEventForNode({ ...node, control, controlProgress });
+    const eventState = objectiveEventWithChain(node, objectiveEventForNode({ ...node, control, controlProgress }));
     if (control !== previousControl) {
       const label = control === "player" ? "保持" : control === "enemy" ? "喪失" : "争奪";
       logEntries.push(`${node.label}は${label}状態へ変化。`);
     }
     if (eventState.id !== previousEventId) {
       logEntries.push(`${node.label}/${node.scenario.label}: ${eventState.label}。${eventState.effectSummary}`);
+    }
+    if (eventState.chainStage > (node.eventState.chainStage ?? 0)) {
+      logEntries.push(`${node.label}/${node.scenario.label}: ${eventState.chainLabel}。${eventState.chainEffectSummary}`);
     }
     return {
       ...node,

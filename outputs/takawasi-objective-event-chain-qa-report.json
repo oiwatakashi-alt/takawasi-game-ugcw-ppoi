@@ -1,0 +1,36 @@
+{
+  "target": "objective-event-chain",
+  "date": "2026-07-05",
+  "devServer": "http://127.0.0.1:5173/",
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "desktopQa": {
+    "viewport": "1440x900",
+    "flow": [
+      "reset campaign",
+      "theater to army camp",
+      "deployment",
+      "battle start",
+      "3x battle ticks",
+      "objective event chain visible",
+      "objective-event response action",
+      "after action"
+    ],
+    "passed": true,
+    "mobileQa": "skipped: mobile/cellphone QA is outside the current target",
+    "observations": [
+      "Battle HUD showed objective event chain summary: 指揮信号途絶:命令混線 / 観測点沈黙:霧中突破.",
+      "Objective effects included chain penalties: 勝利点-16戦線 and 視界-28 with event chain labels.",
+      "Alert cards displayed chain labels and chain effect summaries.",
+      "After Action displayed 目標イベント対応 with event/chain labels and lesson tag 連鎖抑止失敗.",
+      "Per-unit After Action rows retained 指揮信号途絶 / 命令混線 / 未回復."
+    ],
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "nanText": false
+  }
+}

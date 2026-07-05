@@ -232,7 +232,8 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
               .filter((outcome) => outcome.unitId === unitId)
               .map((outcome) => (
                 <p key={outcome.id}>
-                  目標イベント {outcome.objectiveLabel} / {outcome.eventLabel} / {outcome.resultLabel} / {outcome.assessmentReason}
+                  目標イベント {outcome.objectiveLabel} / {outcome.eventLabel} / {outcome.eventChainLabel} / {outcome.resultLabel} /{" "}
+                  {outcome.assessmentReason}
                 </p>
               ))}
             {result.enemyCommandEffectOutcomes
