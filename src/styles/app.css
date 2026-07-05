@@ -4370,6 +4370,44 @@ main {
   color: #5d5649;
 }
 
+.frontline-defender-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.frontline-defender-bulk-actions button {
+  border: 1px solid rgba(47, 83, 58, 0.36);
+  border-radius: 6px;
+  background: rgba(47, 83, 58, 0.92);
+  color: #f8efcf;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.frontline-defender-bulk-actions button.fallback {
+  border-color: rgba(142, 47, 43, 0.42);
+  background: rgba(122, 47, 44, 0.92);
+}
+
+.frontline-defender-bulk-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.frontline-defender-bulk-actions span {
+  border: 1px solid rgba(67, 57, 44, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 252, 240, 0.72);
+  color: #5d5649;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 6px 8px;
+}
+
 .frontline-defender-diagnosis-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

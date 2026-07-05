@@ -2708,7 +2708,7 @@ export function BattleCommandScreen({
         pressureReports,
       )
     : undefined;
-  const selectedFrontlineDefenderDiagnostics = selectedFrontlineDefenders
+  const selectedFrontlineAllDefenderDiagnostics = selectedFrontlineDefenders
     .map((unit) => {
       const soldierRatio = unit.maxSoldiers > 0 ? Math.round((unit.soldiers / unit.maxSoldiers) * 100) : 0;
       const stress = Math.round(frontlineRotationStressScore(unit));
@@ -2758,8 +2758,14 @@ export function BattleCommandScreen({
         recommendationReason,
       };
     })
-    .sort((a, b) => b.stress - a.stress)
-    .slice(0, 6);
+    .sort((a, b) => b.stress - a.stress);
+  const selectedFrontlineDefenderDiagnostics = selectedFrontlineAllDefenderDiagnostics.slice(0, 6);
+  const selectedFrontlineRestRecommendations = selectedFrontlineAllDefenderDiagnostics
+    .filter((entry) => entry.recommendedAction === "rest")
+    .map((entry) => entry.unit);
+  const selectedFrontlineFallbackRecommendations = selectedFrontlineAllDefenderDiagnostics
+    .filter((entry) => entry.recommendedAction === "fallback")
+    .map((entry) => entry.unit);
   const selectedFrontlineStaffAdvisory = selectedFrontlineSegment
     ? staffAdvisories.find((advisory) => advisory.segment.id === selectedFrontlineSegment.id)
     : undefined;
@@ -3135,6 +3141,32 @@ export function BattleCommandScreen({
       return;
     }
     selectFrontlineDefender(unit);
+  };
+
+  const issueFrontlineDefenderBulkRecommendation = (
+    action: "fallback" | "rest",
+    units: BattleUnit[],
+  ) => {
+    if (!selectedFrontlineSegment || units.length === 0) {
+      return;
+    }
+    const firstUnit = units[0];
+    const actionLabel = action === "rest" ? "休息補給" : "後退守備";
+    selectFrontlineDefender(firstUnit);
+    issueOrQueueBattleCommand(
+      `frontline-defender-${selectedFrontlineSegment.id}-${action}`,
+      selectedFrontlineSegment.name,
+      action === "rest" ? "疲弊守備休息" : "危険守備後退",
+      `${selectedFrontlineSegment.name} / ${units.length}旅団 / ${actionLabel}`,
+      (state) =>
+        units.reduce(
+          (nextBattle, unit) =>
+            action === "rest"
+              ? setUnitOrder(nextBattle, unit.unitId, "rest")
+              : applyStandingOrderPreset(nextBattle, unit.unitId, "fallback_guard"),
+          state,
+        ),
+    );
   };
 
   const applyQueuedCommandBatch = (batchSize: number, issueLabel: string) => {
@@ -5204,8 +5236,38 @@ export function BattleCommandScreen({
           <div className="frontline-defender-diagnosis" aria-label="選択戦線の守備旅団診断">
             <div className="frontline-defender-diagnosis-heading">
               <strong>守備旅団診断</strong>
-              <span>守備 {selectedFrontlineDefenderDiagnostics.length} / 圧力 {Math.round(selectedFrontlinePressure?.pressure ?? 0)}</span>
+              <span>
+                守備 {selectedFrontlineAllDefenderDiagnostics.length} / 表示{" "}
+                {selectedFrontlineDefenderDiagnostics.length} / 圧力 {Math.round(selectedFrontlinePressure?.pressure ?? 0)}
+              </span>
               <em>ストレス、弾薬、士気、基準線距離から危険な旅団を先に表示。</em>
+            </div>
+            <div className="frontline-defender-bulk-actions" aria-label="選択戦線の守備旅団一括指揮">
+              <button
+                type="button"
+                disabled={finished || selectedFrontlineRestRecommendations.length === 0}
+                onClick={() =>
+                  issueFrontlineDefenderBulkRecommendation("rest", selectedFrontlineRestRecommendations)
+                }
+              >
+                疲弊を休息補給 {selectedFrontlineRestRecommendations.length}
+              </button>
+              <button
+                className="fallback"
+                type="button"
+                disabled={finished || selectedFrontlineFallbackRecommendations.length === 0}
+                onClick={() =>
+                  issueFrontlineDefenderBulkRecommendation(
+                    "fallback",
+                    selectedFrontlineFallbackRecommendations,
+                  )
+                }
+              >
+                危険を後退守備 {selectedFrontlineFallbackRecommendations.length}
+              </button>
+              <span>
+                {commandQueueMode ? "予約指揮に積む" : "即時発令"} / 推奨対象のみ
+              </span>
             </div>
             <div className="frontline-defender-diagnosis-list">
               {selectedFrontlineDefenderDiagnostics.map(

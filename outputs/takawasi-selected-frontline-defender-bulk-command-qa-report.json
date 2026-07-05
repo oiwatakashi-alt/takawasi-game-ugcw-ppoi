@@ -1,0 +1,45 @@
+{
+  "id": "takawasi-selected-frontline-defender-bulk-command",
+  "date": "2026-07-05",
+  "scope": "Battle Command selected-frontline defender diagnosis bulk commands",
+  "status": "partial-pass",
+  "checks": [
+    {
+      "name": "npm run build",
+      "status": "pass",
+      "notes": "TypeScript project build and Vite production build completed successfully."
+    },
+    {
+      "name": "git diff --check",
+      "status": "pass",
+      "notes": "No whitespace errors reported."
+    },
+    {
+      "name": "browser QA",
+      "status": "blocked",
+      "notes": "In-app browser localhost URL policy continues to block direct control for http://127.0.0.1:5173/ in this pass."
+    }
+  ],
+  "implementedBehavior": [
+    "`守備旅団診断` now derives rest and fallback recommendation groups from the selected frontline defender diagnostics.",
+    "`疲弊を休息補給` applies or queues rest only for defenders whose recommendation is rest.",
+    "`危険を後退守備` applies or queues fallback guard only for defenders whose recommendation is fallback.",
+    "Bulk actions route through existing `issueOrQueueBattleCommand`, `setUnitOrder`, and `applyStandingOrderPreset` paths.",
+    "The first affected brigade is selected and scrolled into map context before the group command is issued.",
+    "No BattleState or save schema fields were added."
+  ],
+  "manualQaSteps": [
+    "Start a campaign and enter Battle Command.",
+    "Select a frontline segment with multiple defenders.",
+    "Confirm `守備旅団診断` shows `疲弊を休息補給 N` and `危険を後退守備 N` above defender cards.",
+    "Pause and enable `予約指揮`, then press each enabled bulk button.",
+    "Confirm queued commands use the selected frontline as subject and describe the affected brigade count.",
+    "Apply queued commands and confirm rest-recommended defenders enter rest/resupply while fallback-recommended defenders switch to fallback guard.",
+    "Repeat without queue mode and confirm the same commands issue immediately."
+  ],
+  "outOfScope": [
+    "Mobile/cellphone QA is outside the active target.",
+    "New image generation was not part of this slice.",
+    "No new tactical AI state or save migration was intended."
+  ]
+}
