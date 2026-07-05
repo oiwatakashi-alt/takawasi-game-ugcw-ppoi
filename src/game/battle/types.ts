@@ -145,6 +145,13 @@ export interface BattleTerrainZone {
     width: number;
     height: number;
   };
+  ridgeLine?: {
+    start: BattlePosition;
+    end: BattlePosition;
+    height: "low" | "medium" | "high";
+    nearSideLabel: string;
+    farSideLabel: string;
+  };
 }
 
 export interface BattleChokePoint {

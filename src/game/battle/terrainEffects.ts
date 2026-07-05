@@ -21,6 +21,7 @@ const lineZone = (
   name: string,
   zone: BattleTerrainZone["zone"],
   overrides: Partial<Pick<BattleTerrainZone, "cover" | "fatigue" | "movement" | "rangeMultiplier" | "fireMultiplier">> = {},
+  ridgeLine?: BattleTerrainZone["ridgeLine"],
 ): BattleTerrainZone => {
   const terrain = definition(terrainTag);
   return {
@@ -33,6 +34,7 @@ const lineZone = (
     rangeMultiplier: overrides.rangeMultiplier ?? 1,
     fireMultiplier: overrides.fireMultiplier ?? 1,
     zone,
+    ridgeLine,
   };
 };
 
@@ -79,6 +81,12 @@ export const createTerrainZonesForBattle = (
       lineZone("terrain-reverse-slope-ridge", "hill", "逆斜面稜線", { x: 36, y: 14, width: 28, height: 28 }, {
         rangeMultiplier: 1.08,
         fireMultiplier: 1.03,
+      }, {
+        start: { x: 46, y: 14 },
+        end: { x: 54, y: 42 },
+        height: "high",
+        nearSideLabel: "西斜面",
+        farSideLabel: "東裏斜面",
       }),
     );
   }
@@ -88,6 +96,12 @@ export const createTerrainZonesForBattle = (
       lineZone("terrain-hill-ridge", "hill", "高地稜線", { x: 18, y: 10, width: 38, height: 26 }, {
         rangeMultiplier: 1.12,
         fireMultiplier: 1.06,
+      }, {
+        start: { x: 26, y: 11 },
+        end: { x: 48, y: 35 },
+        height: "medium",
+        nearSideLabel: "西側斜面",
+        farSideLabel: "東側斜面",
       }),
     );
   }
@@ -198,7 +212,7 @@ export const lineOfSightTerrainClass = (zone: BattleTerrainZone): "blocker" | "p
 
 export const lineOfSightTerrainLabel = (zone: BattleTerrainZone): string => {
   if (zone.terrainTag === "hill") {
-    return "高地射界";
+    return zone.ridgeLine ? "高地射界 / 稜線" : "高地射界";
   }
   if (isCoverEdgeTerrain(zone)) {
     return `${lineOfSightTerrainClass(zone) === "blocker" ? "射線遮蔽" : "射線減衰"} / 遮蔽端`;
@@ -242,6 +256,31 @@ const zoneCenter = (zone: BattleTerrainZone): BattlePosition => ({
   y: zone.zone.y + zone.zone.height / 2,
 });
 
+const sideOfLine = (point: BattlePosition, start: BattlePosition, end: BattlePosition): number =>
+  (end.x - start.x) * (point.y - start.y) - (end.y - start.y) * (point.x - start.x);
+
+const crossesRidgeLine = (from: BattlePosition, to: BattlePosition, ridge: NonNullable<BattleTerrainZone["ridgeLine"]>): boolean => {
+  const fromSide = sideOfLine(from, ridge.start, ridge.end);
+  const toSide = sideOfLine(to, ridge.start, ridge.end);
+  if (Math.abs(fromSide) < 0.001 || Math.abs(toSide) < 0.001) {
+    return false;
+  }
+  return fromSide * toSide < 0;
+};
+
+const ridgeCrossingZones = (from: BattlePosition, to: BattlePosition, terrainZones: BattleTerrainZone[]): BattleTerrainZone[] =>
+  terrainZones.filter((zone) => zone.ridgeLine && crossesRidgeLine(from, to, zone.ridgeLine));
+
+const ridgeBlockageWeight = (zone: BattleTerrainZone): number => {
+  if (zone.ridgeLine?.height === "high") {
+    return 0.3;
+  }
+  if (zone.ridgeLine?.height === "medium") {
+    return 0.22;
+  }
+  return 0.14;
+};
+
 const isReverseSlopeTarget = (from: BattlePosition, to: BattlePosition, hill: BattleTerrainZone): boolean => {
   const center = zoneCenter(hill);
   const horizontalPass = from.x < center.x ? to.x > center.x + hill.zone.width * 0.16 : to.x < center.x - hill.zone.width * 0.16;
@@ -264,6 +303,7 @@ export const lineOfSightBlockage = (
   const toCoverEdge = toZones.find((zone) => isCoverEdgeTerrain(zone) && edgeDistance(zone, to) <= 7);
   const toDeepCover = toZones.find((zone) => isCoverEdgeTerrain(zone) && edgeDistance(zone, to) > 7);
   const reverseSlopeTarget = !!toHighGround && !fromHighGround && isReverseSlopeTarget(from, to, toHighGround);
+  const ridgeCrossings = ridgeCrossingZones(from, to, terrainZones);
 
   for (let index = 1; index < sampleCount; index += 1) {
     const ratio = index / sampleCount;
@@ -297,9 +337,19 @@ export const lineOfSightBlockage = (
     }
   }
 
+  for (const zone of ridgeCrossings) {
+    const current = sampledZones.get(zone.id);
+    const ridgeWeight = ridgeBlockageWeight(zone);
+    if (!current || current.weight < ridgeWeight) {
+      sampledZones.set(zone.id, { zone, weight: ridgeWeight });
+    }
+  }
+
   const highGroundFactor = fromHighGround ? 0.62 : 1;
   const counterSlopeFactor = reverseSlopeTarget ? 1.26 : !fromHighGround && toHighGround ? 1.14 : 1;
   const deepCoverFactor = toDeepCover ? 1.12 : 1;
+  const ridgeFirePenalty = ridgeCrossings.reduce((value, zone) => value * (zone.ridgeLine?.height === "high" ? 0.9 : 0.94), 1);
+  const ridgeRangePenalty = ridgeCrossings.reduce((value, zone) => value * (zone.ridgeLine?.height === "high" ? 0.94 : 0.97), 1);
   const blockage = Array.from(sampledZones.values()).reduce(
     (sum, entry) => sum + entry.weight * highGroundFactor * counterSlopeFactor * deepCoverFactor,
     0,
@@ -309,6 +359,7 @@ export const lineOfSightBlockage = (
     fromCoverEdge ? `遮蔽端射撃 ${fromCoverEdge.name}` : undefined,
     toCoverEdge ? `敵遮蔽端 ${toCoverEdge.name}` : undefined,
     toDeepCover ? `低姿勢遮蔽 ${toDeepCover.name}` : undefined,
+    ...ridgeCrossings.map((zone) => `稜線越え ${zone.name}`),
     reverseSlopeTarget ? `逆斜面遮蔽 ${toHighGround?.name}` : !fromHighGround && toHighGround ? `敵稜線 ${toHighGround.name}` : undefined,
   ].filter((modifier): modifier is string => !!modifier);
   const fireMultiplier =
@@ -316,11 +367,13 @@ export const lineOfSightBlockage = (
     (fromCoverEdge ? 1.04 : 1) *
     (toCoverEdge ? 0.92 : 1) *
     (toDeepCover ? 0.86 : 1) *
+    ridgeFirePenalty *
     (reverseSlopeTarget ? 0.88 : !fromHighGround && toHighGround ? 0.94 : 1);
   const rangeMultiplier =
     (fromHighGround ? 1.08 : 1) *
     (fromCoverEdge ? 1.02 : 1) *
     (toDeepCover ? 0.96 : 1) *
+    ridgeRangePenalty *
     (reverseSlopeTarget ? 0.96 : 1);
   return {
     blocked: blockage >= lineOfSightBlockedThreshold,

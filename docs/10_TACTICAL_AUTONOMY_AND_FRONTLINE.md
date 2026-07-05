@@ -1404,6 +1404,20 @@ Implemented:
 - `waves.ts` gives the profile early enemy entry points on the far side of that ridge, close enough for selected brigades to produce fireable target-audit candidates.
 - Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> 1x. Battle Command showed live target-audit/action reason text including `射線遮断 森林遮蔽帯/逆斜面稜線 逆斜面遮蔽 逆斜面稜線` and `射撃判断: アンデッド銃兵 / 優先最接近 / 減衰 逆斜面稜線 / 逆斜面遮蔽 逆斜面稜線`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-reverse-slope-los-profile-qa-report.json`.
 
+## Implemented Line-Shaped Ridge LOS Slice - 2026-07-06
+
+Ridges now exist as line geometry, not only as the centerline of a rectangular hill zone.
+
+Implemented:
+
+- `BattleTerrainZone` supports optional `ridgeLine` geometry with start/end points, height, and side labels.
+- High-ground and reverse-slope drill hills define explicit crest lines. The reverse-slope QA hill uses a high crest inside `逆斜面稜線`; the ordinary high-ground hill uses a medium crest inside `高地稜線`.
+- `lineOfSightBlockage` checks whether the shooter-target segment crosses a ridge line, adds `稜線越え ...` to the LOS modifiers, and applies ridge-height-based blockage, fire, and range penalties.
+- The previous `逆斜面遮蔽` and enemy-ridge labels still work, but now they can stack with `稜線越え` when the shot actually crosses the crest geometry.
+- Battle Command renders ridge lines as dashed `稜線` overlays on the tactical map. Terrain callouts show `高地射界 / 稜線` for ridge-bearing hills.
+- Direct logic QA invoked `lineOfSightBlockage({x:32,y:25}, {x:58,y:25}, reverseSlopeDrillTerrain)` and returned modifiers `稜線越え 逆斜面稜線` plus `逆斜面遮蔽 逆斜面稜線`, blockage `0.378`, fire multiplier `0.792`, and range multiplier `0.9024`.
+- Desktop 1440px browser QA verified reset -> Camp -> Deployment -> Battle -> 1x. Battle Command showed `逆斜面稜線 移動84% / 高地射界 / 稜線`, one rendered `.terrain-ridge` line, and target-audit/action-reason rows including `稜線越え 逆斜面稜線/逆斜面遮蔽 逆斜面稜線` with `有効射程25`. Console errors/warnings 0, broken images 0, horizontal overflow false, no `NaN`. Mobile QA remains outside the current target. QA report: `outputs/takawasi-line-ridge-los-qa-report.json`.
+
 ## Implemented Frontline Terrain Assessment Slice - 2026-07-04
 
 Frontline placement now has a readable tactical evaluation before and during battle.

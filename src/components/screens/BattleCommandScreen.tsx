@@ -7298,6 +7298,33 @@ export function BattleCommandScreen({
               ))}
             </svg>
           )}
+        {effectiveMapLayers.terrain && battle.terrainZones.some((terrain) => terrain.ridgeLine) && (
+          <svg
+            className="terrain-ridge-layer"
+            viewBox={`0 0 ${battle.mapBounds.width} ${battle.mapBounds.height}`}
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {battle.terrainZones.map((terrain) =>
+              terrain.ridgeLine ? (
+                <g key={`${terrain.id}-ridge`} className={`terrain-ridge ${terrain.ridgeLine.height}`}>
+                  <line
+                    x1={terrain.ridgeLine.start.x}
+                    y1={terrain.ridgeLine.start.y}
+                    x2={terrain.ridgeLine.end.x}
+                    y2={terrain.ridgeLine.end.y}
+                  />
+                  <text
+                    x={(terrain.ridgeLine.start.x + terrain.ridgeLine.end.x) / 2}
+                    y={(terrain.ridgeLine.start.y + terrain.ridgeLine.end.y) / 2 - 1.5}
+                  >
+                    稜線
+                  </text>
+                </g>
+              ) : null,
+            )}
+          </svg>
+        )}
         {effectiveMapLayers.terrain && battle.terrainZones.map((terrain) => (
           <span
             key={terrain.id}

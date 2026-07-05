@@ -6343,6 +6343,33 @@ main {
   stroke-dasharray: 0.5 0.8;
 }
 
+.terrain-ridge-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.terrain-ridge line {
+  stroke: rgba(64, 48, 33, 0.78);
+  stroke-width: 0.75;
+  stroke-linecap: round;
+  stroke-dasharray: 2 1.2;
+}
+
+.terrain-ridge.high line {
+  stroke-width: 1;
+}
+
+.terrain-ridge text {
+  fill: rgba(47, 38, 28, 0.88);
+  font-size: 3px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: rgba(248, 239, 214, 0.72);
+  stroke-width: 0.8;
+}
+
 .terrain-callout,
 .enemy-approach,
 .objective-node {
