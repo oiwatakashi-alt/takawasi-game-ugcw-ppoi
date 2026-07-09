@@ -146,7 +146,8 @@ if [ -f "$STATE" ]; then
     echo "[黄] フェーズ予算超過(${spent}/${budget})。配車は監査番(規則3)"
     over_budget=1
   fi
-  fail_max=$(printf '%s' "$fail_line" | grep -oE '[0-9]+回' | grep -oE '[0-9]+' | sort -n | tail -1 || true)
+  fail_value=$(printf '%s' "$fail_line" | sed 's/(.*//')
+  fail_max=$(printf '%s' "$fail_value" | grep -oE '[0-9]+回' | grep -oE '[0-9]+' | sort -n | tail -1 || true)
   if [ -n "${fail_max:-}" ] && [ "$fail_max" -ge 3 ]; then
     red "同一失敗${fail_max}回。停止・報告の閾値に到達している"
   fi
