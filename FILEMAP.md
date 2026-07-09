@@ -1,10 +1,30 @@
 # FILEMAP - takawasi game
 
-Last updated: 2026-07-06
+Last updated: 2026-07-10
 
 ## Purpose
 
 This file is the implementation map for the `takawasi game` folder. It records what exists, what each file is responsible for, and what is still only planned.
+
+## Goal-Driven Loop v2.7.1 (migrated 2026-07-10)
+
+Canonical source at copy time: `/Users/oiwa/projects/個人_takawasi/takawasiAI/goal-driven-template/`. Before project initialization, source and destination both contained 69 files and `diff -rq` returned no difference.
+
+| Path | Status | Responsibility |
+| --- | --- | --- |
+| `AGENTS.md` | installed/pending-final-gate | Root Codex entrypoint. Routes to the nested v2.7.1 loop and preserves FILEMAP-first, product-scale, layer-separation, QA, and foreground CCDS rules. |
+| `CLAUDE.md` | installed/pending-final-gate | Root Claude/CCDS entrypoint, including v2.7.1 correction kernel and image-generation delegation boundary. |
+| `goal-driven-template/` | installed/pending-final-gate | Project-local v2.7.1 loop kernel. The canonical source remains unchanged; only this copied instance is project-initialized. |
+| `goal-driven-template/00_MISSION.md` | initialized | North star, four product pillars, non-negotiable scope, operating preference, and project verification constants derived from existing confirmed docs and the 2026-07-10 migration/start instruction. |
+| `goal-driven-template/01_PLAN.md` | initialized | Current phase is the v2.7 core-method re-review, not gameplay expansion. Records current runtime truth and defers regression/browser/docs/bundle work to the candidate gate. |
+| `goal-driven-template/02_GOAL.md` | initialized | Active goal requires a new dynamic full-loop evidence pass, three production-distinct alternatives, fresh-window review, and a human continue/pivot verdict. |
+| `goal-driven-template/04_STATE.md` | initialized | Current state, verified build/runtime shape, explicit verification gaps, next move, and active wave pointer. |
+| `goal-driven-template/07_KNOWLEDGE.md` | initialized | Distilled local evidence for template version, route/save shape, verification strength, and confirmed product boundaries. |
+| `goal-driven-template/plans/001_v2_7移行とコア再審査.md` | active | First wave from v2.7: migrate, obtain dynamic evidence, compare at least three core methods, and record human verdict. |
+| `goal-driven-template/tools/check.sh` | project-adapted/pending-final-gate | Ignores pre-loop legacy commits through `.loop-baseline`, recognizes parent `outputs/` as evidence, and detects nested MISSION paths. |
+| `goal-driven-template/tools/filemap_snapshot.sh` | project-adapted/pending-final-gate | Captures the whole game repository while excluding `.git`, `node_modules`, and `dist`, writing history under the loop folder. |
+
+Boundaries: this migration changes no gameplay, save schema, dependency, asset, backend, AWS, deploy, or external service. `FILEMAP.md` remains implementation truth; `goal-driven-template/04_STATE.md` remains current goal-loop position.
 
 ## Current Files
 
