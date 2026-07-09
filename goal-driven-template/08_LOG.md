@@ -35,3 +35,12 @@
 - 報告消費: なし(誤ったv1.22向けCCDSは認証401で成果なし、採用せず)
 - 発見: 自動test scriptなし、最新command issue系browser未検証、high-level docs遅延をSTATE/候補へ転記
 - 次の一手: migration commit後にbaselineを固定し、session briefの偵察配車を実行して駆動開始
+
+## T1 2026-07-10 偵察 GPT-5 Codex
+- 配車: `== 配車: 偵察番(根拠: 規則1 — セッション初回/走行前) ==`
+- 変更: `.loop-baseline`を導入commit `f02f0be`へ固定し、STATEをgit事実へ同期
+- 検証: `bash goal-driven-template/tools/session_brief.sh` → 北極星/STATE/T0/queue0/偵察規則を正常注入
+- 仮定: なし(運転設定の既定値はT0で記録済み)
+- 報告消費: T0をbriefが消費し、次番をM2動的証跡取得に維持
+- 発見: briefの記入例誤検出を`^## T[0-9]`へ補正済み。原本は不変更
+- 次の一手: 次ターンのbrief配車に従い、M2のdesktop一周証跡を取得
