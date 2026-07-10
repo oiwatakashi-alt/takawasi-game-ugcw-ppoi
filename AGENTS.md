@@ -43,6 +43,13 @@
 
 2026-07-10に既存Takawasi Gameへv2.7.1を新規導入済み。導入前にrepo-local `AGENTS.md` / `CLAUDE.md` は存在しなかった。
 
+## 個人LUNA運用(このrepoでは会社横断指示より優先)
+
+- 実装・調査・レビュー・QA・Git操作はCodexのLUNA (`gpt-5.6-luna`) が直営する。
+- DeepSeek、DS V4、CCDS、Claude、Grok、TBA、その他AIモデルへ委譲しない。レビュー分離が必要なときも、LUNAがマクロ→ミクロ→市場の順に文脈を分けて直列実行し、同一モデル代替であることを記録する。
+- GitHubは個人repo `oiwatakashi-alt/takawasi-game-ugcw-ppoi`、公開検証は個人VPSの `game.takawasi-social.com` を使う。Medixus、会社GitHub organization、会社AWS、App Runner等へ接続・展開しない。
+- `/Users/oiwa/Desktop/接続情報.md` とsecret値はrepoへコピーしない。認証は既存のローカルSSH設定を使い、文書には接続先と検証結果だけを残す。
+
 ## プロジェクト固有の柵
 
 > このプロジェクトは、戦略・戦術・軍団育成・防御陣地の判断が相互に履歴を残す、製品版規模の長期戦術キャンペーンゲームを完成させるために存在する。
@@ -56,6 +63,6 @@
 ## 既存プロジェクトから引き継いだ規則
 
 - 非自明な変更は `FILEMAP.md` へ予定touch・責務・検証を先行登録する。
-- 大きな実装はDS V4 / CCDSへ明示的なwork-orderで委譲し、CCDSはforeground起動。Codexは差分・FILEMAP・実機QA・最終ゲートを担う。
+- 大きな実装もLUNAがウェーブへ分割して直営する。外部モデルへのwork-orderは作らない。
 - QAは対象導線を一巡してP0/P1/P2をまとめ、batch修正後に同じ導線を再確認する。
 - 現在の製品QA対象はdesktop。mobile固有QAは再昇格するまで現行ゲート外。

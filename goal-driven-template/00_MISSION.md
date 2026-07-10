@@ -28,7 +28,7 @@
 - 倫理境界: 搾取的収益化(依存・情報格差を突く設計)の禁止。実在人物・実在軍の礼賛や現実の民族敵視へ寄せず、架空設定として扱う
 - 予算・期限の上限: 金額上限なし(課金側上限に従う) / 期限なし
 - 撤退条件: 未設定(人間判断。コア方式ゲートの人間判定が不採択なら現方式への量産を停止)
-- その他の不可侵: 製品版/DLC1規模をMVPへ縮小しない。戦略マップと戦術マップを分離する。主戦場は省略不可、小作戦のみauto-resolve可。logic-firstを崩さない
+- その他の不可侵: 製品版/DLC1規模をMVPへ縮小しない。戦略マップと戦術マップを分離する。主戦場は省略不可、小作戦のみauto-resolve可。logic-firstを崩さない。全工程をCodex LUNA (`gpt-5.6-luna`) で直営し、DeepSeek・DS V4・CCDS・Claude・Grok・TBA・その他AIモデルへ委譲しない。会社資産へ接続・展開しない
 
 **第0層への違和感は変更でなく報告**——直したいと思ったこと自体を発見として人間に上げる。
 
@@ -38,7 +38,7 @@
 |---|---|---|
 | 濃度予算: 主要機能・主要ループの数(多柱型は柱ごと) | 4柱 | 柱数は4で固定。各柱の選好的追加は同時に1件まで。追加は候補置き場経由、満杯なら等価交換 |
 | 同時進行の目標 | 1 | 1(固定運用) |
-| 対象プラットフォーム | desktop browser / local-first | mobile固有QA・backend・online化は候補置き場から人間承認で再昇格 |
+| 対象プラットフォーム | desktop browser / local-first + 個人VPS staging | mobile固有QA・backend・online化は候補置き場から人間承認で再昇格。公開先は `game.takawasi-social.com` |
 
 ## 第2層 — 自由可変
 
@@ -89,6 +89,7 @@
 | 期限 | なし | 設定なし |
 | 撤退条件 | 未設定 | 第0層扱い。コア方式の人間不採択時は現方式の量産を停止 |
 | **運転嗜好** | 継続 | ユーザーの「起動しはじめる」指示と既存の継続運転方針に合わせ、候補がある限り進む |
+| 実行モデル | LUNA固定 | `.codex/config.toml` の `gpt-5.6-luna`。外部AIモデル委譲なし |
 
 ## 停止条件(どの運転嗜好でも共通)
 
@@ -101,12 +102,14 @@
 検証はプロジェクト型で読み替える(ソフトウェア: ビルド+テスト / 執筆: 表記+査読 /
 分析: 再現実行+検算)。
 
-- 検証コマンド群: `npm run build` / `git diff --check` / `bash goal-driven-template/tools/check.sh` / 対象導線のdesktop browser QA
-- 実機QA手段: Codexアプリ内ブラウザまたはPlaywrightを使い、`http://127.0.0.1:5173/` で実操作する。動的体験は操作ログまたは短い録画を残す
+- 検証コマンド群: `npm run build` / `git diff --check` / `bash goal-driven-template/tools/check.sh` / localとliveの対象導線desktop browser QA / live rendered-content smoke
+- 実機QA手段: Codexアプリ内ブラウザまたはPlaywrightを使い、local `http://127.0.0.1:5173/` と個人staging `https://game.takawasi-social.com/` で実操作する。動的体験は操作ログまたは短い録画を残す
 - 証跡置場: `outputs/`(既存JSON QA report・スクショ・今後の短い録画+再現手順)
+- Git/展開先: 個人GitHub `oiwatakashi-alt/takawasi-game-ugcw-ppoi` / 個人VPS `/var/www/subdomains/game`。会社GitHub organization・Medixus・AWS・App Runnerは対象外
 - 迷った時の優先順位: 1.現行LLM+toolで製品品質まで仕上がるコア方式 2.戦略判断と戦術結果の持越し 3.軍団・陣地への長期的愛着 4.市場性 5.装飾
 - 基準線(参照元の名作・製品): Ultimate General: Civil War(構造・可読性の分析参照。模写・流用禁止) / 基準線画像置場: `WEBリサーチ/` と既存 `outputs/`
 
 ## 変更記録(追記式。第1層の変更と、人間による第0層改訂をここに)
 
 - 2026-07-10 / 第0層+運転設定 / 既存の確定docs・FILEMAP・ユーザーのv2.7移行指示を北極星と柵へ写像 / 承認: 人間(本チャットの移行・起動指示、既存docsの確定事項)
+- 2026-07-10 / 第0層+第1層+プロジェクト定数 / ユーザーの個人プロジェクト・LUNA固定・個人GitHub/VPS指示により会社DS/CCDS/AWS前提を撤去 / 承認: 人間(本チャットのLUNA固定・個人接続先指示)

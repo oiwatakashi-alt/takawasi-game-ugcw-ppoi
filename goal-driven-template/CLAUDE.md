@@ -42,6 +42,13 @@
 
 2026-07-10にTakawasi Gameへv2.7.1を導入し、root `AGENTS.md` / `CLAUDE.md` へ配線済み。
 
+## 個人LUNA運用(このrepo固有の上書き)
+
+- 実行モデルはCodex LUNA (`gpt-5.6-luna`) に固定する。Claude系で開いた場合は作業を開始せず、Codex LUNAへ戻す。
+- DeepSeek、DS V4、CCDS、Claude、Grok、TBA、その他AIモデルへ委譲しない。三窓レビューもLUNAが直列実行する。
+- GitHubは `oiwatakashi-alt/takawasi-game-ugcw-ppoi`、公開検証は個人VPSの `game.takawasi-social.com`。会社GitHub/AWS/Medixusへ接続しない。
+- 接続情報とsecret値をrepoへ保存しない。
+
 ## プロジェクト固有の柵
 
 > このプロジェクトは、戦略・戦術・軍団育成・防御陣地の判断が相互に履歴を残す、製品版規模の長期戦術キャンペーンゲームを完成させるために存在する。
@@ -53,5 +60,5 @@
 ## 既存プロジェクトから引き継いだ規則
 
 - 非自明な変更は親 `../FILEMAP.md` へ予定touch・責務・検証を先行登録する。
-- 大きな実装はforeground CCDSへwork-orderで委譲し、指揮側が差分・FILEMAP・実機QAを最終確認する。
+- 大きな実装もLUNAがウェーブへ分割して直営する。外部モデルへのwork-orderは作らない。
 - QAは一巡→P0/P1/P2記録→batch修正→同導線再確認。mobile固有QAは現行ゲート外。

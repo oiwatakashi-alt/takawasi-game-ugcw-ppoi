@@ -12,8 +12,8 @@ Canonical source at copy time: `/Users/oiwa/projects/個人_takawasi/takawasiAI/
 
 | Path | Status | Responsibility |
 | --- | --- | --- |
-| `AGENTS.md` | installed/verified | Root Codex entrypoint. Routes to the nested v2.7.1 loop and preserves FILEMAP-first, product-scale, layer-separation, QA, and foreground CCDS rules. |
-| `CLAUDE.md` | installed/verified | Root Claude/CCDS entrypoint, including v2.7.1 correction kernel and image-generation delegation boundary. |
+| `AGENTS.md` | installed/verified | Root Codex entrypoint. Routes to the nested v2.7.1 loop and enforces FILEMAP-first, product-scale, layer-separation, QA, LUNA-only execution, and personal-infrastructure boundaries. |
+| `CLAUDE.md` | installed/verified | Safety fallback for accidental Claude-family entry: do not execute and return the project to Codex LUNA. |
 | `goal-driven-template/` | installed/verified | Project-local v2.7.1 loop kernel. The canonical source remains unchanged; only this copied instance is project-initialized. |
 | `goal-driven-template/00_MISSION.md` | initialized | North star, four product pillars, non-negotiable scope, operating preference, and project verification constants derived from existing confirmed docs and the 2026-07-10 migration/start instruction. |
 | `goal-driven-template/01_PLAN.md` | initialized | Current phase is the v2.7 core-method re-review, not gameplay expansion. Records current runtime truth and defers regression/browser/docs/bundle work to the candidate gate. |
@@ -25,6 +25,28 @@ Canonical source at copy time: `/Users/oiwa/projects/個人_takawasi/takawasiAI/
 | `goal-driven-template/tools/filemap_snapshot.sh` | project-adapted/verified | Captures the whole game repository while excluding `.git`, `node_modules`, and `dist`, writing history under the loop folder. |
 
 Boundaries: this migration changes no gameplay, save schema, dependency, asset, backend, AWS, deploy, or external service. `FILEMAP.md` remains implementation truth; `goal-driven-template/04_STATE.md` remains current goal-loop position.
+
+## Active Personal-LUNA Release Migration (2026-07-10)
+
+The owner superseded the company-oriented DS/CCDS/AWS assumptions for this personal game. This slice changes only the project operating context, goal, personal GitHub route, and personal VPS release plan; gameplay remains untouched.
+
+| Path / External Route | Status | Responsibility |
+| --- | --- | --- |
+| `.codex/config.toml` | installed/verified | Project-local Codex model default: `gpt-5.6-luna`. UI/thread model selection still wins when explicitly changed. |
+| `AGENTS.md`, `CLAUDE.md` | installed/verified | Company DS/CCDS wording is superseded by LUNA-only, personal-project boundaries; accidental Claude entry is fail-closed. |
+| `goal-driven-template/{AGENTS.md,CLAUDE.md,00_MISSION.md,01_PLAN.md,02_GOAL.md,04_STATE.md,07_KNOWLEDGE.md}` | migrated/verified | LUNA single-agent execution, personal GitHub, and personal VPS staging are part of the active goal/state. |
+| `goal-driven-template/08_LOG.md` | pending-turn-close | Will record the verified migration commit and personal push result before turn close. |
+| `goal-driven-template/plans/002_LUNA個人公開基盤.md` | active/verified | Active wave for personal route correction, dynamic full-loop evidence, static staging, LUNA-separated review, and human continue/pivot verdict. |
+| `docs/deployment/PERSONAL_VPS_STATIC.md` | installed/verified | Secret-free runbook for `game.takawasi-social.com`, versioned static releases, nginx validation, smoke, and rollback. |
+| GitHub `oiwatakashi-alt/takawasi-game-ugcw-ppoi` | origin-corrected/pending-push | Existing personal repo at remote `main=2fa693e`; local fetch/push origin now points to this route. |
+| Personal VPS `game.takawasi-social.com` | read-only-verified/planned | DNS resolves to the personal VPS, TLS endpoint responds, no explicit nginx server name exists yet, and `/var/www/subdomains/` is available. |
+
+Boundaries:
+
+- Do not use DeepSeek, CCDS, Claude, Grok, TBA, Medixus organization repositories, company AWS, or company deployment paths.
+- Do not store tokens, passwords, API keys, credential files, or the contents of `/Users/oiwa/Desktop/接続情報.md` in this repository.
+- This slice may correct the Git remote and push committed migration/docs to the existing personal repo. It does not deploy the game yet.
+- First live deployment requires build, local full-loop QA, versioned upload, `nginx -t`, rendered-content smoke, browser QA, and an explicit rollback path.
 
 ## Current Files
 

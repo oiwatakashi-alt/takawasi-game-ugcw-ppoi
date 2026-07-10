@@ -29,6 +29,18 @@
 - 検証条件: cwd=`/Users/oiwa/projects/個人_takawasi/takawasi game`、`diff -rq`が移行編集前に差分0、source/targetとも69 files
 - 着地先: 00_MISSION / 01_PLAN / 02_GOAL / 04_STATE / root AGENTS・CLAUDE
 
+## 2026-07-10 問い: 個人GitHubの正しいTakawasi Game repoはどれか
+- 答え: ローカルSSHはGitHub user `oiwatakashi-alt` として認証され、既存repo `oiwatakashi-alt/takawasi-game-ugcw-ppoi` のmainをread-only取得できる。旧originの `takawasi/takawasi-game-ugcw-ppoi` は存在せず、新規repo作成は不要
+- 状態: [検証済み] / ソース: `ssh -T git@github.com`、`git ls-remote`、remote HEAD
+- 検証条件: cwd=`/Users/oiwa/projects/個人_takawasi/takawasi game`、2026-07-10、既存ローカルSSH認証。secret値は取得・記録していない
+- 着地先: 00_MISSION Git/展開先、01_PLAN M1、04_STATE 決定ログ、`docs/deployment/PERSONAL_VPS_STATIC.md`
+
+## 2026-07-10 問い: 個人VPSで安全に公開できる既存境界はどこか
+- 答え: `game.takawasi-social.com` は個人VPSへDNS解決しTLS応答するが現在404で、専用nginx `server_name` は存在しない。`/var/www/subdomains/` を親に、`game/releases/<git-sha>` と `current` symlinkを新設する余地がある
+- 状態: [検証済み] / ソース: DNS lookup、HTTPS status probe、personal VPSへのread-only SSH、nginx設定のserver_name一覧
+- 検証条件: 2026-07-10、personal VPS read-only probe。credential・account id・secret値は記録していない
+- 着地先: 01_PLAN M3、04_STATE、`docs/deployment/PERSONAL_VPS_STATIC.md`
+
 ## 2026-07-10 問い: 現在の実装はどこまで一周するか
 - 答え: 9 screenでTheater Command→Camp→Deployment→Battle→After Action→次戦略turnを結び、save v8のversioned localStorage providerで保存する。backend/API/DBは持たない
 - 状態: [検証済み] / ソース: `src/app/routes.ts`、`src/app/App.tsx`、`src/game/save/localStorageProvider.ts`、`src/game/save/migrations.ts`、`FILEMAP.md`
@@ -84,8 +96,8 @@
   as-of 2026-07-09 / 証跡: takawasigame2 §12アクションパック
 - 撮影・検査ツールの自作(判断ゼロのルーチンの計器化) / as-of 2026-07 /
   証跡: llm-screenshot.mjs、check.sh系
-- ワーカー委譲+機械受入での実装(一発合格率5/5) / as-of 2026-07-08 /
-  証跡: saikyo-workflowウェーブ003-011
+- ワーカー委譲+機械受入での実装(一発合格率5/5、この個人repoでは人間指示により利用禁止) / as-of 2026-07-08 /
+  証跡: saikyo-workflowウェーブ003-011。Takawasi GameではLUNA直営へ読み替える
 
 ## 負の知識(探して見つからなかったもの・棄却した案)
 

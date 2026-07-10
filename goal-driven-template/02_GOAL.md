@@ -1,4 +1,4 @@
-# ゴール文 — 現フェーズ: v2.7移行後のコア方式再審査
+# ゴール文 — 現フェーズ: LUNA単騎のコア判定付き個人公開
 
 フェーズごとに書き直して起動する。ゴール文の仕事は「今のフェーズの完了条件を
 検証可能に言うこと」だけ。柵は00_MISSION、配車と番は03_DISPATCH、計画は01_PLAN。
@@ -9,16 +9,19 @@
 北極星(00_MISSION.mdから逐語で引用):
 > このプロジェクトは、戦略・戦術・軍団育成・防御陣地の判断が相互に履歴を残す、製品版規模の長期戦術キャンペーンゲームを完成させるために存在する。
 
-01_PLAN.mdの「v2.7移行後のコア方式再審査」を完了する。
+CodexのLUNA (`gpt-5.6-luna`) だけを使い、01_PLAN.mdの「LUNA単騎のコア判定付き個人公開」を完了する。
+DeepSeek、DS V4、CCDS、Claude、Grok、TBA、その他AIモデルへ委譲しない。会社GitHub/AWS/Medixusは使わない。
 毎ターン必ず: (1)bash goal-driven-template/tools/session_brief.sh を実行する(状態・計器・配車結果・現在番の
 規則が注入される) (2)配車結果を引用して番を宣言する (3)注入された規則だけで働く
 (4)commitして04_STATE.mdを欄置換で更新し、完了報告を08_LOG.mdに追記する
 (5)bash goal-driven-template/tools/turn_close.sh で契約を機械検査する(赤はamend)。
 
 完了条件:
+- local originが個人GitHub `oiwatakashi-alt/takawasi-game-ugcw-ppoi` を向き、全移行commitがmainへpushされている
 - 現行コアループをdesktopで Theater→Camp→Deployment→Battle→After Action→次ターンまで実操作し、短い録画または操作ログ・再現手順・各判断の後続影響が `outputs/` にある
+- `dist/`が個人VPS `/var/www/subdomains/game/releases/<git-sha>/` へversioned配置され、`current` symlinkと専用nginx vhostで `https://game.takawasi-social.com/` に公開されている。旧releaseを残し、`nginx -t`・Takawasi Game固有内容のrendered smoke・live desktop一周QA・rollback検証が成功している
 - 現行方式を含む制作適合性の異なる最低3案が、制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較され、既存実装量を続行理由に使っていない
-- 新品のマクロ/ミクロ/市場窓の指摘に対する採用/棄却+理由が台帳化されている
+- LUNAがマクロ→ミクロ→市場の順に文脈を分けて直列レビューし、同一モデル代替と各指摘の採用/棄却+理由が台帳化されている
 - 人間が実操作証跡と比較表を見て「もう一度遊びたい/条件付き続行/方式転換」を判定し、理由が照合ログとSTATE決定ログにある
 - `npm run build`、`git diff --check`、`bash goal-driven-template/tools/check.sh`が成功し、対象実機QAでconsole error 0・broken image 0
 - 検収パック(01_PLAN.mdの人間チェックポイント節)を提出済み
@@ -26,8 +29,9 @@
 
 規律:
 - 検証が失敗したら先に進まず修復する
-- 「やらないこと」(gameplay/content/art/balance/save schema/dependency/backend/AWS/deploy/個別バグ修正)には触れない
-- フェーズ予算6ターンを超えたら監査番に入り、続行/分割/返上を判断して報告する
+- 「やらないこと」(gameplay/content/art/balance/save schema/dependency/backend/AWS/会社資産/外部AIモデル委譲/個別バグ修正)には触れない
+- `/Users/oiwa/Desktop/接続情報.md` の内容、password、token、API key、private keyをrepo・ログ・回答へ出さない。認証は既存ローカルSSH設定だけを使う
+- フェーズ予算8ターンを超えたら監査番に入り、続行/分割/返上を判断して報告する
 - 人間専任の操作(課金・認証・契約・行政等)はhub/humanops/README.mdの梯子を踏む。
   起票は棚上げであって停止ではない
 - 停止条件は00_MISSIONの停止条件節に従う(同一失敗3回/不可逆操作/全候補人間待ち/撤退条件)。
@@ -53,14 +57,9 @@
 確認 `/goal` / 一時停止 `/goal pause` / 再開 `/goal resume` / 解除 `/goal clear`。
 前提: Gitリポジトリ内で実行。無人度は sandbox(workspace-write推奨)×approval。
 
-## Claude Code で起動(v2.1.72+、as-of 2026-07。食い違ったら公式docsを優先)
+## Claude Codeでの起動は禁止(このプロジェクト固有)
 
-```
-/goal [雛形の完了条件部分]
-```
-
-各ターン後に判定モデルが条件評価、未達なら理由付き続行。解除 `/goal clear`。
-時間駆動は `/loop [間隔] [プロンプト]`、並列は `/batch`(所有権の重複禁止は03の並列レーン節)。
+Claude系でこのrepoを開いた場合は実装・レビュー・Git操作を開始せず、CodexアプリでLUNAを選んだ別セッションへ戻す。`/goal`は上記のCodex用ゴール文だけを使う。
 
 ## 人間不在時の既定動作(00_MISSIONの運転嗜好に従う)
 

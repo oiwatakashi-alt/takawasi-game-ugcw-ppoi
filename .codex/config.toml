@@ -1,0 +1,3 @@
+# Takawasi Game personal-project default.
+# The Codex app/thread model picker can still override this explicitly.
+model = "gpt-5.6-luna"

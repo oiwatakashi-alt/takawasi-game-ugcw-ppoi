@@ -53,3 +53,12 @@
 - 報告消費: T1後のcheck赤を監査入力として原因特定に使用
 - 発見: canonical v2.7.1への同型修正候補を09_LEARNINGSへ記録。原本は不変更
 - 次の一手: 計器/turn contractを再実行し、移行FILEMAPをverifiedへ閉じる
+
+## T3 2026-07-10 実行 LUNA
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 変更: 会社用DS/CCDS/AWS前提を4入口MDから撤去し、LUNA固定、個人GitHub、個人VPS staging、secret-free公開runbookをMISSION/PLAN/GOAL/STATEへ接続
+- 検証: personal origin read-only疎通、`npm run build`、全tool `bash -n`、`git diff --check`、`tools/check.sh`、dashboard再生成が成功
+- 仮定: live deployは次セッションのlocal一周QA後に実行し、本ターンは接続先確定とGitHub反映まで
+- 報告消費: 接続情報の非secret部分とread-only Git/VPSプローブを、既存repo再利用・DNS作業不要・versioned release設計の判断に使用
+- 発見: 新規repoは不要。旧origin ownerのみ誤りで、個人repoとVPS/nginx基盤は既に存在
+- 次の一手: 本commitを個人origin mainへpushし、M1を完了へ更新してM2 local一周動的証跡へ進む
