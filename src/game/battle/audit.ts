@@ -2,6 +2,11 @@ import type { BattleState } from "./types";
 
 export type BattleAuditEventKind = "battle_started" | "command" | "tick" | "battle_finished";
 
+export interface BattleReplayInput {
+  type: "tick";
+  elapsedSeconds: number;
+}
+
 export interface BattleAuditEvent {
   id: string;
   kind: BattleAuditEventKind;
@@ -18,6 +23,7 @@ export interface BattleAudit {
   tickCount: number;
   lastDigest: string;
   events: BattleAuditEvent[];
+  replayInputs: BattleReplayInput[];
 }
 
 const hashText = (value: string): number => {
@@ -152,6 +158,7 @@ export const initializeBattleAudit = (state: BattleState): BattleState => {
           changedEnemyIds: [],
         },
       ],
+      replayInputs: [],
     },
   };
 };
@@ -189,6 +196,9 @@ export const recordBattleTransition = (previous: BattleState, next: BattleState)
     changedUnitIds: changedUnitIds(previous, next),
     changedEnemyIds: changedEnemyIds(previous, next),
   };
+  const replayInputs = tickAdvanced
+    ? [...base.replayInputs, { type: "tick" as const, elapsedSeconds: previous.elapsedSeconds }].slice(-240)
+    : base.replayInputs;
   return {
     ...next,
     audit: {
@@ -196,6 +206,7 @@ export const recordBattleTransition = (previous: BattleState, next: BattleState)
       tickCount: base.tickCount + (tickAdvanced ? 1 : 0),
       lastDigest: digest,
       events: [...base.events, event].slice(-240),
+      replayInputs,
     },
   };
 };

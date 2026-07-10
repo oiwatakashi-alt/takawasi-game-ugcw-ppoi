@@ -421,6 +421,28 @@
 - 境界: Scenario Pack量産、画像生成、個人VPS、外部AIモデル委譲は実施していない
 - 次の一手: replay fixture/同一入力digestを固定し、その後viewport summary/detailと初回説明へ進む
 
+## T37 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: B契約の未達を決定的tick replayとして固定し、同一入力結果の機械検証を通す
+- 実装: `src/game/battle/replay.ts`、`replayInputs`付き監査、`replayFixture.ts`、local QAページ`battle-replay-fixture.html`
+- 検証: 5tick入力列を2回適用し、初期digest `9ad584c4`、両方の最終digest `45dfaf3a`、経過5秒、`pass: true`
+- console: replay fixtureページでconsole error 0。保存復元・effect log・同一tick結果一致をB契約受入へ接続
+- 判定: ユーザー条件のevent/effect log経路を採用し、方式B検証契約を完了扱い。完全な命令入力リプレイは追加拡張であり、今回の受入から除外
+- 境界: 戦略map/戦術map分離、主戦場省略不可、小作戦のみauto-resolve、製品版/DLC1規模を維持。content量産、画像生成、VPS、外部AIモデル委譲なし
+- 次の一手: Battle viewport summary/detail整形と初回説明をスクリーンショット起点で進める
+
+## T38 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: UGCW比較のP0に従い、Battle主戦場と右側判断材料を1280x720の同一viewportへ戻し、初回説明を接続する
+- 実装: `mapFieldStyle`の固定1680px指定を撤去しデスクトップviewport幅へ収めた。`.map-unit`は`clamp`で可読性を維持。Battleの表示順を`topbar→command→初回ガイド→警報→map→HUD`へ固定し、6指標を常設・長文をsummary/detailへ退避
+- 初回説明: `初回ガイド`で「上段確認→マップ選択→下段で結果確認」を表示し、`命令→動作→結果`の説明を開閉可能にした
+- QA: 1280x720、map width 1219px / client width 1219px、ミニマップ下端715.99px、horizontal overflow false、broken image 0、console error 0。ガイドと目標詳細を開いた状態でもhorizontal overflow falseを確認
+- 証跡: `outputs/ui-reorg/battle-viewport-v6-2026-07-10.json`。`npm run build` pass
+- 判定: Battle viewport整形の受入を緑とし、次のScenario Pack起点local一周QAへ進む。画像生成、content量産、VPS公開、外部AIモデル委譲は実施していない
+- 次の一手: Theater→Camp→Deployment→Battle→After Action→次ターンを1280x720で再走し、操作ログ・後続影響・console/broken/overflowを再固定する
+
 ## T25 2026-07-10 監査 LUNA
 
 - 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`
@@ -433,3 +455,16 @@
 - 削除候補: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`はM5検収後まで保留。旧blocked証跡、発見4件、候補4件を削除・昇格しない
 - 判定: 計画監査は完了。コード、gameplay、save schema、VPS current、方式A/B/C、M5判定は変更なし。次は人間が検収パックへ3択・理由・条件を記入する
 - 次の一手: 監査commitとturn_closeを完了後、M5人間判定待ちで停止する
+
+## T39 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: Scenario Pack起点のTheater→Camp→Deployment→Battle→After Action→次ターンを1280x720で再走し、Battleの命令→動作→結果と後続画面への影響を固定する
+- 操作: `幕舎で準備する`→`出撃配置へ`→`選抜部隊で戦闘開始`→`勝利点保持`→`3倍`→`撤退実行`→`戦果報告へ`→`結果を反映して幕舎へ`→`戦略マップへ戻る`
+- Battle: `勝利点保持`を発令し、`勝利点保持へ2旅団を投入。主線保持。担当戦線 塹壕補修線。`を確認。3倍速後に撤退実行し、勝利ではなく制御撤退として記録
+- After Action: 弾薬消費162、補給消費8、医療補給0、勝利点喪失0%、補給点保持100%、視界点喪失0%。勝利点保持の責務が第2工兵中隊と将校結果へ残った
+- 次ターン: 第3戦略ターンの5層戦線へ戻り、直前報告に戦闘撤退、勝利地点喪失、補給点保持、後衛追撃被害抑止が表示され、後続画面への影響を確認
+- QA: 1280x720 / console error 0 / broken image 0 / horizontal overflow false / body scrollWidth 1280 / document clientWidth 1280
+- 証跡: `outputs/takawasi-local-loop-qa-v6-2026-07-10.json` / `outputs/takawasi-local-loop-repro-v6-2026-07-10.md`
+- 判定: local一周を緑で受入。次は`PERSONAL_VPS_STATIC.md`に従う個人VPSのread-only preflight→SHA別release→live QA→rollback確認
+- 境界: 個人GitHub/VPSのみ。会社GitHub、AWS、Medixus、外部AIモデル、秘密情報、画像生成、content量産は使用・委譲していない

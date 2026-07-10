@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Takawasi Battle Replay Fixture</title>
+  </head>
+  <body>
+    <pre id="output">fixture実行中...</pre>
+    <script type="module">
+      import { verifyDefaultBattleReplayFixture } from "/src/game/battle/replayFixture.ts";
+
+      const result = verifyDefaultBattleReplayFixture();
+      document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+    </script>
+  </body>
+</html>

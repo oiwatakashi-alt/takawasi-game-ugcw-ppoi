@@ -1,0 +1,60 @@
+{
+  "capturedAt": "2026-07-10",
+  "target": "http://127.0.0.1:5174/",
+  "viewport": {"width": 1280, "height": 720, "dpr": 2, "scale": 1},
+  "sourceBaseCommit": "bfd1cbca4ae27694768385c68b96a22a5a8e5514",
+  "route": [
+    "Theater / 第2戦略ターン",
+    "Camp",
+    "Deployment",
+    "Battle",
+    "After Action",
+    "Camp after result apply",
+    "Theater / 第3戦略ターン"
+  ],
+  "actions": [
+    "幕舎で準備する",
+    "出撃配置へ",
+    "選抜部隊で戦闘開始",
+    "勝利点保持を発令",
+    "3倍を選択",
+    "撤退実行",
+    "戦果報告へ",
+    "結果を反映して幕舎へ",
+    "戦略マップへ戻る"
+  ],
+  "observed": {
+    "battleCommand": "勝利点保持",
+    "commandEffect": "目標対応: 勝利点保持へ2旅団を投入。主線保持。担当戦線 塹壕補修線。",
+    "battleTempo": "3倍速で防衛時間を進行し、撤退実行を選択",
+    "afterAction": {
+      "resource": "弾薬消費 162 / 補給消費 8 / 医療補給 0",
+      "carryover": "勝利点喪失 0% / 補給点保持 100% / 視界点喪失 0%",
+      "unitAndOfficerOutcome": "勝利点保持の責務が第2工兵中隊と将校結果に残った"
+    },
+    "nextTurn": {
+      "heading": "第3戦略ターン",
+      "mainBattle": "東方辺境防衛線防衛戦",
+      "mapLayers": "5層戦線",
+      "priorReport": "戦闘撤退、勝利地点喪失、補給点保持、後衛追撃被害抑止が直前報告に表示"
+    },
+    "outcomeInterpretation": "勝利ではなく、勝利地点を失いながら補給点を保持した制御撤退として観測"
+  },
+  "checks": {
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "bodyClientWidth": 1280,
+    "bodyScrollWidth": 1280,
+    "documentClientWidth": 1280,
+    "documentScrollWidth": 1280
+  },
+  "qaStatus": "pass",
+  "evidence": [
+    "outputs/ui-reorg/battle-viewport-v6-2026-07-10.json",
+    "outputs/takawasi-local-loop-qa-report.json",
+    "outputs/takawasi-local-loop-repro.md",
+    "goal-driven-template/08_LOG.md"
+  ],
+  "secrets": "none"
+}

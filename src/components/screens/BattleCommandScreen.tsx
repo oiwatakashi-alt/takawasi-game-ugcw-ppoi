@@ -1888,9 +1888,7 @@ const chokePointLabelStyle = (battle: BattleState, choke: BattleChokePoint): CSS
   top: `${(choke.position.y / battle.mapBounds.height) * 100}%`,
 });
 
-const mapFieldStyle = (battle: BattleState): CSSProperties => ({
-  minWidth: `${Math.max(1280, battle.mapBounds.width * 12)}px`,
-});
+const mapFieldStyle = (_battle: BattleState): CSSProperties => ({});
 
 const segmentName = (battle: BattleState, segmentId?: string): string =>
   battle.frontlineSegments.find((segment) => segment.id === segmentId)?.name ?? "未指定";
@@ -5473,6 +5471,17 @@ export function BattleCommandScreen({
         ))}
       </div>
 
+      <div className="battle-reading-guide" aria-label="初回ガイド">
+        <div className="battle-reading-guide-main">
+          <strong>初回ガイド</strong>
+          <span>①上段で目標と戦線を確認 ②マップで部隊/敵/施設を選択 ③命令後の行動と戦果を下段で確認</span>
+        </div>
+        <details>
+          <summary>命令→動作→結果</summary>
+          <span>命令は伝令遅延後に届き、移動・射撃・士気・補給の変化としてマップへ現れる。結果は目標、損耗、次ターンへ持ち越される。</span>
+        </details>
+      </div>
+
       <div className={`withdrawal-forecast-panel ${withdrawalForecast.tone}`} aria-label="撤退予測">
         <div className="withdrawal-forecast-main">
           <strong>撤退予測</strong>
@@ -7583,19 +7592,24 @@ export function BattleCommandScreen({
           <span>勝利点 {Math.round(battle.objectiveState.victoryControl)}%</span>
           <span>補給点 {Math.round(battle.objectiveState.supplyControl)}%</span>
           <span>視界点 {Math.round(battle.objectiveState.visibilityControl)}%</span>
-          <span>目標効果 {objectiveEffects.summary}</span>
-          <span>目標イベント {objectiveEffects.eventSummary}</span>
-          <span>敵波 {battle.wavesSpawned}</span>
-          <span>波計画 {battle.scenario.waveIntel.summary}</span>
-          <span>敵波判読 {objectiveEffects.waveIntelLabel}</span>
-          {battle.scenario.waveIntel.surpriseSummary && <span>実波警戒 {battle.scenario.waveIntel.surpriseSummary}</span>}
-          <span>視界 {spottingRange}</span>
-          <span>発見 {spottedEnemyCount}/{battle.enemyUnits.length}</span>
-          {(battle.chokePoints ?? []).map((choke) => (
-            <span key={choke.id}>
-              隘路 {choke.currentPressure}/{choke.flowLimit} 遅滞{choke.delayPercent}%
-            </span>
-          ))}
+          <details className="battle-objective-detail">
+            <summary>詳細</summary>
+            <div>
+              <span>目標効果 {objectiveEffects.summary}</span>
+              <span>目標イベント {objectiveEffects.eventSummary}</span>
+              <span>敵波 {battle.wavesSpawned}</span>
+              <span>波計画 {battle.scenario.waveIntel.summary}</span>
+              <span>敵波判読 {objectiveEffects.waveIntelLabel}</span>
+              {battle.scenario.waveIntel.surpriseSummary && <span>実波警戒 {battle.scenario.waveIntel.surpriseSummary}</span>}
+              <span>視界 {spottingRange}</span>
+              <span>発見 {spottedEnemyCount}/{battle.enemyUnits.length}</span>
+              {(battle.chokePoints ?? []).map((choke) => (
+                <span key={choke.id}>
+                  隘路 {choke.currentPressure}/{choke.flowLimit} 遅滞{choke.delayPercent}%
+                </span>
+              ))}
+            </div>
+          </details>
         </div>
         <div className="battle-wave-timeline" aria-label="戦闘中敵波タイムライン">
           {(battle.scenario.waveIntel.timeline ?? []).slice(0, 4).map((entry) => (

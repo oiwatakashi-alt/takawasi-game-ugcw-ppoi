@@ -618,7 +618,7 @@ export function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell app-shell-${screen}`}>
       <ResourceBar campaign={campaign} onReset={reset} />
       {CAMP_SCREENS.includes(screen) && (
         <ScreenTabs

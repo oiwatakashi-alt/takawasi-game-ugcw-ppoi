@@ -1,0 +1,56 @@
+{
+  "capturedAt": "2026-07-10",
+  "screen": "battle",
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "devicePixelRatio": 2,
+    "visualScale": 1
+  },
+  "visualInspection": {
+    "source": "in-app browser screenshot",
+    "result": "pass",
+    "notes": [
+      "戦術マップを画面幅へ収め、敵進路・勝利地点・視界点・ミニマップを同一画面で確認できる",
+      "初回ガイドは命令→動作→結果の因果を1行で示し、詳細説明は開閉可能",
+      "目標の6指標を常時表示し、波計画・視界・隘路などの長文は詳細へ退避"
+    ]
+  },
+  "orderedSections": [
+    "battle-topbar",
+    "battle-command-ribbon",
+    "battle-reading-guide",
+    "battle-alerts",
+    "battle-map-scroll",
+    "battle-hud"
+  ],
+  "layout": {
+    "scrollTop": 0,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "horizontalOverflow": false,
+    "bodyScrollHeight": 5338
+  },
+  "boxes": {
+    "resourceBar": { "top": 0, "bottom": 86.59, "width": 1280, "height": 86.59 },
+    "battleTopbar": { "top": 104.59, "bottom": 146.59, "width": 1218.56, "height": 42 },
+    "firstRunGuide": { "top": 216.59, "bottom": 250.59, "width": 1218.56, "height": 34 },
+    "battleAlerts": { "top": 262.59, "bottom": 333.59, "width": 1218.56, "height": 71 },
+    "battleMap": { "top": 355.59, "bottom": 729.99, "width": 1218.56, "height": 374.4 },
+    "minimapPanel": { "top": 543.49, "bottom": 715.99, "width": 150, "height": 172.5 },
+    "battleHud": { "top": 741.99, "bottom": 1261.99, "width": 1218.56, "height": 520 }
+  },
+  "map": {
+    "scrollWidth": 1219,
+    "clientWidth": 1219,
+    "scrollLeft": 0
+  },
+  "details": {
+    "guideOpen": false,
+    "objectiveOpen": false,
+    "guideAndObjectiveOpenVerified": true,
+    "horizontalOverflowWhenOpen": false
+  },
+  "brokenImages": [],
+  "consoleErrors": []
+}

@@ -142,9 +142,9 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
   - [x] [型: 整備] [実行者: LUNA直営] 型付きScenario Pack、作成ファクトリ、schema validator、作成手順書を追加 — 受入: `src/content/scenarioTypes.ts`、`src/content/templates/scenarioPackTemplate.ts`、`docs/content/SCENARIO_AUTHORING.md`、`docs/content/SCENARIO_PACK_TEMPLATE.md`、`npm run build` pass
   - [x] [型: 実装] [実行者: LUNA直営] 初期Scenario Pack `border-emergency-001`をテンプレートから作成し、主戦場/小作戦/戦果持越しの境界を検証 — 受入: `src/content/baseGame/scenarioPacks.ts`、主戦場`isMandatory=true`/`canAutoResolve=false`、小作戦のみauto-resolve、`createCampaign`起動時validator
   - [x] [型: 実装] [実行者: LUNA直営] 方式B検証契約の初期ゲートとしてBattle active save/reloadとseed付きeffect logを接続 — 受入: 進行中Battleのreload復元、終了BattleのAfter Action復元、console error 0、broken image 0。証跡: `docs/battle/BATTLE_SIMULATION_CONTRACT.md` / `outputs/m5-battle-save-reload-qa-2026-07-10.json`
-  - [ ] [型: 実装] [実行者: LUNA直営] 方式Bの検証契約をBattle/save/replayへ接続 — 受入: Battle save/reload、seed/replayまたはevent/effect log、同一入力の結果一致、既存A UIと主戦場境界の維持
-  - [ ] [型: 実装] [実行者: LUNA直営] 右側補助面のsummary→detail整形と初回説明導線を再編 — 受入: 1280x720で主操作/主戦場可視、右欄の判断順が説明可能、console error 0、broken image 0、overflowなし
-  - [ ] [型: リサーチ] [実行者: LUNA直営] Scenario PackからTheater→Camp→Deployment→Battle→After Action→次ターンをlocal desktopで再走 — 受入: 操作ログ/再現手順/後続影響、console error 0、broken image 0、右欄観点の再撮影
+  - [x] [型: 実装] [実行者: LUNA直営] 方式Bの検証契約をBattle/save/replayへ接続 — 受入: Battle save/reload、seed/replayまたはevent/effect log、同一入力の結果一致、既存A UIと主戦場境界の維持。effect log経路と決定的tick fixtureを採用。証跡: `docs/battle/BATTLE_SIMULATION_CONTRACT.md` / `outputs/battle-replay-fixture-qa-2026-07-10.json`
+  - [x] [型: 実装] [実行者: LUNA直営] 右側補助面のsummary→detail整形と初回説明導線を再編 — 受入: 1280x720で主操作/主戦場可視、右欄の判断順が説明可能、console error 0、broken image 0、overflowなし。証跡: `outputs/ui-reorg/battle-viewport-v6-2026-07-10.json`
+  - [x] [型: リサーチ] [実行者: LUNA直営] Scenario PackからTheater→Camp→Deployment→Battle→After Action→次ターンをlocal desktopで再走 — 受入: 操作ログ/再現手順/後続影響、console error 0、broken image 0、右欄観点の再撮影。証跡: `outputs/takawasi-local-loop-qa-v6-2026-07-10.json` / `outputs/takawasi-local-loop-repro-v6-2026-07-10.md`
   - [ ] [型: 実装] [実行者: LUNA直営] 条件付き続行版を個人VPSへSHA別releaseしlive QA/rollback — 受入: `npm run build`、hash一致、専用vhost、`nginx -t`、rendered smoke、1280x720 live一周、rollback
 - やらないこと: Scenario Packの型・validator・初期設定1件・B契約の入口は行うが、テンプレート受入前のcontent量産、balance調整、DLC量産、backend、AWS、会社account、Medixus、外部AIモデル委譲、主戦場のauto-resolve、戦略/戦術map統合は行わない
 - premortem:

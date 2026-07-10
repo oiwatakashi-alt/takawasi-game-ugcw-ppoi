@@ -3017,6 +3017,97 @@ main {
   overflow-x: clip;
 }
 
+.battle-layout > * {
+  order: 10;
+}
+
+.battle-layout > .battle-topbar,
+.battle-layout > .battle-command-ribbon,
+.battle-layout > .battle-reading-guide,
+.battle-layout > .withdrawal-forecast-panel,
+.battle-layout > .command-queue-panel,
+.battle-layout > .battle-alerts,
+.battle-layout > .fire-discipline-strip,
+.battle-layout > .fire-mission-strip,
+.battle-layout > .fire-plan-strip {
+  order: 1;
+}
+
+.battle-layout > .map-command-hint,
+.battle-layout > .map-layer-control-panel {
+  order: 2;
+}
+
+.battle-layout > .battle-map-scroll {
+  order: 3;
+}
+
+.battle-layout > .battle-hud {
+  order: 4;
+}
+
+.battle-layout > .objective-staff-panel,
+.battle-layout > .enemy-command-network-panel,
+.battle-layout > .reserve-command-panel,
+.battle-layout > .frontline-pressure-strip,
+.battle-layout > .staff-advisory-panel,
+.battle-layout > .frontline-command-panel,
+.battle-layout > .selected-command-panel,
+.battle-layout > .enemy-intent-panel {
+  order: 20;
+}
+
+.battle-reading-guide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(83, 62, 35, 0.24);
+  border-left: 4px solid #6f855c;
+  border-radius: 7px;
+  background: rgba(248, 239, 207, 0.8);
+  color: #3c3328;
+  padding: 7px 9px;
+}
+
+.battle-reading-guide-main {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 0;
+}
+
+.battle-reading-guide-main strong {
+  color: #2f4a34;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.battle-reading-guide-main span,
+.battle-reading-guide details {
+  color: #5d5649;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.battle-reading-guide details {
+  flex: 0 0 auto;
+  max-width: 38%;
+}
+
+.battle-reading-guide summary {
+  color: #5a2b24;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.battle-reading-guide details > span {
+  display: block;
+  max-width: 360px;
+  padding-top: 4px;
+}
+
 .battle-command-ribbon {
   display: flex;
   gap: 8px;
@@ -6771,6 +6862,40 @@ main {
   z-index: 6;
 }
 
+.battle-objective-detail {
+  position: relative;
+  background: rgba(47, 53, 40, 0.92);
+  color: #f5efdf;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.battle-objective-detail summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.battle-objective-detail > div {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  display: grid;
+  gap: 4px;
+  min-width: 250px;
+  max-width: min(420px, 70vw);
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid rgba(183, 170, 140, 0.38);
+  border-radius: 6px;
+  background: rgba(42, 35, 28, 0.96);
+  padding: 7px;
+}
+
+.battle-objective-detail > div span {
+  background: transparent;
+  padding: 2px 0;
+}
+
 .battle-objective span {
   background: rgba(47, 53, 40, 0.92);
   color: #f5efdf;
@@ -6958,8 +7083,9 @@ main {
 
 .battle-hud {
   display: grid;
-  grid-template-columns: minmax(320px, 2fr) minmax(240px, 1fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.55fr);
   gap: 12px;
+  align-items: start;
 }
 
 .unit-command-list {
@@ -6974,6 +7100,12 @@ main {
 .battle-unit-card.selected {
   border-color: rgba(47, 107, 69, 0.6);
   box-shadow: inset 0 0 0 1px rgba(47, 107, 69, 0.24);
+}
+
+.battle-unit-card:not(.selected) > p:nth-of-type(2),
+.battle-unit-card:not(.selected) .action-reason-detail,
+.battle-unit-card:not(.selected) .standing-order-panel {
+  display: none;
 }
 
 .unit-card-heading {
@@ -7355,6 +7487,29 @@ main {
 }
 
 @media (min-width: 921px) {
+  .app-shell-battle .resource-bar {
+    grid-template-columns: minmax(220px, 1.1fr) minmax(520px, 2.5fr) auto;
+    gap: 8px;
+    padding: 6px 12px;
+  }
+
+  .app-shell-battle .resource-bar div:first-child {
+    gap: 1px;
+  }
+
+  .app-shell-battle .resource-message {
+    display: block;
+    max-width: 390px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-shell-battle .resource-grid {
+    gap: 4px;
+    font-size: 11px;
+  }
+
   .resource-bar {
     grid-template-columns: minmax(300px, 1.1fr) minmax(520px, 1.9fr) auto;
     padding-inline: clamp(16px, 2.4vw, 32px);
@@ -7456,6 +7611,27 @@ main {
     margin: 0 auto;
   }
 
+  .screen-host-battle .battle-topbar {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .screen-host-battle .battle-topbar div:first-child {
+    gap: 7px;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .screen-host-battle .battle-topbar .button-row {
+    gap: 4px;
+  }
+
+  .screen-host-battle .battle-topbar .button-row button {
+    min-height: 30px;
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+
   .screen-host-battle .battle-layout > * {
     order: 10;
   }
@@ -7468,25 +7644,54 @@ main {
     order: 1;
   }
 
-  .screen-host-battle .battle-layout > .battle-alerts {
+  .screen-host-battle .battle-layout > .battle-reading-guide {
     order: 2;
   }
 
-  .screen-host-battle .battle-layout > .battle-map-scroll {
+  .screen-host-battle .battle-layout > .battle-alerts {
     order: 3;
   }
 
-  .screen-host-battle .battle-layout > .battle-hud {
+  .screen-host-battle .battle-layout > .battle-map-scroll {
     order: 4;
+  }
+
+  .screen-host-battle .battle-layout > .battle-hud {
+    order: 5;
   }
 
   .screen-host-battle .battle-layout > .withdrawal-forecast-panel,
   .screen-host-battle .battle-layout > .command-queue-panel {
-    order: 5;
+    order: 6;
+  }
+
+  .screen-host-battle .battle-layout > .fire-discipline-strip,
+  .screen-host-battle .battle-layout > .fire-mission-strip,
+  .screen-host-battle .battle-layout > .fire-plan-strip {
+    order: 7;
+  }
+
+  .screen-host-battle .battle-layout > .objective-staff-panel,
+  .screen-host-battle .battle-layout > .enemy-command-network-panel,
+  .screen-host-battle .battle-layout > .reserve-command-panel,
+  .screen-host-battle .battle-layout > .frontline-pressure-strip,
+  .screen-host-battle .battle-layout > .staff-advisory-panel,
+  .screen-host-battle .battle-layout > .frontline-command-panel,
+  .screen-host-battle .battle-layout > .selected-command-panel,
+  .screen-host-battle .battle-layout > .enemy-intent-panel {
+    order: 20;
   }
 
   .screen-host-battle .battle-map {
-    min-height: min(60vh, 620px);
+    min-height: clamp(360px, 52vh, 520px);
+  }
+
+  .screen-host-battle .battle-map-field {
+    min-width: 0;
+  }
+
+  .screen-host-battle .map-unit {
+    min-width: clamp(160px, 15vw, 224px);
   }
 
   .screen-host-battle .battle-hud {
@@ -7534,6 +7739,18 @@ main {
   .screen-host-battle .battle-alert {
     flex: 1 1 0;
     min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 7px;
+  }
+
+  .screen-host-battle .battle-alert-body {
+    flex: 1 1 auto;
+  }
+
+  .screen-host-battle .battle-alert-actions {
+    flex: 0 0 auto;
   }
 
   .screen-host-after-action .battle-spoils-box {

@@ -1,0 +1,20 @@
+{
+  "date": "2026-07-10",
+  "scope": "deterministic Battle tick replay fixture",
+  "fixtureUrl": "http://127.0.0.1:5174/battle-replay-fixture.html",
+  "input": "5 consecutive tick inputs from elapsedSeconds 0 through 4",
+  "result": {
+    "pass": true,
+    "sameInputResult": true,
+    "initialDigest": "9ad584c4",
+    "firstDigest": "45dfaf3a",
+    "secondDigest": "45dfaf3a",
+    "expectedDigest": "45dfaf3a",
+    "replayedElapsedSeconds": 5,
+    "expectedElapsedSeconds": 5,
+    "reason": "同じtick入力列の結果digestが一致"
+  },
+  "consoleErrors": 0,
+  "selectedBContractRoute": "seed付きeffect log + deterministic tick replay",
+  "notIncluded": "完全な命令入力リプレイは追加拡張として未実装"
+}
