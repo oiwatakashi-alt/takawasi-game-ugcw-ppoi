@@ -156,3 +156,13 @@
 - 判定: 素材はカード可読性を壊さないため採用。戦術map素材は密度再評価後に判断し、画像追加を自動的に拡張しない
 - ブロッカー: 個人VPS SSH port 22のConnection refusedは継続。M3 remote mutation/live QAは未実行
 - 次の一手: UIウェーブ2としてBattle警報/指揮密度とAfter Actionの数値階層をスクリーンショット起点で再編
+
+## T12 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 変更: Battle警報群を警報レールとしてグループ化し、After Actionの目標/戦利品/参謀責任のコントラストと旅団損耗カードの2列階層を調整
+- 証跡: `outputs/ui-reorg/13-battle-wave2.png`、`14-after-action-wave2.png`、`15-next-turn-wave2.png`、`qa-report-v3.json`、`repro-v3.md`
+- 検証: `npm run build`、local desktop 1280px、console error 0、console warning 0、broken image 0、horizontal overflow false
+- 行動結果: Theater→Camp→Deployment→Battle→After Action→第6戦略ターンCamp。Battleは戦線崩壊として保持し、After Actionの損耗・教訓・次ターン反映を確認
+- 範囲境界: UI表示のみ。gameplay、save schema、戦略/戦術境界、backend、VPS、会社資産、秘密情報、外部AIモデル委譲は変更なし
+- 次の一手: local screenshot QAを閉じ、VPS SSH回復後にPERSONAL_VPS_STATIC.mdのM3 releaseへ戻る

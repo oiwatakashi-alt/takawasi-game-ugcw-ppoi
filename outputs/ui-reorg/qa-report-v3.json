@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-07-10",
+  "scope": "local desktop screenshot-led UI reorganization wave 2",
+  "screenshots": [
+    "07-theater-map-v1.png",
+    "08-camp-map-v1.png",
+    "09-deployment-map-v1.png",
+    "13-battle-wave2.png",
+    "14-after-action-wave2.png",
+    "15-next-turn-wave2.png"
+  ],
+  "changes": [
+    "Battle warning cards are visually grouped into a warning rail.",
+    "After Action objective/spoils/accountability boxes now use readable light-surface contrast.",
+    "After Action unit-loss cards use a two-column name/detail hierarchy without deleting fields."
+  ],
+  "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> 第6戦略ターンCamp",
+  "runtimeQA": {
+    "viewportWidth": 1280,
+    "bodyWidth": 1280,
+    "bodyHeight": 2094,
+    "horizontalOverflow": false,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "finalRoute": "Camp",
+    "finalStrategicTurn": "第6戦略ターン"
+  },
+  "carryover": {
+    "battleOutcome": "戦線崩壊",
+    "afterActionObserved": true,
+    "nextTurnResourceAndArmyStateObserved": true
+  },
+  "scopeGuard": {
+    "gameplayLogicChanged": false,
+    "saveSchemaChanged": false,
+    "strategicTacticalBoundaryChanged": false,
+    "vpsTouched": false,
+    "externalModelDelegation": false
+  }
+}

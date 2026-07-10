@@ -40,6 +40,13 @@
 - 再撮影: `07-theater-map-v1.png`で左端の地形テクスチャを確認。カード文字の可読性は維持。
 - 導線再検証: `08-camp-map-v1.png`〜`12-next-turn-map-v1.png`で、画像導入後も一周と結果持越しを再確認。
 
+## UI再編ウェーブ2の結果
+
+- Battle: 警報カード群を赤い左境界付きの警報レールとしてまとめ、主戦場mapの前にある判断群のまとまりを明確化。
+- After Action: 目標・戦利品・参謀責任のチップを明色面で再配色し、右側の損耗カードを「部隊名 / 数値・任務」の2列へ再編。
+- 再撮影: `13-battle-wave2.png`、`14-after-action-wave2.png`、`15-next-turn-wave2.png`。
+- 実測: 第6戦略ターンCamp、console error 0、console warning 0、broken image 0、horizontal overflow false。
+
 ## 判定境界
 
 このループではgameplay、save schema、backend、VPS展開を変更しない。UIの読みやすさ・操作順・画面密度・グラフィックの視認性だけを扱う。

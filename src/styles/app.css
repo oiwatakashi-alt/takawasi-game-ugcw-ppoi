@@ -7484,4 +7484,71 @@ main {
     overflow: auto;
     scrollbar-color: #8e2f2b #c9bd9f;
   }
+
+  .screen-host-battle .battle-alerts {
+    padding: 7px 8px 8px;
+    border: 1px solid rgba(142, 47, 43, 0.28);
+    border-left: 5px solid #8e2f2b;
+    border-radius: 7px;
+    background: rgba(255, 252, 240, 0.68);
+  }
+
+  .screen-host-after-action .battle-spoils-box {
+    background: #e7dfcb;
+    border-color: #b9a77d;
+    color: #3b3025;
+  }
+
+  .screen-host-after-action .battle-spoils-box strong {
+    color: #8e2f2b;
+  }
+
+  .screen-host-after-action .battle-spoils-box span {
+    background: #f3eddd;
+    border-color: #c2ad84;
+    color: #3c3328;
+  }
+
+  .screen-host-after-action .intelligence-review-box {
+    background: #efddd2;
+    border-color: #c4826d;
+  }
+
+  .screen-host-after-action .intelligence-review-box span {
+    background: #f5e4db;
+    border-color: #d39a85;
+    color: #5b2d26;
+  }
+
+  .screen-host-after-action .tactical-lesson-preview-box {
+    background: #d9dec5;
+    border-color: #9cae78;
+  }
+
+  .screen-host-after-action .tactical-lesson-preview-box span {
+    background: #e9efd5;
+    border-color: #afbd8c;
+    color: #2f4a34;
+  }
+
+  .screen-host-after-action .two-column > .panel:last-child .history-item {
+    display: grid;
+    grid-template-columns: minmax(170px, 0.55fr) minmax(0, 1.45fr);
+    gap: 6px 14px;
+    align-items: start;
+  }
+
+  .screen-host-after-action .two-column > .panel:last-child .history-item h3 {
+    grid-column: 1;
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.25;
+  }
+
+  .screen-host-after-action .two-column > .panel:last-child .history-item p {
+    grid-column: 2;
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
 }
