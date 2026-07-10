@@ -205,3 +205,4 @@
 - M3 local preflight: release SHA `1ce85dd67b6a01da35288f0a61d3a9511370a00b`、個人GitHub main一致、`npm ci`/`npm run build`成功、dist 92 files / 2494657 bytes、checksum manifest固定
 - remote state: TCP/22 open、既存ローカルSSH経路auth_denied、HTTPS 404。remote release/current/vhost/nginx/live QA/rollbackは未実行
 - 証跡: `outputs/takawasi-vps-preflight-1ce85dd.json` / `outputs/takawasi-vps-release-1ce85dd67b6a01da35288f0a61d3a9511370a00b-sha256.txt`
+- read-only再確認: TCP/22 open、HTTPS 404。SSH auth_deniedは既存確認から変化なしとして扱い、認証回避・remote mutationは行わない

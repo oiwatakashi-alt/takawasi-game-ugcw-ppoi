@@ -16,7 +16,7 @@
     "strategicMapSourcePngInDist": false
   },
   "remoteChecks": {
-    "source": "prior read-only verification; no remote mutation in this preflight",
+    "source": "read-only verification: TCP/22 and HTTPS rechecked this turn; SSH auth state last confirmed auth_denied; no remote mutation",
     "tcp22": "open",
     "existingLocalSSHPath": "auth_denied",
     "httpsStatus": 404,
