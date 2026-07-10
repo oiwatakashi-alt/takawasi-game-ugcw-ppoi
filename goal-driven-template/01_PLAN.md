@@ -113,7 +113,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 
 ### フェーズ1: LUNA単騎のコア判定付き個人公開
 - 目的: LUNA単騎で現在の一周可能なゲームを個人stagingへ公開し、「既に多く作ったから」ではなく実操作・制作適合性・市場性・もう一度遊びたいかで続行/転換判定できる状態へ移す。北極星への接続: 製品版を完成させる方式と展開面を、会社資産に依存しない同じ個人環境で検査する
-- 予算: 目安12ターン(2026-07-10ユーザー指示によるスクリーンショット起点UI再編を追加。超過したら監査番が強制発火)
+- 予算: 目安18ターン(2026-07-10監査で、SSH復旧を含む個人VPS公開とM4三窓レビューを同一フェーズ内で完了するため再較正。超過したら監査番が強制発火)
 - マイルストーン:
   - [x] [型: 整備] [実行者: LUNA直営] v2.7.1、LUNA project default、会社用委譲指示の撤去、個人GitHub origin、secret-free個人VPS runbookを接続し、個人repoへpush — 受入: `.codex/config.toml`、4入口MD、personal origin疎通、`docs/deployment/PERSONAL_VPS_STATIC.md`、push済みcommit `05e8fc1`、goal計器全緑
   - [x] [型: リサーチ] [実行者: LUNA直営] 現行コアループをlocal desktopで一周し、操作ログまたは短い録画・各判断が後続画面をどう変えたか・動的欠陥を `outputs/` に保存 — 受入: Theater→Camp→Deployment→Battle→After Action→次ターンの再現手順と動的証跡、console error 0、broken image 0。証跡: `outputs/takawasi-local-loop-qa-report.json` / `outputs/takawasi-local-loop-repro.md`
@@ -123,7 +123,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
   - [x] [型: 実装] [実行者: LUNA直営] スクリーンショット起点UI再編ウェーブ3でDeployment主要操作とBattle警報railのviewport収まりを修復 — 受入: 1280pxでDeployment主要操作2件が上端可視、Battle警報6件がrail内、After Action/次ターン再走、console error 0、broken image 0、overflowなし。証跡: `outputs/ui-reorg/qa-report-v4.json` / `outputs/ui-reorg/repro-v4.md`
   - [x] [型: 実装] [実行者: LUNA直営] スクリーンショット起点UI再編ウェーブ4でAfter Action主要操作と共通ヘッダー直前報告の視認性を修復 — 受入: 1280pxでAfter Actionの幕舎遷移操作がファーストビューに可視、ヘッダーに直前報告ラベルと詳細title、Theater/Camp/After Action再走、console error 0、broken image 0、overflowなし。証跡: `outputs/ui-reorg/qa-report-v5.json` / `outputs/ui-reorg/repro-v5.md`
   - [x] [型: 実装] [実行者: LUNA直営] `dist/`を個人VPSのgit SHA別releaseへ配置し、`current` symlinkと専用nginx vhostで `game.takawasi-social.com` を公開 — 受入: versioned release、旧release温存、`nginx -t`成功、Takawasi Game固有内容のrendered smoke、live desktop一周QA、release SHA付き証跡、rollback手順の検証。証跡: `outputs/takawasi-vps-deploy-1ce85dd.json` / `outputs/takawasi-vps-live-qa-1ce85dd.png` / `outputs/takawasi-vps-live-after-action-1ce85dd.png` / `outputs/takawasi-vps-live-next-turn-1ce85dd.png`
-  - [ ] [型: 軸生成] [実行者: LUNA直営(マクロ→ミクロ→市場を文脈分離して直列実行)] 現行方式を含む制作適合性の異なる最低3案を、制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較し、各視点の指摘と採否を台帳化 — 受入: 比較表、LUNA直列3視点報告、同一モデル代替の明記、採用/棄却理由、既存実装量を続行理由に使っていないこと
+  - [x] [型: 軸生成] [実行者: LUNA直営(マクロ→ミクロ→市場を文脈分離して直列実行)] 現行方式を含む制作適合性の異なる最低3案を、制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較し、各視点の指摘と採否を台帳化 — 受入: 比較表、LUNA直列3視点報告、同一モデル代替の明記、採用/棄却理由、既存実装量を続行理由に使っていないこと。証跡: `outputs/m4-comparison-2026-07-10.md` / `outputs/m4-review-ledger-2026-07-10.md` / `hub/reports/from-codex/m4-macro-review-2026-07-10.md` / `hub/reports/from-codex/m4-micro-review-2026-07-10.md` / `hub/reports/from-codex/m4-market-review-2026-07-10.md`
   - [ ] [固定] [型: リサーチ] [実行者: 人間(効果判定)] local/live証跡と比較表を見て、現行方式を「もう一度遊びたい/条件付き続行/方式転換」のいずれかで判定 — 受入: 判定と理由が照合ログ・STATE決定ログに記録される
 - やらないこと: gameplay追加、content量産、balance調整、save schema変更、dependency追加、backend、AWS、会社account、Medixus、外部AIモデル委譲。UI骨格が安定するまでart量産は行わず、生成画像は後続の局所アセット補強に限定する。現行方式の境界・製品版/DLC1規模・戦略map/戦術map分離・主戦場省略不可は維持する
 - premortem:
@@ -176,6 +176,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 
 - フェーズ1後の問い: 個人staging上の現行「動的戦略+半自律戦術+軍団履歴+防御長期戦」を、制作適合性の違う代替方式よりもう一度遊びたいか。条件付きなら、どの条件が満たされるまでcontent量産を止めるか
 - 抜き取り検査: 月1回程度、証跡の再現手順を実際に叩いて一致を確かめる
+- 今回の検収パック: `outputs/m4-human-acceptance-pack-2026-07-10.md`。人間判定欄が未記入の間はフェーズ完了にしない
 
 ## ドリフト指標(監査番が使う閾値)
 
@@ -204,3 +205,5 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 - 2026-07-10 / 抜取監査 / `outputs/takawasi-battle-spoils-equipment-wear-qa-report.json` の戦利品・装備摩耗・camp復帰・console/broken image 0を `AfterActionScreen.tsx` / `applyCampaignDelta.ts` / `results.ts` と突合し一致。今周期はLUNA直営のためワーカー報告なし
 - 2026-07-10 / 監査 / MISSION承認後も赤を継続していた計器を、最新MISSION変更より後の明示的MISSION監査commitをackする方式へ修正。`bash goal-driven-template/tools/check.sh`でMISSION緑・実行番を確認 / 削除候補: なし
 - 2026-07-10 / M3 preflight / local build・clean worktree・個人GitHub main反映は成功。個人VPSはSSH port 22がConnection refused、HTTPSは404のため、release/vhost/reloadを実行せずblocked証跡を保存 / M3未完了
+- 2026-07-10 / 監査 / フェーズ消費13/12と自動テスト増分0を黄色として確認。ユーザーの総ターン上限なし、M3公開とM4三窓レビューが同一フェーズの完了条件なので、目安を18へ再較正して継続。削除候補は旧blocked artifact、直前T15のqa-report-v5は原本とsourceを突合して不一致なし
+- 2026-07-10 / M4軸生成 / 現行A・simulation-core先行B・scenario/content data先行Cを、実装量を除外して比較。LUNAがmacro→micro→marketを直列実行し、各指摘を採否台帳へ消費。暫定助言はBを背骨候補、Aの触感/境界保持、CはB後の量産層

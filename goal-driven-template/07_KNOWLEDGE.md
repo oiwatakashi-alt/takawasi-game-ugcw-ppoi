@@ -58,6 +58,12 @@
 - 状態: [検証済み] / ソース: `docs/00_DECISIONS.md`、`docs/01_PRODUCT_REQUIREMENTS.md`、`docs/08_STRATEGIC_CAMPAIGN_MAP.md`、`docs/10_TACTICAL_AUTONOMY_AND_FRONTLINE.md`、`FILEMAP.md`
 - 着地先: 00_MISSION 第0層、root AGENTS/CLAUDE
 
+## 2026-07-10 問い: 戦略/戦術/軍団履歴を持つ市場の声は何を褒め、何を嫌うか
+- 答え: Steam Communityの具体的レビューでは、長期campaign・戦場/軍管理・部隊の戦間成長・logistics・資源/進行が再戦理由として現れる。同時に、campaignが決め打ちに見える、tutorialが浅い、meta unlockが過剰という反転信号もある。これは代表性のある市場統計ではなく、M4ギャップ抽出の声である
+- 状態: [検証済み] / ソース: `hub/reports/from-codex/m4-market-review-2026-07-10.md`、`outputs/m4-comparison-2026-07-10.md`、`06_REVIEW_FILTER.md`
+- 原文アンカー: Ultimate General Steam review (2019/2025)、Radio General Steam review (2020)、Unity of Command II Steam review (2019)、The Last Spell Steam review (2025)。URLと短い逐語引用は市場レポートに固定
+- 着地先: `outputs/m4-review-ledger-2026-07-10.md` MKT-01〜04、`outputs/m4-human-acceptance-pack-2026-07-10.md`
+
 ## 着任パック(クローン配員用のナレッジ資産。05_CONTRACTSのクローン配員節が使う)
 
 反復して委譲する領域の知識は、台帳の項目から**着任パック**に編集して版管理する。

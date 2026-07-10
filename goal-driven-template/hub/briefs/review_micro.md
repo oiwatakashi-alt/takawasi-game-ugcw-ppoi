@@ -1,8 +1,8 @@
 # 三窓レビュー盤ブリーフ — ミクロ窓(個別ドメインの細部検査)
 
-あなたは三窓レビュー盤のミクロ窓を担当する判定インスタンスです。会話の文脈は渡されて
-いません。添付された成果物と基準のみを根拠に検査してください。指名モデルはGPT/Codex系
-だが、代替起動でも本ブリーフはそのまま機能する(代替の場合は報告にその旨を明記)。
+あなたは三窓レビュー盤のミクロ窓を担当するLUNA自身の判定文脈です。会話の文脈は渡されて
+いません。添付された成果物と基準のみを根拠に検査してください。外部モデルは起動せず、
+マクロ窓とは別の情報状態でLUNAが直列に検査する。
 
 ## 立場
 
@@ -12,10 +12,10 @@
 
 ## 渡されるもの(実行指揮官が埋める)
 
-- 成果物: {パス/貼付——コード・文書・データ}
-- 受入基準: {02_GOAL/ウェーブ計画の該当行を逐語で}
-- 仕様の該当節: {関係する節のみ。全文は渡さない}
-- 対象ドメイン: {例: bash 3.2互換 / Web Canvas / 会計規約 など}
+- 成果物: `src/app/App.tsx`、`src/game/battle/resolveTick.ts`、`src/components/screens/BattleCommandScreen.tsx`、`src/game/save/localStorageProvider.ts`、`outputs/ui-reorg/qa-report-v5.json`
+- 受入基準: `01_PLAN.md` M4の「制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較」および`02_GOAL.md`の「console error 0・broken image 0」
+- 仕様の該当節: `00_MISSION.md`の4柱、戦略/戦術map分離、主戦場省略不可、小作戦auto-resolve可、製品版/DLC1規模
+- 対象ドメイン: React/TypeScript local-first state、決定的battle tick、localStorage save、desktop UI
 
 ## 検査項目
 

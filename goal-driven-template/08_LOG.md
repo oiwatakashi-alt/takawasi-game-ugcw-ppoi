@@ -229,3 +229,16 @@
 - 証跡: `outputs/takawasi-vps-deploy-1ce85dd.json`、`outputs/takawasi-vps-live-qa-1ce85dd.png`、`outputs/takawasi-vps-live-after-action-1ce85dd.png`、`outputs/takawasi-vps-live-next-turn-1ce85dd.png`
 - 範囲境界: 個人GitHub/個人VPSのみ。AWS、会社GitHub、Medixus、秘密情報、外部AIモデル委譲、gameplay/save schema/backendは不使用
 - 次の一手: M4の方式3案比較とLUNA直列マクロ→ミクロ→市場レビューへ移る。turn_closeは状態/ログ/証跡整合を確認して緑で閉じる
+
+## T18 2026-07-10 監査 LUNA
+
+- 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`
+- check.sh: 赤なし。黄色はフェーズ消費13/12と実行番17回でテスト数行更新0。総ターン上限はなく、M3公開とM4レビューが未完了だったため停止せず、目安を18へ再較正
+- stop_check: 未チェック2件はM5人間判定と下書きフェーズ、humanops open 0。残存を完了扱いにはせず、検収パックへ集約
+- 監査抜取: T15のqa-report-v5をAfterAction/ResourceBarの原本sourceと突合し不一致なし
+- 削除候補: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`。停止履歴としてM4検収後まで保留し、削除は実行しない
+- 09_LEARNINGS: 未振り分け5行を`03_DISPATCH.md`のproject-local UI evidence guardへ刈り取り、全て改訂済みへ分類
+- M4: 現行A、simulation-core先行B、scenario/content data先行Cを比較。macro/micro/marketをLUNAだけで直列実行し、採否をledgerへ記録
+- 市場窓: Steam Community/Steam store/公式ページを06_REVIEW_FILTERで採取。Xと外部モデルは不使用。市場声は助言であり人間判定を代行しない
+- 証跡: `outputs/m4-comparison-2026-07-10.md` / `outputs/m4-review-ledger-2026-07-10.md` / `outputs/m4-human-acceptance-pack-2026-07-10.md` / `hub/reports/from-codex/m4-*-review-2026-07-10.md`
+- 判定: M4を証跡ベースで完了。M5は人間の「もう一度遊びたい／条件付き続行／方式転換」記入待ち。フェーズ完了・goal completeは申告しない
