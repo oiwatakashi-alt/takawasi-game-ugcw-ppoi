@@ -319,6 +319,16 @@
 - 判定: M5は未完了。人間が検収パックへ3択・理由・条件を記入するまでgoal completeを申告しない
 - 次の一手: `git commit --amend`後に`turn_close.sh`を再実行し、赤・黄が残らないことを確認する
 
+## T27 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: 現行f058545の公開状態を1280x720で再確認し、スクリーンショット起点の右欄観測とデプロイrunbookの状態を同期する
+- 結果: Theater reloadで主操作top304、主戦場/スキップ不可表示、console error 0、broken image 0、horizontal overflow false。右側小任務カードは幅341px・高さ803〜840px
+- 検証: `npm run build` pass。コードはf058545から差分なし。現行live再確認を`outputs/takawasi-vps-live-recheck-2026-07-10.md`へ保存
+- 修復: `docs/deployment/PERSONAL_VPS_STATIC.md`の歴史的preflight 404/未公開記述を現行f058545公開状態へ同期
+- 判定: 技術QAは緑。右欄の縦長はUI上の黄候補として残すが、M5人間判定前のため新UI仕様・方式・content量産は変更しない
+- 次の一手: 人間が検収パックへ3択・理由・条件を記入するまでM5を完了扱いにしない
+
 ## T25 2026-07-10 監査 LUNA
 
 - 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`

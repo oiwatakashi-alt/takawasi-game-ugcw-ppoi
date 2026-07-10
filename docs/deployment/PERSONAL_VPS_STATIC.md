@@ -1,6 +1,6 @@
 # Takawasi Game - Personal VPS Static Deployment
 
-Last verified: 2026-07-10
+Last verified: 2026-07-10 (current release rechecked)
 
 ## Scope
 
@@ -15,7 +15,7 @@ Deploy the Vite static build to the owner's personal infrastructure. This runboo
 - Release layout: `/var/www/subdomains/game/releases/<git-sha>/`
 - Active release: `/var/www/subdomains/game/current` symlink
 
-Read-only checks on 2026-07-10 proved that the personal repository exists at `main=2fa693e`, DNS for the staging host resolves to the personal VPS, nginx is running, the host is not yet an explicit `server_name`, and the HTTPS request currently reaches the VPS but returns `404`.
+Historical preflight before first deployment proved that the personal repository exists at `main=2fa693e`, DNS for the staging host resolves to the personal VPS, nginx is running, and the HTTPS request reached the VPS but returned `404`. That preflight state is superseded by the release record below.
 
 ## Non-Goals
 
@@ -40,7 +40,8 @@ Point `current` back to the previous release symlink, run `nginx -t`, reload ngi
 
 ## Current Status
 
-- Repository route: verified; local `origin` corrected and migration commit `05e8fc1` pushed to personal `main`.
-- DNS/VPS reachability: verified.
-- Explicit nginx vhost and deployment tree: not created.
-- Live game deployment: not started.
+- Repository route: verified; local `origin` is the personal repository and current documentation/audit commits are pushed to personal `main`.
+- Current release: `f058545e6597b5c966184b9198320a3627677f5b`, deployed as a SHA-named release with `current` symlink.
+- Deployment evidence: `outputs/takawasi-vps-deploy-f058545.json` records 92-file hash match, dedicated vhost, `nginx -t`, reload, rendered smoke, and rollback rehearsal.
+- Live QA evidence: `outputs/takawasi-vps-live-f058545-*.png` records 1280x720 Theater→Camp→Deployment→Battle→After Action→next-turn flow; latest read-only recheck is `outputs/takawasi-vps-live-recheck-2026-07-10.md`.
+- Live status: `https://game.takawasi-social.com/` is playable. Latest Theater recheck: console errors 0, broken images 0, horizontal overflow false, primary action top 304px.
