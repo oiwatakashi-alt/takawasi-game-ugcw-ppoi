@@ -41,6 +41,8 @@
 - 技術QA: console error 0、broken image 0、horizontal overflow false
 - rollback: 旧releaseへ一時切替してsmoke後、f058545へ復帰してsmoke合格
 - Battleは主戦場を手動操作し、3倍速と撤退操作を使った。小任務のauto-resolveには置き換えていない
+- 現行live再監査: `outputs/takawasi-vps-live-recheck-2026-07-10.md`。Theater主操作top304、主戦場/スキップ不可表示、console error 0、broken image 0、horizontal overflow false
+- 右欄の観測: 小任務カード4枚は幅341px、DOM上の高さ803px / 840px / 813px / 809px。切れや主操作の押し下げはないが、補助情報としてこの縦長が判断を助けたか、要約→詳細分離が必要かを人間が判定する
 
 ## 人間記入欄
 
@@ -49,3 +51,4 @@
 - 条件付き続行の条件: `[該当時に記入]`
 - 実操作で最も再戦したくなった判断: `[人間が記入]`
 - 実操作で最も説明不足だった判断: `[人間が記入]`
+- 右側小任務欄の評価（判断を助けた／情報過多／要約が必要）: `[人間が記入]`
