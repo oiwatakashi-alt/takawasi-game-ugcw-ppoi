@@ -132,3 +132,15 @@
 - 報告消費: なし（ワーカー委譲なし、LUNA直営）
 - ループ改善報告: remote接続失敗をlocal QA合格と混同せず、M3ゲートを停止境界で保った
 - 次の一手: SSH到達性の最終read-only再確認
+
+## T10 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- ユーザー指示: VPSを一旦止め、各画面のスクリーンショット起点でUI再編ループを一通り回す
+- 変更: 共通ヘッダーの長文制限、Theaterの3役列、Camp旅団カード2列化、Deployment配置面2列化、Battle主戦場mapを初期viewportへ移動、After Actionの2列固定を実装
+- 証跡: `outputs/ui-reorg/01-theater-v1.png`〜`06-next-turn-v1.png`、`outputs/ui-reorg/qa-report-v1.json`、`outputs/ui-reorg/repro-v1.md`
+- 検証: `npm run build`成功、local desktop 1280px、console error 0、console warning 0、broken image 0、horizontal overflow false
+- 行動結果: Theater→Camp→Deployment→Battle→After Action→第4戦略ターンCampを再確認。Battleの戦線崩壊は観測結果として保持し、ゲーム成功へ改変していない
+- 範囲境界: gameplay、save schema、backend、VPS、会社資産、秘密情報、外部AIモデル委譲は変更なし。画像生成は骨格の次ループへ保留
+- ブロッカー: 個人VPS SSH port 22のConnection refusedは継続。M3 remote mutation/live QAは未実行
+- 次の一手: スクリーンショット差分をもう一周確認し、骨格の重大な崩れがなければ主戦場/戦略mapの局所グラフィック生成へ進む

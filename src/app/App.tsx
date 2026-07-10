@@ -613,7 +613,7 @@ export function App() {
           onDeployment={() => setScreen("deployment")}
         />
       )}
-      <main>{renderScreen()}</main>
+      <main className={`screen-host screen-host-${screen}`}>{renderScreen()}</main>
       <footer className="app-footer">
         <span>現在戦区: {currentSector?.name}</span>
         <span>保存 v{campaign.saveVersion} / ローカル保存</span>

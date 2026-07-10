@@ -113,14 +113,15 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 
 ### フェーズ1: LUNA単騎のコア判定付き個人公開
 - 目的: LUNA単騎で現在の一周可能なゲームを個人stagingへ公開し、「既に多く作ったから」ではなく実操作・制作適合性・市場性・もう一度遊びたいかで続行/転換判定できる状態へ移す。北極星への接続: 製品版を完成させる方式と展開面を、会社資産に依存しない同じ個人環境で検査する
-- 予算: 目安8ターン(超過したら監査番が強制発火)
+- 予算: 目安12ターン(2026-07-10ユーザー指示によるスクリーンショット起点UI再編を追加。超過したら監査番が強制発火)
 - マイルストーン:
   - [x] [型: 整備] [実行者: LUNA直営] v2.7.1、LUNA project default、会社用委譲指示の撤去、個人GitHub origin、secret-free個人VPS runbookを接続し、個人repoへpush — 受入: `.codex/config.toml`、4入口MD、personal origin疎通、`docs/deployment/PERSONAL_VPS_STATIC.md`、push済みcommit `05e8fc1`、goal計器全緑
   - [x] [型: リサーチ] [実行者: LUNA直営] 現行コアループをlocal desktopで一周し、操作ログまたは短い録画・各判断が後続画面をどう変えたか・動的欠陥を `outputs/` に保存 — 受入: Theater→Camp→Deployment→Battle→After Action→次ターンの再現手順と動的証跡、console error 0、broken image 0。証跡: `outputs/takawasi-local-loop-qa-report.json` / `outputs/takawasi-local-loop-repro.md`
+  - [x] [型: 実装] [実行者: LUNA直営] スクリーンショット起点でTheater/Camp/Deployment/Battle/After Action/次ターンの画面骨格を再編 — 受入: desktop 1280pxの各画面PNG、共通ヘッダー整理、Camp/Deploymentの横はみ出し抑制、Battleの主戦場mapを初期viewportへ移動、console error 0、broken image 0、overflowなし。証跡: `outputs/ui-reorg/00_CONTROL.md` / `outputs/ui-reorg/qa-report-v1.json` / `outputs/ui-reorg/repro-v1.md`
   - [ ] [型: 実装] [実行者: LUNA直営] `dist/`を個人VPSのgit SHA別releaseへ配置し、`current` symlinkと専用nginx vhostで `game.takawasi-social.com` を公開 — 受入: versioned release、旧release温存、`nginx -t`成功、Takawasi Game固有内容のrendered smoke、live desktop一周QA、release SHA付き証跡、rollback手順の検証
   - [ ] [型: 軸生成] [実行者: LUNA直営(マクロ→ミクロ→市場を文脈分離して直列実行)] 現行方式を含む制作適合性の異なる最低3案を、制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較し、各視点の指摘と採否を台帳化 — 受入: 比較表、LUNA直列3視点報告、同一モデル代替の明記、採用/棄却理由、既存実装量を続行理由に使っていないこと
   - [ ] [固定] [型: リサーチ] [実行者: 人間(効果判定)] local/live証跡と比較表を見て、現行方式を「もう一度遊びたい/条件付き続行/方式転換」のいずれかで判定 — 受入: 判定と理由が照合ログ・STATE決定ログに記録される
-- やらないこと: gameplay追加、content量産、art量産、balance調整、save schema変更、dependency追加、backend、AWS、会社account、Medixus、外部AIモデル委譲、現行方式の欠点修正
+- やらないこと: gameplay追加、content量産、balance調整、save schema変更、dependency追加、backend、AWS、会社account、Medixus、外部AIモデル委譲。UI骨格が安定するまでart量産は行わず、生成画像は後続の局所アセット補強に限定する。現行方式の境界・製品版/DLC1規模・戦略map/戦術map分離・主戦場省略不可は維持する
 - premortem:
   - 既存実装量が暗黙の続行理由になる → 比較表からcommit数・ファイル数を除外し、制作適合性の異なる3案をLUNAが視点ごとに文脈を切って比較する
   - 静止画が良く見えるだけで動的欠陥を通す → 一周の操作ログまたは短い録画を受入必須にする

@@ -1,0 +1,57 @@
+{
+  "capturedAt": "2026-07-10",
+  "scope": "local desktop screenshot-led UI reorganization v1",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "screenshots": [
+    {
+      "screen": "Theater",
+      "file": "01-theater-v1.png",
+      "focus": "five-layer front, primary operation, side operations"
+    },
+    {
+      "screen": "Camp",
+      "file": "02-camp-v1.png",
+      "focus": "corps summary, two-column brigade board, unit inspector"
+    },
+    {
+      "screen": "Deployment",
+      "file": "03-deployment-v1.png",
+      "focus": "briefing, two-column deployment slots, field panel"
+    },
+    {
+      "screen": "Battle",
+      "file": "04-battle-v1.png",
+      "focus": "topbar, frontline controls, warning, tactical map in primary viewport"
+    },
+    {
+      "screen": "After Action",
+      "file": "05-after-action-v1.png",
+      "focus": "result meaning and carryover loss split from unit details"
+    },
+    {
+      "screen": "Next turn Camp",
+      "file": "06-next-turn-v1.png",
+      "focus": "result-applied resources, unit state and next-turn readiness"
+    }
+  ],
+  "runtimeQA": {
+    "routeAfterFlow": "Camp",
+    "strategicTurnAfterFlow": "第4戦略ターン",
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "bodyWidth": 1280,
+    "viewportWidth": 1280
+  },
+  "behaviorPreserved": {
+    "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> next-turn Camp",
+    "battleOutcome": "戦線崩壊を観測結果として保持。成功扱いへ改変していない。",
+    "gameplayLogicChanged": false,
+    "saveSchemaChanged": false,
+    "deploymentAttempted": false
+  }
+}
