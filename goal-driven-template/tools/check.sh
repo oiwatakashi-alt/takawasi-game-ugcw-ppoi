@@ -193,9 +193,23 @@ fi
 echo ""
 echo "-- MISSION変更検知 --"
 if [ -f 00_MISSION.md ]; then
-  mission_touches=$(loop_log -n "$N" --name-only --pretty=format: 2>/dev/null | grep -Ec '(^|/)00_MISSION.md$' || true)
-  if [ "${mission_touches:-0}" -gt 0 ]; then
-    red "直近${n}commit内に00_MISSION.mdへの変更が${mission_touches}件。変更記録欄の人間承認と突合せよ"
+  mission_commit=$(loop_log -n "$N" --format='%H' -- 00_MISSION.md 2>/dev/null | head -1 || true)
+  mission_audit=""
+  if [ -n "${mission_commit:-}" ]; then
+    while IFS="$(printf '\t')" read -r sha subject; do
+      [ -z "${sha:-}" ] && continue
+      [ "$sha" = "$mission_commit" ] && break
+      case "$subject" in
+        "[監査]"*MISSION*) mission_audit="$sha"; break ;;
+      esac
+    done <<EOF
+$(loop_log -n "$N" --format='%H%x09%s' 2>/dev/null || true)
+EOF
+  fi
+  if [ -n "${mission_audit:-}" ]; then
+    echo "[緑] MISSION変更は監査commit ${mission_audit}で承認突合済み"
+  elif [ -n "${mission_commit:-}" ]; then
+    red "直近${n}commit内の00_MISSION.md変更に、後続のMISSION監査commitがない。変更記録欄の人間承認と突合せよ"
   else
     echo "[緑] MISSIONへの変更なし"
   fi

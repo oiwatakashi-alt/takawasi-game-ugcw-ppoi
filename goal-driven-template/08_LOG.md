@@ -83,3 +83,14 @@
 - 報告消費: なし（ワーカー委譲なし、LUNA直営）
 - ループ改善報告: MISSION赤は承認突合で処理し、製品作業と混線させず記録層へ着地させた
 - 次の一手: M2 local desktopでTheater→Camp→Deployment→Battle→After Action→次ターンを実操作し、outputs/へ動的証跡を保存
+
+## T6 2026-07-10 監査 LUNA
+- 配車: `== 配車: 監査番(根拠: 規則2(計器に赤あり)) ==`
+- 赤処理: 承認済みMISSION変更を直近N窓だけで再赤化する`check.sh`を、後続の明示的MISSION監査commitでackする境界へ修正
+- 検証: `bash -n goal-driven-template/tools/check.sh`、MISSION変更→監査commitの現履歴で`check.sh`がMISSION緑になることを確認
+- 北極星照合: 計器の誤赤を除き、製品版規模の戦略・戦術・軍団・防御履歴QAへ復帰
+- 抜取/削除候補: 前番の戦利品QA抜取は一致。削除候補なし（固定境界・QA証跡）
+- 09_LEARNINGS: 今回の計器欠陥をプロジェクト限り・改訂済みとして刈り取り
+- 報告消費: なし（ワーカー委譲なし、LUNA直営）
+- ループ改善報告: 監査ack境界を計器へ移し、同じ承認突合を毎ターン繰り返さない
+- 次の一手: M2 local desktop一周QAへ進む

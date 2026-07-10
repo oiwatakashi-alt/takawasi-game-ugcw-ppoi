@@ -197,3 +197,4 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 - 2026-07-10 / 人間指示による再計画 / 会社DS/CCDS/AWS前提を撤去し、LUNA単騎+個人GitHub/VPS公開をコア再審査の前提へ追加 / 北極星照合: 製品完成の方式と実公開面を同じ個人環境で検査する
 - 2026-07-10 / 監査 / `05e8fc1` のMISSION変更をユーザー指示・変更記録・個人GitHub/VPS境界と突合し承認済みと判定。削除候補: なし（固定境界） / 次: M2 local一周
 - 2026-07-10 / 抜取監査 / `outputs/takawasi-battle-spoils-equipment-wear-qa-report.json` の戦利品・装備摩耗・camp復帰・console/broken image 0を `AfterActionScreen.tsx` / `applyCampaignDelta.ts` / `results.ts` と突合し一致。今周期はLUNA直営のためワーカー報告なし
+- 2026-07-10 / 監査 / MISSION承認後も赤を継続していた計器を、最新MISSION変更より後の明示的MISSION監査commitをackする方式へ修正。`bash goal-driven-template/tools/check.sh`でMISSION緑・実行番を確認 / 削除候補: なし
