@@ -1,0 +1,24 @@
+{
+  "capturedAt": "2026-07-10",
+  "localCommit": "3a4bc68b7bec00216a60ba4b73c60706f7f48b1e",
+  "personalGitHubMain": "3a4bc68b7bec00216a60ba4b73c60706f7f48b1e",
+  "localBuild": "passed",
+  "localQA": "passed",
+  "releaseTarget": "/var/www/subdomains/game/releases/<full-git-sha>/",
+  "activeRelease": "/var/www/subdomains/game/current",
+  "remoteChecks": {
+    "tcp22": "open",
+    "existingLocalSSHPath": "auth_denied",
+    "httpsStatus": 404,
+    "remoteMutation": false,
+    "nginxReload": false,
+    "liveQA": false,
+    "rollback": false
+  },
+  "evidence": [
+    "outputs/ui-reorg/qa-report-v3.json",
+    "outputs/ui-reorg/repro-v3.md",
+    "docs/deployment/PERSONAL_VPS_STATIC.md"
+  ],
+  "secretPolicy": "No password, token, API key, private key, username, or host address recorded."
+}

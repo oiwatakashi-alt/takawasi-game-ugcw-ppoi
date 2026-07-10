@@ -166,3 +166,13 @@
 - 行動結果: Theater→Camp→Deployment→Battle→After Action→第6戦略ターンCamp。Battleは戦線崩壊として保持し、After Actionの損耗・教訓・次ターン反映を確認
 - 範囲境界: UI表示のみ。gameplay、save schema、戦略/戦術境界、backend、VPS、会社資産、秘密情報、外部AIモデル委譲は変更なし
 - 次の一手: local screenshot QAを閉じ、VPS SSH回復後にPERSONAL_VPS_STATIC.mdのM3 releaseへ戻る
+
+## T13 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- preflight: local worktree clean、`npm run build`成功、個人GitHub `main`がlocal SHA `3a4bc68b7bec00216a60ba4b73c60706f7f48b1e`へ反映済み
+- read-only結果: TCP/22はopen、既存ローカルSSH経路はauth_denied、HTTPSは404
+- 変更範囲: remote release/current/vhost/nginx/reload/live QA/rollbackは未実行。別ユーザー・別鍵・認証回避なし
+- 証跡: `outputs/takawasi-vps-preflight-3a4bc68.json` / `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`
+- 範囲境界: 個人GitHubのみへpush。会社GitHub、AWS、Medixus、秘密情報は不使用
+- 次の一手: 認証状態が復旧したら同じSHAのversioned releaseを作成し、nginx -t、rendered smoke、live QA、rollbackへ進む
