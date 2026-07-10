@@ -16,7 +16,9 @@
 ## 証跡
 
 - local UI: `outputs/ui-reorg/qa-report-v5.json` / `outputs/ui-reorg/repro-v5.md`
-- VPS deployment/live: `outputs/takawasi-vps-deploy-1ce85dd.json` / `outputs/takawasi-vps-live-*.png`
+- VPS deployment/live (current): `outputs/takawasi-vps-deploy-f058545.json` / `outputs/takawasi-vps-live-f058545-*.png`
+- VPS deployment/live (historical): `outputs/takawasi-vps-deploy-1ce85dd.json` / `outputs/takawasi-vps-live-*.png`
+- UI review lens: `outputs/ui-reorg/screenshot-review-lens-v1.md`
 - 比較: `outputs/m4-comparison-2026-07-10.md`
 - 三窓: `hub/reports/from-codex/m4-macro-review-2026-07-10.md`、`m4-micro-review-2026-07-10.md`、`m4-market-review-2026-07-10.md`
 - 採否台帳: `outputs/m4-review-ledger-2026-07-10.md`
@@ -29,6 +31,16 @@
 - `もう一度遊びたい`: 現行Aを続行。Bの検証契約を次waveとして昇格し、CはB後に再評価。
 - `条件付き続行`: 条件を具体化し、満たすまでcontent量産を停止。候補条件は「battle save/reload」「seed/replayで同じ戦果」「戦果が次ターン戦略へ可視に残る」「初回説明導線の理解」の4つ。
 - `方式転換`: 現行Aのcontent量産を停止し、BまたはCのどこへ転換するかを理由付きで指定。
+
+## 最新公開版の確認材料
+
+- 公開release: `f058545e6597b5c966184b9198320a3627677f5b`
+- 公開URL: `https://game.takawasi-social.com/`
+- 1280x720 live一周: Theater→Camp→Deployment→Battle→After Action→第3戦略ターンCamp→Theater
+- UI面積: Theater主操作top304、Camp右情報面336px、Deployment右面325px、Battle主戦場map top448、After Action主操作top414
+- 技術QA: console error 0、broken image 0、horizontal overflow false
+- rollback: 旧releaseへ一時切替してsmoke後、f058545へ復帰してsmoke合格
+- Battleは主戦場を手動操作し、3倍速と撤退操作を使った。小任務のauto-resolveには置き換えていない
 
 ## 人間記入欄
 
