@@ -107,3 +107,16 @@
 - 発見: 司令部疲労と目標イベントが戦線崩壊・After Action教訓へ連鎖。欠点修正は現フェーズの範囲外として記録のみ
 - ループ改善報告: 状態遷移ごとにDOM/画像/consoleを観測し、静止画だけでなく動的操作ログを受入に結び付けた
 - 次の一手: 証跡commitを個人mainへ反映し、M3個人VPS static stagingへ進む
+
+## T8 2026-07-10 実行 LUNA
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 実施: `npm ci`、`npm run build`、`git diff --check`、goal計器を再確認。M2証跡commitを許可された個人GitHub mainへpush
+- preflight: clean worktree、local QA証跡、個人main反映を確認
+- ブロッカー: 個人VPS SSH port 22がConnection refused。HTTPSは404のまま
+- 停止範囲: release upload、current symlink、nginx vhost、nginx -t/reload、live QA、rollbackは未実行
+- 証跡: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`
+- 仮定: なし。接続回復までM3未完了として扱う
+- 報告消費: なし（ワーカー委譲なし、LUNA直営）
+- 発見: 初回接続後にSSH到達性が変化したため、認証回避や別展開先への迂回はしない
+- ループ改善報告: deploy gateをlocal/build/GitHub/remote write/live QAに分離し、remote未到達で成功宣言しない
+- 次の一手: SSH到達性と既存release/nginxをread-only再確認後、同じSHAのM3 deployを再開
