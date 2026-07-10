@@ -62,3 +62,12 @@
 - 報告消費: 接続情報の非secret部分とread-only Git/VPSプローブを、既存repo再利用・DNS作業不要・versioned release設計の判断に使用
 - 発見: 新規repoは不要。旧origin ownerのみ誤りで、個人repoとVPS/nginx基盤は既に存在
 - 次の一手: 本commitを個人origin mainへpushし、M1を完了へ更新してM2 local一周動的証跡へ進む
+
+## T4 2026-07-10 監査 LUNA
+- 配車: M1の不可逆Git push結果を監査し、STATE/FILEMAPをremote事実へ同期
+- 変更: 01_PLAN M1を完了、STATEをM2 local一周証跡へ遷移、FILEMAPとdeploy runbookをpush済みSHAへ更新
+- 検証: `git push origin main` → `2fa693e..05e8fc1 main -> main`、remote main SHA照合、turn contract再検査
+- 仮定: なし
+- 報告消費: T3のpush前検証をGit反映判断に使用し、既存個人repoを新規作成せず正本化
+- 発見: なし
+- 次の一手: 別セッションのLUNAでM2 local desktop一周動的証跡を取得し、通過後にM3個人VPS stagingへ進む

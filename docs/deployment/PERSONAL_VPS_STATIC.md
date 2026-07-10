@@ -40,7 +40,7 @@ Point `current` back to the previous release symlink, run `nginx -t`, reload ngi
 
 ## Current Status
 
-- Repository route: verified; local `origin` correction and push pending.
+- Repository route: verified; local `origin` corrected and migration commit `05e8fc1` pushed to personal `main`.
 - DNS/VPS reachability: verified.
 - Explicit nginx vhost and deployment tree: not created.
 - Live game deployment: not started.
