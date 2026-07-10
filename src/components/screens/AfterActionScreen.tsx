@@ -79,6 +79,11 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
           負傷兵収容率: {Math.round(result.medicalRecoveryRate * 100)}% / 収容復帰{" "}
           {Object.values(result.recoveredByUnit).reduce((sum, recovered) => sum + recovered, 0)}名
         </p>
+        <div className="after-action-primary-actions" aria-label="戦果報告の主要操作">
+          <button className="primary-button" type="button" onClick={onContinue}>
+            結果を反映して幕舎へ
+          </button>
+        </div>
         {medicalBonusDetails.length > 0 && (
           <div className="battle-spoils-box intelligence-review-box">
             <strong>救護線</strong>
@@ -215,9 +220,6 @@ export function AfterActionScreen({ result, onContinue }: AfterActionScreenProps
             ))}
           </div>
         )}
-        <button className="primary-button" type="button" onClick={onContinue}>
-          結果を反映して幕舎へ
-        </button>
       </div>
       <div className="panel">
         <div className="section-title">

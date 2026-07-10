@@ -1,0 +1,44 @@
+{
+  "capturedAt": "2026-07-10",
+  "scope": "local desktop screenshot-led UI reorganization wave 4",
+  "screenshots": [
+    "17-battle-alerts-wave3.png",
+    "20-after-action-wave4.png",
+    "21-next-turn-wave4.png",
+    "22-theater-header-wave4.png"
+  ],
+  "changes": [
+    "After Action primary transition is visible immediately after the result summary.",
+    "The common resource header labels the latest report and retains full text through title and aria-label while keeping the two-line summary."
+  ],
+  "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> 第9戦略ターンCamp -> Theater",
+  "runtimeQA": {
+    "viewportWidth": 1280,
+    "theaterScrollWidth": 1280,
+    "campScrollWidth": 1280,
+    "afterActionScrollWidth": 1280,
+    "afterActionBodyHeight": 1243,
+    "afterActionPrimaryActionVisible": true,
+    "afterActionPrimaryActionTop": 414,
+    "headerMessageLabel": "直前報告",
+    "headerMessageTitlePresent": true,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "horizontalOverflow": false,
+    "finalRoute": "Theater",
+    "finalStrategicTurn": "第9戦略ターン"
+  },
+  "carryover": {
+    "battleOutcome": "戦闘撤退",
+    "afterActionObserved": true,
+    "nextTurnResourceAndArmyStateObserved": true
+  },
+  "scopeGuard": {
+    "gameplayLogicChanged": false,
+    "saveSchemaChanged": false,
+    "strategicTacticalBoundaryChanged": false,
+    "vpsTouched": false,
+    "externalModelDelegation": false
+  }
+}

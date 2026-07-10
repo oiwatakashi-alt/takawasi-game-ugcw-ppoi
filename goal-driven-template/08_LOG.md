@@ -190,3 +190,15 @@
 - ブロッカー: 個人VPSはTCP/22 open後も既存ローカルSSH経路auth_denied、HTTPS 404。remote release/vhost/reload/live QA/rollbackは未実行
 - 次の一手: 共通ヘッダーとCamp/After Actionの上端・主作業面を再撮影比較し、UIループ閉鎖後に同じSHAのVPS release preflightへ戻る
 - 事後整備: `turn_close.sh`のdashboard再生成を同期対象へ含め、STATE/LOG/DASHBOARDの同一HEAD整合を閉じる
+
+## T15 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 変更: After Actionの「結果を反映して幕舎へ」を要約直後へ移動し、共通ヘッダーの直前報告へラベル/title/aria-labelを追加
+- 証跡: `outputs/ui-reorg/20-after-action-wave4.png`、`21-next-turn-wave4.png`、`22-theater-header-wave4.png`、`qa-report-v5.json`、`repro-v5.md`
+- 検証: `npm run build`成功、1280px、After Action主要操作可視、header label/titleあり、console error 0、console warning 0、broken image 0、overflowなし
+- 行動結果: Theater→Camp→Deployment→Battle→After Action→第9戦略ターンCamp→Theaterを再走。Battle結果は戦闘撤退として保持
+- 範囲境界: UI表示と証跡のみ。gameplay/save schema、戦略map/戦術map分離、主戦場省略不可、小任務auto-resolve、VPS、会社資産、秘密情報、外部AIモデル委譲は不変
+- 判定: 画像生成の追加は不要。local screenshot QAをwave4で閉じ、現行SHAのM3 release preflightへ戻す
+- ブロッカー: 個人VPSはTCP/22 open後も既存ローカルSSH経路auth_denied、HTTPS 404。remote release/vhost/reload/live QA/rollbackは未実行
+- 次の一手: 現行HEADのfull SHA、dist checksum、個人GitHub main反映、秘密混入なしを固定し、認証復旧後に同じSHAでM3を再開

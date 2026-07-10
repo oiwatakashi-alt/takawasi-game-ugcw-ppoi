@@ -13,7 +13,10 @@ export function ResourceBar({ campaign, onReset }: ResourceBarProps) {
       <div>
         <strong>第{campaign.turnNumber}戦略ターン</strong>
         <span>{campaign.theater.campaignChapter}</span>
-        <span>{campaign.lastMessage}</span>
+        <span className="resource-message" title={campaign.lastMessage} aria-label={`直前報告: ${campaign.lastMessage}`}>
+          <span className="resource-message-label">直前報告</span>
+          {campaign.lastMessage}
+        </span>
       </div>
       <div className="resource-grid">
         <span>軍資金 {resources.gold}</span>

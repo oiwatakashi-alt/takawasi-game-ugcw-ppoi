@@ -7299,12 +7299,29 @@ main {
   min-width: 0;
 }
 
-.resource-bar > div:first-child span:last-child {
+.resource-bar > div:first-child > span:last-child {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-height: 1.35;
+}
+
+.resource-bar > div:first-child .resource-message {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.35;
+}
+
+.resource-message-label {
+  color: #f0d58b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-right: 6px;
 }
 
 main {
@@ -7566,6 +7583,12 @@ main {
     margin: 0;
     font-size: 12px;
     line-height: 1.4;
+  }
+
+  .screen-host-after-action .after-action-primary-actions {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
   }
 }
 

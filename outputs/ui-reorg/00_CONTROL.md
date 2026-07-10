@@ -58,3 +58,11 @@
 - 再撮影: `16-deployment-actions-wave3.png`、`17-battle-alerts-wave3.png`、`18-after-action-wave3.png`、`19-next-turn-wave3.png`。
 - 実測: local desktop 1280px、Deployment画面でscrollWidth 1280 / viewport 1280、主要操作2件が可視。Battle警報6件がrail内へ収まり、console error 0、console warning 0、broken image 0。
 - 次回観測候補: 共通ヘッダーの直前メッセージは2行制限で省略されるため、情報を削らず要約表示と詳細表示を分ける案をスクリーンショットで再評価する。
+
+## UI再編ウェーブ4の結果
+
+- After Action: `結果を反映して幕舎へ` を戦果要約の直後へ移し、損耗一覧の下までスクロールしなくても次ターンへ進める。
+- 共通ヘッダー: 直前報告に可視ラベル、`title`、`aria-label`を追加。2行の要約表示を維持しつつ、全文参照の入口を残す。
+- 再撮影: `20-after-action-wave4.png`、`21-next-turn-wave4.png`、`22-theater-header-wave4.png`。
+- 実測: local desktop 1280px、After Action主要操作可視、Theater/Camp/After Action再走、console error 0、console warning 0、broken image 0、horizontal overflow false。
+- 判定: UI骨格のスクリーンショットループを一旦閉じ、画像生成は追加せず、次は現行SHAの個人VPS release preflightへ戻る。
