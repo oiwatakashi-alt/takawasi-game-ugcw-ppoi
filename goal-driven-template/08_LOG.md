@@ -310,3 +310,16 @@
 - 証跡: `outputs/m4-human-acceptance-pack-2026-07-10.md` / `outputs/takawasi-vps-deploy-f058545.json`
 - 範囲境界: 検収資料の更新のみ。個人VPSのcurrentはf058545、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
 - 次の一手: 人間が検収パックの3択と理由・条件を記入するまでM5を完了扱いにしない。目安ターンを超えたため、次番は計画・予算の監査配車へ従う
+
+## T25 2026-07-10 監査 LUNA
+
+- 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`
+- 目的: `stop_check.sh`、北極星、常駐入口、M3/M4証跡、M5検収待ち状態を突合し、現在の公開実績に計画・状態・ログを同期する
+- stop_check: 未完了マイルストーン1件は人間専任のM5判定、humanops open 0、発見リスト4件、候補置き場4件。M5は人間入力が必要なため、停止宣言・goal complete・方式選択は行わない
+- 北極星照合: `outputs/m4-human-acceptance-pack-2026-07-10.md`にf058545の公開URL、1280x720一周、右面/主操作面積、console error 0、broken image 0、rollbackを接続。製品版/DLC1規模、戦略map/戦術map分離、主戦場省略不可は維持
+- 入口同期: `00_MISSION.md`、`02_GOAL.md`、`03_DISPATCH.md`、`04_STATE.md`、`01_PLAN.md`を突合。LUNA単騎、個人GitHub/VPS限定、会社資産/AWS/Medixus/外部AIモデル不使用、UIの右面・主作業面・first viewport観点に不一致なし
+- 予算再較正: 19/18は、ユーザー許可後のTheater主操作修正、f058545公開、live desktop QA、rollback、M5検収接続までを実施した実績と照合し、`01_PLAN.md`と`04_STATE.md`の目安を24へ置換。これは総ターン上限の変更ではない
+- 証跡抜取: `outputs/takawasi-vps-deploy-f058545.json`とf058545のlive PNG群、`outputs/m4-save-reload-probe-2026-07-10.json`、`outputs/ui-reorg/screenshot-review-lens-v1.md`を確認。秘密値・接続情報は出力していない
+- 削除候補: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`はM5検収後まで保留。旧blocked証跡、発見4件、候補4件を削除・昇格しない
+- 判定: 計画監査は完了。コード、gameplay、save schema、VPS current、方式A/B/C、M5判定は変更なし。次は人間が検収パックへ3択・理由・条件を記入する
+- 次の一手: 監査commitとturn_closeを完了後、M5人間判定待ちで停止する
