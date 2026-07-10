@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-07-10",
+  "releaseSha": "1ce85dd67b6a01da35288f0a61d3a9511370a00b",
+  "probes": {
+    "tcp22": "open",
+    "httpsStatus": 404,
+    "directDomainSSH": "auth_or_transport_denied",
+    "existingLocalSSHPath": "auth_denied_last_confirmed"
+  },
+  "remoteMutation": false,
+  "nginxReload": false,
+  "liveQA": false,
+  "rollback": false,
+  "policy": "No alternate user, key, credential, host-verification bypass, company asset, or secret was used or recorded."
+}

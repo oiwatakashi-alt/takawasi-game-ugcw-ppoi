@@ -206,3 +206,13 @@
 - remote state: TCP/22 open、既存ローカルSSH経路auth_denied、HTTPS 404。remote release/current/vhost/nginx/live QA/rollbackは未実行
 - 証跡: `outputs/takawasi-vps-preflight-1ce85dd.json` / `outputs/takawasi-vps-release-1ce85dd67b6a01da35288f0a61d3a9511370a00b-sha256.txt`
 - read-only再確認: TCP/22 open、HTTPS 404。SSH auth_deniedは既存確認から変化なしとして扱い、認証回避・remote mutationは行わない
+
+## T16 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- M3 read-only再確認: TCP/22 open、HTTPS 404、直接domain SSH probeはauth_or_transport_denied
+- 既存ローカルSSH経路のauth_deniedを迂回せず、別ユーザー・別鍵・host verification bypass・remote writeは未実行
+- 対象release: `1ce85dd67b6a01da35288f0a61d3a9511370a00b` のlocal preflightを維持
+- 証跡: `outputs/takawasi-vps-readonly-2026-07-10.json`
+- 範囲境界: 個人GitHubと個人VPSのみ。会社GitHub、AWS、Medixus、秘密情報、外部AIモデル委譲は不使用
+- 次の一手: 認証状態が復旧したら同じSHAでrelease upload/current/nginx -t/live QA/rollbackを再開。復旧しない間はM3 remote mutationを停止
