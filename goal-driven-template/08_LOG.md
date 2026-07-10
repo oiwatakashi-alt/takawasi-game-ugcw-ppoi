@@ -274,3 +274,16 @@
 - 判定への影響: 次waveのスクショレビュー観点を強化した。UIコード、gameplay、save schema、方式A/B/C、VPS公開物は変更していない。M5人間判定は未完了のまま
 - 範囲境界: local screenshot review documentationのみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
 - 次の一手: 人間が検収パックの3択を記入するまでM5を完了扱いにせず、記入後の選択に応じて次waveのUI/方式作業を決める
+
+## T22 2026-07-10 監査 LUNA
+
+- 配車: `== 配車: 監査番(根拠: 規則2(計器に赤あり)) ==`
+- 目的: `check.sh`のMISSION変更検知赤を先に修復し、ユーザー許可による個人VPS再公開へ安全に進める境界を確認する
+- 原因: `00_MISSION.md`の最後の変更`05e8fc1`に対する`[監査] ... MISSION ...` commit `e2c59a2`が直近20commitの計器窓から外れていた。MISSION本文の新規変更ではない
+- 突合: MISSIONのLUNA単騎・個人GitHub/VPS限定・会社GitHub/AWS/Medixus/外部AI不使用は継続。今回のユーザー許可は個人VPSとHPを失敗許容で変更してよいという範囲拡張であり、境界違反ではない
+- 判定: 監査ackをこのcommitで固定。赤を解消してから、次番でbuild→個人VPS SHA release→nginx/live desktop QAへ進む。M5人間判定は未完了のまま保持
+- 削除候補: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`はM5検収後まで保留。今回削除なし
+- 北極星照合: 失敗を許容しつつ、個人公開先で実際に遊べる長期戦術キャンペーンを証跡付きで検証する方向は北極星と一致
+- 常駐入口: `goal-driven-template/00_MISSION.md`、`goal-driven-template/02_GOAL.md`、`goal-driven-template/03_DISPATCH.md`、`goal-driven-template/04_STATE.md`を突合し、現フェーズの個人境界とUI観点に不一致なし
+- 範囲境界: 監査と個人VPS実行準備のみ。会社資産、AWS、Medixus、外部AIモデル委譲は不使用。接続情報・秘密値はログへ出さない
+- 次の一手: `check.sh`が緑になった次番で、ユーザー許可どおり個人VPSへ再公開し、live desktopでプレイ可能性を確認する
