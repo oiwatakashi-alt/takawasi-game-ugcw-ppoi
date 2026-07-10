@@ -141,6 +141,14 @@ main {
   padding: 14px;
 }
 
+/* Screenshot-led UI reorganization v1: a low-contrast map texture gives the
+   strategic layer a visual anchor without competing with readable band cards. */
+.screen-host-campaign-map .map-panel {
+  background:
+    linear-gradient(rgba(243, 236, 218, 0.55), rgba(243, 236, 218, 0.55)),
+    url("../assets/generated/strategic-theater-map-v1.jpg") left center / cover no-repeat;
+}
+
 .section-title {
   display: flex;
   justify-content: space-between;

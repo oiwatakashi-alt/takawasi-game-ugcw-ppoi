@@ -144,3 +144,15 @@
 - 範囲境界: gameplay、save schema、backend、VPS、会社資産、秘密情報、外部AIモデル委譲は変更なし。画像生成は骨格の次ループへ保留
 - ブロッカー: 個人VPS SSH port 22のConnection refusedは継続。M3 remote mutation/live QAは未実行
 - 次の一手: スクリーンショット差分をもう一周確認し、骨格の重大な崩れがなければ主戦場/戦略mapの局所グラフィック生成へ進む
+
+## T11 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 変更: Codex内蔵image generationで生成した戦略map背景を生成元証跡`outputs/ui-reorg/strategic-theater-map-v1-source.png`として保存し、実行時JPEG`src/assets/generated/strategic-theater-map-v1.jpg`をTheater左の5層戦線map-panelへ低不透明度で適用
+- 証跡: `outputs/ui-reorg/asset-v1.md`、`07-theater-map-v1.png`、`08-camp-map-v1.png`〜`12-next-turn-map-v1.png`、`qa-report-v2.json`、`repro-v2.md`
+- 検証: `npm run build`成功、191 modules、local desktop 1280px、console error 0、console warning 0、broken image 0、horizontal overflow false
+- 行動結果: Theater→Camp→Deployment→Battle→After Action→第5戦略ターンCampを再走。Battleは戦線崩壊として観測し、After Actionの損耗/教訓/次ターン資源・兵力反映を確認
+- 範囲境界: 戦略map背景だけを追加。戦術map、gameplay、save schema、backend、VPS、会社資産、秘密情報、外部AIモデル委譲は変更なし
+- 判定: 素材はカード可読性を壊さないため採用。戦術map素材は密度再評価後に判断し、画像追加を自動的に拡張しない
+- ブロッカー: 個人VPS SSH port 22のConnection refusedは継続。M3 remote mutation/live QAは未実行
+- 次の一手: UIウェーブ2としてBattle警報/指揮密度とAfter Actionの数値階層をスクリーンショット起点で再編

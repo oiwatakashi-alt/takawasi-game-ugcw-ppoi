@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-07-10",
+  "scope": "local desktop screenshot-led UI reorganization v1, strategic map graphic pass",
+  "asset": "src/assets/generated/strategic-theater-map-v1.jpg",
+  "screenshots": [
+    "07-theater-map-v1.png",
+    "08-camp-map-v1.png",
+    "09-deployment-map-v1.png",
+    "10-battle-map-v1.png",
+    "11-after-action-map-v1.png",
+    "12-next-turn-map-v1.png"
+  ],
+  "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> 第5戦略ターンCamp",
+  "runtimeQA": {
+    "viewportWidth": 1280,
+    "bodyWidth": 1280,
+    "bodyHeight": 2094,
+    "horizontalOverflow": false,
+    "brokenImages": 0,
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "finalRoute": "Camp",
+    "finalStrategicTurn": "第5戦略ターン"
+  },
+  "carryover": {
+    "battleOutcome": "戦線崩壊",
+    "afterActionObserved": true,
+    "nextTurnResourceAndArmyStateObserved": true
+  },
+  "scopeGuard": {
+    "gameplayLogicChanged": false,
+    "saveSchemaChanged": false,
+    "backendChanged": false,
+    "vpsTouched": false,
+    "externalModelDelegation": false
+  }
+}

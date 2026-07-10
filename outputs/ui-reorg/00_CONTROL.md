@@ -30,6 +30,16 @@
 - 証跡: `01-theater-v1.png`〜`06-next-turn-v1.png`、`qa-report-v1.json`、`repro-v1.md`。
 - 実測: local desktop 1280px、console error 0、console warning 0、broken image 0、horizontal overflow false。
 
+## グラフィック補強 v1
+
+- 実行時素材: `src/assets/generated/strategic-theater-map-v1.jpg`
+- 生成元証跡: `outputs/ui-reorg/strategic-theater-map-v1-source.png`
+- 用途: Theater左側の5層戦線map-panelの低不透明度背景。文字・カード・操作要素は既存DOMを維持。
+- 生成条件: 16:9の古地図風・無文字・無UI・中央に余白を持つ戦略map背景。生成元はCodex内蔵image generation、repo内へversioned filenameでコピー。
+- 判定: 画像を主役にせず、戦略map層の存在感だけを補強する。可読性が落ちた場合は不採用へ戻せる。
+- 再撮影: `07-theater-map-v1.png`で左端の地形テクスチャを確認。カード文字の可読性は維持。
+- 導線再検証: `08-camp-map-v1.png`〜`12-next-turn-map-v1.png`で、画像導入後も一周と結果持越しを再確認。
+
 ## 判定境界
 
 このループではgameplay、save schema、backend、VPS展開を変更しない。UIの読みやすさ・操作順・画面密度・グラフィックの視認性だけを扱う。
