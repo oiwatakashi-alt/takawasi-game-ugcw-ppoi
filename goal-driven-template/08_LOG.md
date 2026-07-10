@@ -176,3 +176,16 @@
 - 証跡: `outputs/takawasi-vps-preflight-3a4bc68.json` / `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`
 - 範囲境界: 個人GitHubのみへpush。会社GitHub、AWS、Medixus、秘密情報は不使用
 - 次の一手: 認証状態が復旧したら同じSHAのversioned releaseを作成し、nginx -t、rendered smoke、live QA、rollbackへ進む
+
+## T14 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- ユーザー指示: VPS stagingより先に各画面のスクリーンショット起点UI再編ループを継続
+- 変更: Deployment主要操作を左ペイン上端へ移動、Battle警報6枚を1280px desktopで均等表示。gameplay/save schemaは変更なし
+- 証跡: `outputs/ui-reorg/16-deployment-actions-wave3.png`〜`19-next-turn-wave3.png`、`qa-report-v4.json`、`repro-v4.md`
+- 検証: `npm run build`成功、Deployment viewport 1280 / scrollWidth 1280、Battle alert 6件を1240px以内に収容、console error 0、console warning 0、broken image 0
+- 行動結果: Theater→Camp→Deployment→Battle→After Action→第8戦略ターンCamp→Theater→Deploymentを再走。Battle結果は戦闘撤退として保持
+- 範囲境界: UI表示とスクショ証跡のみ。戦略map/戦術map分離、主戦場省略不可、小任務auto-resolve境界、VPS、会社資産、秘密情報、外部AIモデル委譲は不変
+- 判定: 画像生成の追加は不要。共通ヘッダーの2行省略は次ウェーブのスクショ観測候補へ積む
+- ブロッカー: 個人VPSはTCP/22 open後も既存ローカルSSH経路auth_denied、HTTPS 404。remote release/vhost/reload/live QA/rollbackは未実行
+- 次の一手: 共通ヘッダーとCamp/After Actionの上端・主作業面を再撮影比較し、UIループ閉鎖後に同じSHAのVPS release preflightへ戻る

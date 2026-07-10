@@ -50,3 +50,11 @@
 ## 判定境界
 
 このループではgameplay、save schema、backend、VPS展開を変更しない。UIの読みやすさ・操作順・画面密度・グラフィックの視認性だけを扱う。
+
+## UI再編ウェーブ3の結果
+
+- Deployment: `幕舎へ戻る` と `選抜部隊で戦闘開始` を長い敵情・敵波タイムラインより前へ移し、左ペイン上端の主要操作として固定。操作は同じcallbackを維持し、gameplay境界は変更しない。
+- Battle: 警報レールの6カードを1280px desktopでは均等縮小して同一viewportへ収め、狭いdesktopでは従来どおり横スクロールへ切り替える。
+- 再撮影: `16-deployment-actions-wave3.png`、`17-battle-alerts-wave3.png`、`18-after-action-wave3.png`、`19-next-turn-wave3.png`。
+- 実測: local desktop 1280px、Deployment画面でscrollWidth 1280 / viewport 1280、主要操作2件が可視。Battle警報6件がrail内へ収まり、console error 0、console warning 0、broken image 0。
+- 次回観測候補: 共通ヘッダーの直前メッセージは2行制限で省略されるため、情報を削らず要約表示と詳細表示を分ける案をスクリーンショットで再評価する。

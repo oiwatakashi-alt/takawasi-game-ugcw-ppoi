@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-07-10",
+  "scope": "local desktop screenshot-led UI reorganization wave 3",
+  "screenshots": [
+    "07-theater-map-v1.png",
+    "16-deployment-actions-wave3.png",
+    "17-battle-alerts-wave3.png",
+    "18-after-action-wave3.png",
+    "19-next-turn-wave3.png"
+  ],
+  "changes": [
+    "Deployment primary actions are visible at the top of the briefing panel.",
+    "Battle warning rail fits six alert cards inside the 1280px desktop viewport while retaining horizontal scrolling below the wide-desktop threshold."
+  ],
+  "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> 第8戦略ターンCamp -> Theater -> Deployment",
+  "runtimeQA": {
+    "viewportWidth": 1280,
+    "deploymentScrollWidth": 1280,
+    "deploymentBodyHeight": 4068,
+    "deploymentBrokenImages": 0,
+    "deploymentConsoleErrors": 0,
+    "deploymentConsoleWarnings": 0,
+    "deploymentPrimaryActionsVisible": 2,
+    "battleAlertCardCount": 6,
+    "battleAlertCardsWithinViewport": true,
+    "battleBodyHorizontalOverflow": false,
+    "battleBrokenImages": 0,
+    "afterActionObserved": true,
+    "nextTurnResourceAndArmyStateObserved": true,
+    "finalRoute": "Deployment",
+    "finalStrategicTurn": "第8戦略ターン"
+  },
+  "carryover": {
+    "battleOutcome": "戦闘撤退",
+    "afterActionObserved": true,
+    "nextTurnObserved": true
+  },
+  "scopeGuard": {
+    "gameplayLogicChanged": false,
+    "saveSchemaChanged": false,
+    "strategicTacticalBoundaryChanged": false,
+    "vpsTouched": false,
+    "externalModelDelegation": false
+  }
+}

@@ -7413,6 +7413,17 @@ main {
     min-width: 0;
   }
 
+  .screen-host-deployment .deployment-primary-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin: 10px 0 12px;
+  }
+
+  .screen-host-deployment .deployment-primary-actions button {
+    min-width: 0;
+  }
+
   .screen-host-battle .battle-layout {
     max-width: 1600px;
     margin: 0 auto;
@@ -7493,6 +7504,11 @@ main {
     background: rgba(255, 252, 240, 0.68);
   }
 
+  .screen-host-battle .battle-alert {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .screen-host-after-action .battle-spoils-box {
     background: #e7dfcb;
     border-color: #b9a77d;
@@ -7550,5 +7566,25 @@ main {
     margin: 0;
     font-size: 12px;
     line-height: 1.4;
+  }
+}
+
+@media (min-width: 921px) and (max-width: 1220px) {
+  .screen-host-battle .battle-alerts {
+    overflow-x: auto;
+  }
+
+  .screen-host-battle .battle-alert {
+    flex: 0 0 196px;
+    min-width: 196px;
+  }
+}
+
+@media (max-width: 920px) {
+  .screen-host-deployment .deployment-primary-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin: 10px 0 12px;
   }
 }

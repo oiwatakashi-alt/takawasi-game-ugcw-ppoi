@@ -1827,6 +1827,28 @@ export function DeploymentScreen({
         </div>
         <h2>{operation.title}</h2>
         <p>主戦場へ投入する旅団を上限枠内で選ぶ。ここで選んだ部隊だけが前線配置に入る。</p>
+        <div className="deployment-primary-actions" aria-label="出撃操作">
+          <button type="button" onClick={onBackToCamp}>
+            幕舎へ戻る
+          </button>
+          <button
+            className="primary-button"
+            type="button"
+            disabled={selectedUnitIds.length === 0}
+            onClick={() =>
+              onStartBattle(
+                selectedUnitIds,
+                frontlineGeometry,
+                reserveDoctrine,
+                commandIssuePlan,
+                reserveUnitIds,
+                rearGuardUnitIds,
+              )
+            }
+          >
+            選抜部隊で戦闘開始
+          </button>
+        </div>
         <dl className="deployment-ledger">
           <dt>戦区</dt>
           <dd>{sector?.name}</dd>
@@ -1923,28 +1945,6 @@ export function DeploymentScreen({
               </div>
             ))}
           </div>
-        </div>
-        <div className="button-row">
-          <button type="button" onClick={onBackToCamp}>
-            幕舎へ戻る
-          </button>
-          <button
-            className="primary-button"
-            type="button"
-            disabled={selectedUnitIds.length === 0}
-            onClick={() =>
-              onStartBattle(
-                selectedUnitIds,
-                frontlineGeometry,
-                reserveDoctrine,
-                commandIssuePlan,
-                reserveUnitIds,
-                rearGuardUnitIds,
-              )
-            }
-          >
-            選抜部隊で戦闘開始
-          </button>
         </div>
         <div className="reserve-doctrine-panel">
           <div className="section-title">
