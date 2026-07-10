@@ -1,0 +1,78 @@
+{
+  "date": "2026-07-10",
+  "releaseSha": "f058545e6597b5c966184b9198320a3627677f5b",
+  "scope": "personal VPS static release and live desktop QA",
+  "source": "personal GitHub main",
+  "dist": {
+    "fileCount": 92,
+    "hashMatched": true,
+    "appleDoubleFiles": false,
+    "tarExtendedHeaderWarning": true
+  },
+  "remote": {
+    "shaReleaseCreated": true,
+    "previousReleaseRetained": true,
+    "currentSymlinkSwitched": true,
+    "nginxServerNameChecked": true,
+    "nginxRootChecked": true,
+    "nginxSpaFallbackChecked": true,
+    "nginxTest": "pass",
+    "nginxReload": "pass",
+    "renderedIndexSmoke": "pass",
+    "currentFileCount": 92
+  },
+  "rollback": {
+    "previousRelease": "d3cb6e97c5ade8e73e489c9814c476cc92a14d66",
+    "previousReleaseSmoke": "pass",
+    "newReleaseRestored": true,
+    "restoredReleaseSmoke": "pass",
+    "restoredLiveTheaterPrimaryActionTop": 304
+  },
+  "liveQA": {
+    "targetViewport": "1280x720",
+    "actualCssViewport": "1280x720",
+    "flow": "Theater -> Camp -> Deployment -> Battle -> After Action -> next-turn Camp -> Theater",
+    "theater": {
+      "primaryActionTop": 304,
+      "primaryActionVisible": true,
+      "sideOpsWidth": 365
+    },
+    "camp": {
+      "rightInspectorWidth": 336,
+      "rightInspectorHeight": 530
+    },
+    "deployment": {
+      "primaryActionTop": 340,
+      "rightFieldPanelWidth": 325
+    },
+    "battle": {
+      "battleAlertsTop": 314,
+      "battleMapTop": 448,
+      "manualMainBattle": true,
+      "retreatActionUsed": true
+    },
+    "afterAction": {
+      "primaryActionTop": 414,
+      "primaryActionVisible": true,
+      "carryoverVisible": true
+    },
+    "nextTurn": {
+      "strategicTurn": "第3戦略ターン",
+      "carryoverReportVisible": true
+    },
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "reportAriaLabelAndTitle": true
+  },
+  "screenshots": [
+    "outputs/takawasi-vps-live-qa-f058545-theater.png",
+    "outputs/takawasi-vps-live-f058545-camp.png",
+    "outputs/takawasi-vps-live-f058545-deployment.png",
+    "outputs/takawasi-vps-live-f058545-battle.png",
+    "outputs/takawasi-vps-live-f058545-after-action.png",
+    "outputs/takawasi-vps-live-f058545-next-turn-camp.png",
+    "outputs/takawasi-vps-live-f058545-next-theater.png"
+  ],
+  "uiChange": "Theater主操作を主戦場タイトル直後へ移動。gameplay、save schema、戦略/戦術境界は不変。"
+}

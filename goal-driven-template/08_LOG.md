@@ -295,7 +295,8 @@
 - 検出: `幕舎で準備する`のDOM top=810。horizontal overflowなしでも、長い主戦場情報の末尾に主操作があり、最初のviewportで遊び始められなかった
 - 修復: `src/components/screens/TheaterCommandScreen.tsx`で主操作を主戦場タイトル直後へ移動し、`theater-primary-action`で上端の操作面として表示。callback/gameplay/save schemaは変更なし
 - local QA: patch後のlocal browserで主操作top=300・visible、broken image 0、horizontal overflow falseを確認。ただしactual CSS viewportは3878x2181だったため、1280x720の厳密な再現は新SHAのlive probeで別記録する
-- 判定: d3cb6e9のVPS公開はrendered smoke合格だがUI受入未完了。修正SHAを再build→SHA release→live desktop QAするまで公開完了扱いにしない
-- 証跡: `src/components/screens/TheaterCommandScreen.tsx` / `src/styles/app.css`
-- 範囲境界: Theater UI配置のみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用(次段で個人VPS再公開)
-- 次の一手: clean worktreeをcommitし、修正SHAを個人GitHub mainと個人VPSへ反映して全導線を再走する
+- 判定: 修正SHA `f058545e6597b5c966184b9198320a3627677f5b`を個人GitHub mainと個人VPSへ反映。1280x720でTheater→Camp→Deployment→Battle→After Action→第3戦略ターンCamp→Theaterを再走し、console error 0、broken image 0、overflowなし。旧release rollback→修正release復帰もsmoke合格
+- 証跡: `outputs/takawasi-vps-deploy-f058545.json` / `outputs/takawasi-vps-live-qa-f058545-theater.png` / `src/components/screens/TheaterCommandScreen.tsx` / `src/styles/app.css`
+- UI面積結果: Theater主操作top304、Camp右情報面336px、Deployment右面325px、Battle警報top314・主戦場map top448、After Action主操作top414。右面を残しながら主操作をファーストビューへ戻した
+- 範囲境界: Theater UI配置と個人VPS公開のみ。会社資産、AWS、Medixus、外部AIモデル委譲は不使用。M5人間判定は未完了
+- 次の一手: 人間が検収パックの3択と理由・条件を記入するまでM5を完了扱いにしない
