@@ -1,0 +1,57 @@
+{
+  "target": "http://127.0.0.1:5173/",
+  "sourceCommit": "e2c59a2",
+  "flow": [
+    "Theater",
+    "Camp",
+    "Deployment",
+    "Battle",
+    "After Action",
+    "next turn Camp"
+  ],
+  "startState": "第2戦略ターン / Theater",
+  "endState": "第3戦略ターン / Camp",
+  "actions": [
+    "Theaterで『幕舎で準備する』を操作",
+    "Campで『出撃配置へ』を操作",
+    "Deploymentで6旅団の選抜を確認し『選抜部隊で戦闘開始』を操作",
+    "Battleを3倍速で進行し『勝利点保持』を発令",
+    "戦線崩壊後に『戦果報告へ』を操作",
+    "After Actionで『結果を反映して幕舎へ』を操作"
+  ],
+  "gameplayOutcome": {
+    "battle": "戦線崩壊",
+    "observed": [
+      "防衛時間53/150秒で戦線維持9%、敵制圧3%、勝利点0%、補給点100%、視界点0%",
+      "指揮信号途絶/命令混線と観測点沈黙/霧中突破が発生",
+      "After Actionに戦利品（針撃銃+3、猟兵銃+1）、装備摩耗、目標イベント対応、次戦教訓、負傷将校1名が表示",
+      "結果反映後、第3戦略ターンへ進み、補給462・軍資金1305などの資源と部隊史が更新"
+    ]
+  },
+  "checks": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "viewportWidth": 1280,
+    "documentWidth": 1280,
+    "stages": {
+      "theater": {"brokenImages": 0},
+      "camp": {"brokenImages": 0},
+      "deployment": {"brokenImages": 0},
+      "battle": {"brokenImages": 0},
+      "afterAction": {"brokenImages": 0},
+      "nextTurn": {"brokenImages": 0}
+    }
+  },
+  "evidence": [
+    "outputs/takawasi-local-loop-01-theater.png",
+    "outputs/takawasi-local-loop-02-camp.png",
+    "outputs/takawasi-local-loop-03-deployment.png",
+    "outputs/takawasi-local-loop-04-battle.png",
+    "outputs/takawasi-local-loop-05-after-action.png",
+    "outputs/takawasi-local-loop-06-next-turn.png",
+    "outputs/takawasi-local-loop-repro.md"
+  ],
+  "qaStatus": "flow-passed; gameplay failure preserved as observed evidence"
+}

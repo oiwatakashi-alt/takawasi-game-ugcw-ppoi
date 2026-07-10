@@ -94,3 +94,16 @@
 - 報告消費: なし（ワーカー委譲なし、LUNA直営）
 - ループ改善報告: 監査ack境界を計器へ移し、同じ承認突合を毎ターン繰り返さない
 - 次の一手: M2 local desktop一周QAへ進む
+
+## T7 2026-07-10 実行 LUNA
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 変更: local desktopでTheater→Camp→Deployment→Battle→After Action→第3戦略ターンCampを実操作し、6画面PNG・操作ログ・QA JSONを`outputs/`へ保存
+- 後続影響: Battleで勝利点喪失/指揮信号途絶/視界点喪失、After Actionで戦利品・装備摩耗・目標イベント教訓・負傷将校、次Campで資源/部隊史/装備品質を確認
+- 判定: M2導線QA受入。Battle結果は「戦線崩壊」として保存し、勝利扱いに改変しない
+- 検証: browser実操作、console error 0、console warn 0、broken image 0、horizontal overflow false、viewport/document 1280px
+- 証跡: `outputs/takawasi-local-loop-qa-report.json`、`outputs/takawasi-local-loop-repro.md`、`outputs/takawasi-local-loop-01-theater.png`〜`06-next-turn.png`
+- 仮定: なし。M2受入は導線/ランタイム証跡、面白さ・再戦価値はM4/M5の判定対象
+- 報告消費: なし（ワーカー委譲なし、LUNA直営）
+- 発見: 司令部疲労と目標イベントが戦線崩壊・After Action教訓へ連鎖。欠点修正は現フェーズの範囲外として記録のみ
+- ループ改善報告: 状態遷移ごとにDOM/画像/consoleを観測し、静止画だけでなく動的操作ログを受入に結び付けた
+- 次の一手: 証跡commitを個人mainへ反映し、M3個人VPS static stagingへ進む
