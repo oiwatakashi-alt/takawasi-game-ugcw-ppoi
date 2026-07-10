@@ -124,7 +124,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
   - [x] [型: 実装] [実行者: LUNA直営] スクリーンショット起点UI再編ウェーブ4でAfter Action主要操作と共通ヘッダー直前報告の視認性を修復 — 受入: 1280pxでAfter Actionの幕舎遷移操作がファーストビューに可視、ヘッダーに直前報告ラベルと詳細title、Theater/Camp/After Action再走、console error 0、broken image 0、overflowなし。証跡: `outputs/ui-reorg/qa-report-v5.json` / `outputs/ui-reorg/repro-v5.md`
   - [x] [型: 実装] [実行者: LUNA直営] `dist/`を個人VPSのgit SHA別releaseへ配置し、`current` symlinkと専用nginx vhostで `game.takawasi-social.com` を公開 — 受入: versioned release、旧release温存、`nginx -t`成功、Takawasi Game固有内容のrendered smoke、live desktop一周QA、release SHA付き証跡、rollback手順の検証。証跡: 現行`outputs/takawasi-vps-deploy-f058545.json` / `outputs/takawasi-vps-live-qa-f058545-theater.png` / `outputs/takawasi-vps-live-f058545-*.png`、歴史的初回`outputs/takawasi-vps-deploy-1ce85dd.json`
   - [x] [型: 軸生成] [実行者: LUNA直営(マクロ→ミクロ→市場を文脈分離して直列実行)] 現行方式を含む制作適合性の異なる最低3案を、制作適合性・市場層・楽しさ・受入の機械検証可能率・全損costで比較し、各視点の指摘と採否を台帳化 — 受入: 比較表、LUNA直列3視点報告、同一モデル代替の明記、採用/棄却理由、既存実装量を続行理由に使っていないこと。証跡: `outputs/m4-comparison-2026-07-10.md` / `outputs/m4-review-ledger-2026-07-10.md` / `goal-driven-template/hub/reports/from-codex/m4-macro-review-2026-07-10.md` / `goal-driven-template/hub/reports/from-codex/m4-micro-review-2026-07-10.md` / `goal-driven-template/hub/reports/from-codex/m4-market-review-2026-07-10.md`
-  - [ ] [固定] [型: リサーチ] [実行者: 人間(効果判定)] local/live証跡と比較表を見て、現行方式を「もう一度遊びたい/条件付き続行/方式転換」のいずれかで判定 — 受入: 判定と理由が照合ログ・STATE決定ログに記録される
+  - [x] [固定] [型: リサーチ] [実行者: 人間(効果判定)] local/live証跡と比較表を見て、現行方式を「もう一度遊びたい/条件付き続行/方式転換」のいずれかで判定 — 受入: `条件付き続行`、理由、条件をユーザーが明示し、検収パック・照合ログ・STATE決定ログへ記録
 - やらないこと: gameplay追加、content量産、balance調整、save schema変更、dependency追加、backend、AWS、会社account、Medixus、外部AIモデル委譲。UI骨格が安定するまでart量産は行わず、生成画像は後続の局所アセット補強に限定する。現行方式の境界・製品版/DLC1規模・戦略map/戦術map分離・主戦場省略不可は維持する
 - premortem:
   - 既存実装量が暗黙の続行理由になる → 比較表からcommit数・ファイル数を除外し、制作適合性の異なる3案をLUNAが視点ごとに文脈を切って比較する
@@ -134,8 +134,23 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
   - 会社用指示へ回帰する → 4入口MDと00_MISSIONにLUNA固定・会社資産不使用を重複境界として置き、brief時に確認する
 - 完了条件: 個人GitHub反映+local/live一周の動的証跡+rollback可能な個人staging+3案比較+LUNA直列3視点の採否+人間判定+検収パックが揃い、次フェーズが「現行続行」または「方式転換」の判定に従って書かれている
 
-### フェーズ2: [下書き] コア判定後の製品化
-- 現行方式の続行/転換判定後に書く。判定前は機能マイルストーンへ展開しない
+### フェーズ2: 条件付き続行・Scenario Pack整形とB契約準備
+- 目的: コンテンツ量産を先行せず、現行Aの画面触感と戦略/戦術境界を保ったまま、方式Bの再現可能なsimulation/effect契約へ接続できる型と最初のシナリオ設定を作る。北極星への接続: 判断が履歴になり、戦果が次の戦略・軍団・防御判断を変える製品版/DLC1規模の土台を、作者の手作業だけに依存しない
+- 予算: 目安12ターン(Scenario Packの型・テンプレート・初期設定・local QA・B契約の入口まで。超過したら監査番が強制発火)
+- マイルストーン:
+  - [x] [型: リサーチ] [実行者: LUNA直営] UGCW公式画面/システムと現状の戦闘画面・戦術ロジック・軍アニメーション表現を比較し、実装停止中の整形順を固定 — 受入: `WEBリサーチ/13_ugcw_vs_takawasi_battle_animation_gap_research.md`、公式ガイド/公式ページ/公式ストアの出典、1280x720のP0/P1/P2優先順位
+  - [x] [型: 整備] [実行者: LUNA直営] 型付きScenario Pack、作成ファクトリ、schema validator、作成手順書を追加 — 受入: `src/content/scenarioTypes.ts`、`src/content/templates/scenarioPackTemplate.ts`、`docs/content/SCENARIO_AUTHORING.md`、`docs/content/SCENARIO_PACK_TEMPLATE.md`、`npm run build` pass
+  - [x] [型: 実装] [実行者: LUNA直営] 初期Scenario Pack `border-emergency-001`をテンプレートから作成し、主戦場/小作戦/戦果持越しの境界を検証 — 受入: `src/content/baseGame/scenarioPacks.ts`、主戦場`isMandatory=true`/`canAutoResolve=false`、小作戦のみauto-resolve、`createCampaign`起動時validator
+  - [ ] [型: 実装] [実行者: LUNA直営] 方式Bの検証契約をBattle/save/replayへ接続 — 受入: Battle save/reload、seed/replayまたはevent/effect log、同一入力の結果一致、既存A UIと主戦場境界の維持
+  - [ ] [型: 実装] [実行者: LUNA直営] 右側補助面のsummary→detail整形と初回説明導線を再編 — 受入: 1280x720で主操作/主戦場可視、右欄の判断順が説明可能、console error 0、broken image 0、overflowなし
+  - [ ] [型: リサーチ] [実行者: LUNA直営] Scenario PackからTheater→Camp→Deployment→Battle→After Action→次ターンをlocal desktopで再走 — 受入: 操作ログ/再現手順/後続影響、console error 0、broken image 0、右欄観点の再撮影
+  - [ ] [型: 実装] [実行者: LUNA直営] 条件付き続行版を個人VPSへSHA別releaseしlive QA/rollback — 受入: `npm run build`、hash一致、専用vhost、`nginx -t`、rendered smoke、1280x720 live一周、rollback
+- やらないこと: Scenario Packの型・validator・初期設定1件・B契約の入口は行うが、テンプレート受入前のcontent量産、balance調整、DLC量産、backend、AWS、会社account、Medixus、外部AIモデル委譲、主戦場のauto-resolve、戦略/戦術map統合は行わない
+- premortem:
+  - schemaだけ増えてゲーム判断が薄くなる → carryoverと主戦場/小作戦境界をvalidatorとlocal QAへ含める
+  - A UIとB engineのadapter移行で全損する → 既存Aの画面触感を保持し、B契約を先にfixtureで検証する
+  - templateが作者向け文書だけでruntimeに接続されない → `createCampaign`起動時validatorと初期Packの型検証を必須にする
+  - 右欄整形が義務情報削除になる → summary/detailへ分け、情報の削除や画像置換を受入にしない
 
 ### 候補置き場(未着手・自由に追記——スコープ拡張の関門)
 
@@ -209,3 +224,4 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 - 2026-07-10 / M4軸生成 / 現行A・simulation-core先行B・scenario/content data先行Cを、実装量を除外して比較。LUNAがmacro→micro→marketを直列実行し、各指摘を採否台帳へ消費。暫定助言はBを背骨候補、Aの触感/境界保持、CはB後の量産層
 - 2026-07-10 / 監査 / フェーズ消費19/18を、ユーザー許可後のTheater主操作修正・f058545個人VPS再公開・1280x720 live QA・rollback・M5検収接続までの実績と照合し、目安を24へ再較正。M5人間判定は未完了、候補置き場4件と発見リスト4件は昇格させない
 - 2026-07-10 / 監査 / フェーズ消費25/24を、humanops M5起票と三窓/現行PNG参照修復までの実績と照合し、目安を27へ再較正。M5人間判定は未完了、候補置き場4件と発見リスト4件は昇格させない
+- 2026-07-10 / 人間判定 / ユーザーは`条件付き続行`を選択。コンテンツ量は一旦十分、もう一度遊びたいかは整形・テンプレート・初期シナリオ・B契約を仕上げるまで未判定とし、content量産を停止してフェーズ2へ遷移

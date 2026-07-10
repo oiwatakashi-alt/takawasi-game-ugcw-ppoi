@@ -385,6 +385,29 @@
 - 予算: 25/24を、humanops M5起票・三窓参照修復・現行PNG参照修復までの実績と照合し、`01_PLAN.md`/`04_STATE.md`の目安を27へ再較正。総ターン上限はなし
 - 判定: 技術QA・公開状態・証跡参照は緑。未完了は人間の3択・理由・条件・右欄評価だけ。次はM5人間記入待ち
 
+## T34 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 人間判定: ユーザーは`条件付き続行`を選択。コンテンツ量は一旦十分、再戦価値は整形後に再評価する。条件はBattle save/reload、seed/replayまたはevent/effect log、次ターン可視化、初回説明導線
+- フェーズ遷移: フェーズ1 M5を完了扱いにし、フェーズ2「Scenario Pack整形とB契約準備」へ移行。content量産はテンプレート受入まで停止
+- 実装: 型付きschema/validator、作成ファクトリ、`border-emergency-001`、Scenario Pack作成手順書/テンプレートを追加。`createCampaign`起動時validatorを接続
+- 検証: `npm run build` pass、主戦場非auto-resolve/小作戦auto-resolve/戦果持越しのPack境界を型検証。既存runtime画面挙動は未変更
+- humanops: `2026-07-10_m5-acceptance.md`をdoneへ移動。M5検収パックへユーザー判定と未判定項目の理由を記録
+- 次の一手: B契約・右欄summary/detail・初回説明導線を整え、Scenario Pack起点のlocal QAへ進む
+
+## T35 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: ユーザー指示により戦闘画面・戦術システム・軍アニメーションの実装を停止し、UGCWと現状を画像/システム/動作因果で比較する
+- 調査: UGCW公式ガイド/公式ページ/公式ストア、現状スクリーンショット、`BattleCommandScreen.tsx`、`resolveTick.ts`、`app.css`を突合。`WEBリサーチ/13_ugcw_vs_takawasi_battle_animation_gap_research.md`へ固定
+- 結論: 現状は戦術ロジックが不足しているのではなく、UGCWに比べマップ主役化、summary/detail分離、動きの視覚化が弱い。画像生成はP0/P1後の局所アセットに限定
+- 検証: `git diff --check`は次のturn_close前に実行。VPS、個人GitHub公開版、コード実装、戦闘QAは変更なし。ローカルdev serverは停止
+- 仮定: UGCWの動的アニメーション品質は静止画だけでは判定しない。次回は短い実機録画で待機→移動→射撃→圧迫→後退→戦果を確認する
+- 報告消費: なし。外部AIモデル委譲なし
+- 発見: `.map-unit`は最小幅224px、`isMoving`の主な表示差は破線枠。戦闘ロジックの状態数に対して画面が長文カード化している / STATE未解決へ転記
+- 予算脱落: local一周QAを中断し、ユーザー指定のUGCW比較へ繰り越し
+- 次の一手: battle viewport契約→B save/reload/replay契約→短い動的録画→局所アセットの順で再開
+
 ## T25 2026-07-10 監査 LUNA
 
 - 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`

@@ -17,8 +17,8 @@ for st in $STATIONS; do
 done
 # 導入・移行commitの互換タグ
 case "$msg" in "[整備]"*) tagged=1 ;; esac
-if [ "$tagged" -eq 1 ]; then echo "[緑] commitタグ: $msg"
-else echo "[赤] commitに番タグがない: 「$msg」(書式: [偵察/実行/監査] 要旨)"; ok=0; fi
+if [ "$tagged" -eq 1 ]; then echo "[緑] commitタグ: ${msg}"
+else echo "[赤] commitに番タグがない: 「${msg}」(書式: [偵察/実行/監査] 要旨)"; ok=0; fi
 
 files=$(git show --name-only --pretty=format: HEAD)
 if echo "$files" | grep -q "04_STATE.md"; then echo "[緑] STATE更新がHEADに含まれる"

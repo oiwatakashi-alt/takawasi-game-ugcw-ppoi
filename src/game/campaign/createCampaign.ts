@@ -6,6 +6,7 @@ import { createInitialResources } from "../logistics/types";
 import { createTheater } from "../theater/createTheater";
 import { applyStrategicTurnToTheater, generateStrategicTurn } from "../theater/generateStrategicTurn";
 import type { CampaignState } from "./types";
+import { assertScenarioPackValid, borderEmergencyScenarioPack } from "../../content/registries";
 
 const initialOfficers = (): Officer[] => [
   {
@@ -379,6 +380,7 @@ const initialArmy = (): ArmyState => ({
 });
 
 export const createCampaign = (): CampaignState => {
+  assertScenarioPackValid(borderEmergencyScenarioPack);
   const theater = createTheater();
   const activeStrategicTurn = generateStrategicTurn(theater);
   const theaterWithTurn = applyStrategicTurnToTheater(theater, activeStrategicTurn);

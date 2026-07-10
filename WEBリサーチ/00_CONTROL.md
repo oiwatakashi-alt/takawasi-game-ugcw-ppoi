@@ -31,6 +31,7 @@
 | `10_ugcw_uiux_gap_analysis.md` | done | UGCW比較で不足していたBattle Map、Armory、Career、Deployment GUIの差分分析と追加実装メモ。 |
 | `11_ugcw_army_scale_and_tactical_map_design.md` | done | UGCWの最大軍規模と戦術マップ情報層を、初期軍拡張・6旅団投入・VP/補給/視界/ミニマップ演出へ反映する設計メモ。 |
 | `12_tactical_rts_combat_model.md` | done | 戦術マップ上の座標、射程、最寄り目標射撃、敵部隊移動、防衛施設処理を初期RTSモデルへ落とした実装メモ。 |
+| `13_ugcw_vs_takawasi_battle_animation_gap_research.md` | done | UGCW公式画面/システムと現状戦闘画面・戦術ロジック・軍アニメーション表現の比較。次の整形順を定義。 |
 | `90_source_index.md` | done | 参照元と信頼度メモ。 |
 
 ## 優先ソース
