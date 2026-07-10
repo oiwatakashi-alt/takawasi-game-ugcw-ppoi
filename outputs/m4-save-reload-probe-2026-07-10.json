@@ -1,0 +1,22 @@
+{
+  "date": "2026-07-10",
+  "scope": "local desktop save/reload evidence for M5 acceptance",
+  "campaignReload": {
+    "before": {"screen": "Theater", "strategicTurn": 9},
+    "after": {"screen": "Theater", "strategicTurn": 9},
+    "stateMatch": true
+  },
+  "battleReload": {
+    "before": {"screen": "Battle", "elapsed": "0/150秒"},
+    "after": {"screen": "Theater", "strategicTurn": 9, "battleScreen": false},
+    "inProgressBattlePersisted": false
+  },
+  "desktopQA": {
+    "viewport": "1280x720",
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false
+  },
+  "interpretation": "Campaign save/reload is confirmed. In-progress Battle save/reload is not present in the current localStorage campaign envelope; this remains a human acceptance condition and was not changed in this probe.",
+  "screenshot": "outputs/m4-save-reload-campaign-2026-07-10.png"
+}

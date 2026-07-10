@@ -3,7 +3,7 @@
 1. 結論: ゲームロジックの純粋関数化された核はBへの足場になるが、UI時間制御・画面遷移・save境界が同じ契約になっていない。
 2. 良好: `src/game/battle/resolveTick.ts:1510`の`resolveTick`は`BattleState`を受けて次状態を返すため、seed付きfixture/replayの対象にできる。
 3. 良好: `src/app/App.tsx:76-79`はcampaign/screen/battle/lastResultを別stateで保持し、戦略map・battle・After Actionの境界は追跡できる。
-4. P1相当の未検証: `src/game/save/localStorageProvider.ts:15-35`が保存するのはcampaign envelopeで、battle stateのsave/reloadは対象導線で証明されていない。再現手順: Battle中にreloadし、同じbattleを継続できるか確認する。
+4. P1相当の確認済み: `src/game/save/localStorageProvider.ts:15-35`が保存するのはcampaign envelopeで、Battle中reloadではBattle画面が復帰せず第9ターンTheaterへ戻った。根拠: `outputs/m4-save-reload-probe-2026-07-10.json`。
 5. P1相当の設計臭: `BattleCommandScreen.tsx:2766-2772`が`window.setInterval`と`onChange(resolveTick(battle))`を所有する。React再描画とtick時間の再現契約が分離されていない。
 6. P2相当の受入不足: `qa-report-v5.json`はconsole/broken image/overflowとcarryoverを証明するが、seed/replay、save/reload、複数failure pathは証明しない。
 7. 採否: Bの「pure engine + event/effect log + replay fixture」は採用候補。次のcode waveで勝手に実装せず、人間の方式判定後に昇格する。

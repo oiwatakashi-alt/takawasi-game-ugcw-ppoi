@@ -242,3 +242,14 @@
 - 市場窓: Steam Community/Steam store/公式ページを06_REVIEW_FILTERで採取。Xと外部モデルは不使用。市場声は助言であり人間判定を代行しない
 - 証跡: `outputs/m4-comparison-2026-07-10.md` / `outputs/m4-review-ledger-2026-07-10.md` / `outputs/m4-human-acceptance-pack-2026-07-10.md` / `hub/reports/from-codex/m4-*-review-2026-07-10.md`
 - 判定: M4を証跡ベースで完了。M5は人間の「もう一度遊びたい／条件付き続行／方式転換」記入待ち。フェーズ完了・goal completeは申告しない
+
+## T19 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: M5人間判定の材料を増やすため、現行方式のsave/reload境界をlocal desktopで再現。方式A/B/Cの採否は変更していない
+- 結果: Theater第9ターンでreload後もTheater/第9ターンを保持。Battle開始直後にreloadするとBattle画面は復帰せずTheater/第9ターンへ戻った
+- QA: desktop 1280x720、console error 0、broken image 0、horizontal overflow false。再現JSONとcampaign screenshotを保存
+- 証跡: `outputs/m4-save-reload-probe-2026-07-10.json` / `outputs/m4-save-reload-campaign-2026-07-10.png`
+- 判定への影響: Battle save/reloadは条件付き続行の候補条件へ追加。現ターンではsave schema/gameplayを変更せず、方式を勝手に選ばない
+- 範囲境界: local browser QAのみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
+- 次の一手: 人間が検収パックの3択と条件を記入するまで、M5を完了扱いにしない
