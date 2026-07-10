@@ -120,3 +120,15 @@
 - 発見: 初回接続後にSSH到達性が変化したため、認証回避や別展開先への迂回はしない
 - ループ改善報告: deploy gateをlocal/build/GitHub/remote write/live QAに分離し、remote未到達で成功宣言しない
 - 次の一手: SSH到達性と既存release/nginxをread-only再確認後、同じSHAのM3 deployを再開
+
+## T9 2026-07-10 実行 LUNA
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 再確認: 既存ローカルSSH設定で個人VPSへread-only接続を再試行
+- 結果: SSH port 22が再度Connection refused。HTTPSは既存404のまま
+- 変更範囲: remote release/vhost/current/nginx/reload/live QAは未実行
+- 同一失敗: 2回目。3回目までは安全なread-only再確認、3回目は人間返上
+- 証跡: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md`
+- 仮定: なし。秘密・host verification回避・別展開先への迂回なし
+- 報告消費: なし（ワーカー委譲なし、LUNA直営）
+- ループ改善報告: remote接続失敗をlocal QA合格と混同せず、M3ゲートを停止境界で保った
+- 次の一手: SSH到達性の最終read-only再確認

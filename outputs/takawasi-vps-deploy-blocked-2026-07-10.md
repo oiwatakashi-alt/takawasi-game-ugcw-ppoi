@@ -12,6 +12,7 @@
 
 - The public staging URL still returns HTTP 404, which matches the pre-deployment state recorded in `docs/deployment/PERSONAL_VPS_STATIC.md`.
 - The read-only SSH probe first found the existing personal-VPS login path, but subsequent attempts returned `Connection refused` on port 22.
+- A fresh read-only retry at 2026-07-10 09:35 returned the same `Connection refused`; the blocker remains external reachability, not an authentication workaround.
 - No release directory, `current` symlink, nginx vhost, reload, or remote file mutation was performed.
 
 ## Resume gate
