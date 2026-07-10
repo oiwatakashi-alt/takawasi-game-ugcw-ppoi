@@ -228,4 +228,4 @@
 - rollback: コード/package同一のSHA `16b153d0ef5d952f390388bb140196b7673cdb62`を候補release化し、candidateへ切替→nginx -t/reload→live smoke→対象SHAへ復帰→live smokeを通過。現行は対象SHAへ復帰済み
 - 証跡: `outputs/takawasi-vps-deploy-1ce85dd.json`、`outputs/takawasi-vps-live-qa-1ce85dd.png`、`outputs/takawasi-vps-live-after-action-1ce85dd.png`、`outputs/takawasi-vps-live-next-turn-1ce85dd.png`
 - 範囲境界: 個人GitHub/個人VPSのみ。AWS、会社GitHub、Medixus、秘密情報、外部AIモデル委譲、gameplay/save schema/backendは不使用
-- 次の一手: M4の方式3案比較とLUNA直列マクロ→ミクロ→市場レビューへ移る
+- 次の一手: M4の方式3案比較とLUNA直列マクロ→ミクロ→市場レビューへ移る。turn_closeは状態/ログ/証跡整合を確認して緑で閉じる
