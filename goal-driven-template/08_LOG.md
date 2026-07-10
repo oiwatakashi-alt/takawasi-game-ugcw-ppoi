@@ -202,3 +202,6 @@
 - 判定: 画像生成の追加は不要。local screenshot QAをwave4で閉じ、現行SHAのM3 release preflightへ戻す
 - ブロッカー: 個人VPSはTCP/22 open後も既存ローカルSSH経路auth_denied、HTTPS 404。remote release/vhost/reload/live QA/rollbackは未実行
 - 次の一手: 現行HEADのfull SHA、dist checksum、個人GitHub main反映、秘密混入なしを固定し、認証復旧後に同じSHAでM3を再開
+- M3 local preflight: release SHA `1ce85dd67b6a01da35288f0a61d3a9511370a00b`、個人GitHub main一致、`npm ci`/`npm run build`成功、dist 92 files / 2494657 bytes、checksum manifest固定
+- remote state: TCP/22 open、既存ローカルSSH経路auth_denied、HTTPS 404。remote release/current/vhost/nginx/live QA/rollbackは未実行
+- 証跡: `outputs/takawasi-vps-preflight-1ce85dd.json` / `outputs/takawasi-vps-release-1ce85dd67b6a01da35288f0a61d3a9511370a00b-sha256.txt`

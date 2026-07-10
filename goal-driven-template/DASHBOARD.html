@@ -17,12 +17,12 @@ pre{white-space:pre-wrap;background:#f6f6f6;padding:.8rem;border-radius:6px;font
 nav a{margin-right:1rem}
 </style></head><body id="top">
 <h1>プロジェクトダッシュボード</h1>
-<p class="meta">生成: 2026-07-10 11:07 / 投入は user/drop/ へ。確認はこの1枚。</p>
+<p class="meta">生成: 2026-07-10 11:10 / 投入は user/drop/ へ。確認はこの1枚。</p>
 <nav><a href="#state">現在地</a><a href="#ho">人間操作TODO (0件)</a><a href="#user">ユーザー資料
 (投入0・昇格0・再検討0)</a></nav>
 
 <h2 id="state">現在地(04_STATEより)</h2>
-<div class="sec"><ul><li>フェーズ: LUNA単騎のコア判定付き個人公開(UI再編再計画: 2026-07-10)</li><li>現マイルストーン: local screenshot QA完了・UI再編wave4完了・個人VPS SHA release preflight待ち</li><li>直前に完了したこと: After Action主要操作を結果一覧の上端へ移し、共通ヘッダーへ直前報告ラベル/titleを追加。Theater→Camp→Deployment→Battle→After Action→第9戦略ターンCamp→Theaterを再走し、console error 0、broken image 0、overflowなしを確認</li><li>次の一手: local UIループはwave4で閉じ、現行HEADのSHA別release preflightを作り直す。個人VPSの認証復旧まではremote release/vhost/reload/live QA/rollbackを実行しない</li><li>ブロッカー: TCP/22は到達するが既存ローカルSSH経路がauth_denied。HTTPSは404、release/vhost/reloadは未実行。証跡: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md` / `outputs/takawasi-vps-preflight-3a4bc68.json`</li></ul></div>
+<div class="sec"><ul><li>フェーズ: LUNA単騎のコア判定付き個人公開(UI再編再計画: 2026-07-10)</li><li>現マイルストーン: local screenshot QA完了・UI再編wave4完了・個人VPS SHA release preflight固定・認証待ち</li><li>直前に完了したこと: After Action主要操作を結果一覧の上端へ移し、共通ヘッダーへ直前報告ラベル/titleを追加。Theater→Camp→Deployment→Battle→After Action→第9戦略ターンCamp→Theaterを再走し、console error 0、broken image 0、overflowなしを確認</li><li>次の一手: release SHA `1ce85dd67b6a01da35288f0a61d3a9511370a00b` のpreflightを固定済み。個人VPSの認証復旧まではremote release/vhost/reload/live QA/rollbackを実行しない。復旧後は同じSHAで再開する</li><li>ブロッカー: TCP/22は到達するが既存ローカルSSH経路がauth_denied。HTTPSは404、release/vhost/reloadは未実行。証跡: `outputs/takawasi-vps-deploy-blocked-2026-07-10.md` / `outputs/takawasi-vps-preflight-1ce85dd.json`</li></ul></div>
 
 <h2 id="ho">人間操作TODO — 0件</h2>
 <div class="sec"><p>未処理の人間操作はありません。</p></div>

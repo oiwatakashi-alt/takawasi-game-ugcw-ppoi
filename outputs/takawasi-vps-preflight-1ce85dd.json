@@ -1,0 +1,35 @@
+{
+  "capturedAt": "2026-07-10",
+  "releaseSha": "1ce85dd67b6a01da35288f0a61d3a9511370a00b",
+  "personalGitHubMain": "1ce85dd67b6a01da35288f0a61d3a9511370a00b",
+  "worktreeBeforeManifest": "clean",
+  "npmCi": "passed",
+  "npmBuild": "passed",
+  "localQA": "passed",
+  "releaseTarget": "/var/www/subdomains/game/releases/<full-git-sha>/",
+  "activeRelease": "/var/www/subdomains/game/current",
+  "dist": {
+    "fileCount": 92,
+    "totalBytes": 2494657,
+    "checksumManifest": "outputs/takawasi-vps-release-1ce85dd67b6a01da35288f0a61d3a9511370a00b-sha256.txt",
+    "strategicMapRuntimeAsset": "dist/assets/strategic-theater-map-v1-gaZIEKng.jpg",
+    "strategicMapSourcePngInDist": false
+  },
+  "remoteChecks": {
+    "source": "prior read-only verification; no remote mutation in this preflight",
+    "tcp22": "open",
+    "existingLocalSSHPath": "auth_denied",
+    "httpsStatus": 404,
+    "remoteMutation": false,
+    "nginxReload": false,
+    "liveQA": false,
+    "rollback": false
+  },
+  "evidence": [
+    "outputs/ui-reorg/qa-report-v5.json",
+    "outputs/ui-reorg/repro-v5.md",
+    "docs/deployment/PERSONAL_VPS_STATIC.md",
+    "outputs/takawasi-vps-release-1ce85dd67b6a01da35288f0a61d3a9511370a00b-sha256.txt"
+  ],
+  "secretPolicy": "No password, token, API key, private key, username, or host address recorded."
+}
