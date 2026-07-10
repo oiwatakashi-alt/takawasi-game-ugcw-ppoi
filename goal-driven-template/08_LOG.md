@@ -189,3 +189,4 @@
 - 判定: 画像生成の追加は不要。共通ヘッダーの2行省略は次ウェーブのスクショ観測候補へ積む
 - ブロッカー: 個人VPSはTCP/22 open後も既存ローカルSSH経路auth_denied、HTTPS 404。remote release/vhost/reload/live QA/rollbackは未実行
 - 次の一手: 共通ヘッダーとCamp/After Actionの上端・主作業面を再撮影比較し、UIループ閉鎖後に同じSHAのVPS release preflightへ戻る
+- 事後整備: `turn_close.sh`のdashboard再生成を同期対象へ含め、STATE/LOG/DASHBOARDの同一HEAD整合を閉じる
