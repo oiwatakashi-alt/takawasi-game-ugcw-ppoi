@@ -17,15 +17,27 @@ pre{white-space:pre-wrap;background:#f6f6f6;padding:.8rem;border-radius:6px;font
 nav a{margin-right:1rem}
 </style></head><body id="top">
 <h1>プロジェクトダッシュボード</h1>
-<p class="meta">生成: 2026-07-10 13:40 / 投入は user/drop/ へ。確認はこの1枚。</p>
-<nav><a href="#state">現在地</a><a href="#ho">人間操作TODO (0件)</a><a href="#user">ユーザー資料
+<p class="meta">生成: 2026-07-10 13:42 / 投入は user/drop/ へ。確認はこの1枚。</p>
+<nav><a href="#state">現在地</a><a href="#ho">人間操作TODO (1件)</a><a href="#user">ユーザー資料
 (投入0・昇格0・再検討0)</a></nav>
 
 <h2 id="state">現在地(04_STATEより)</h2>
-<div class="sec"><ul><li>フェーズ: LUNA単騎のコア判定付き個人公開(UI再編・個人VPS公開: 2026-07-10)</li><li>現マイルストーン: local/live QA・UI再編wave4・個人VPS公開・M4方式3案比較とLUNA直列レビュー完了・人間判定待ち</li><li>直前に完了したこと: 修正SHA `f058545e6597b5c966184b9198320a3627677f5b` を92ファイルのhash一致で個人VPSへ配置し、専用vhost、`nginx -t`、reload、rendered index smoke、live 1280x720一周、旧release rollback→新release復帰を完了。今回の現行live再確認でもTheater主操作top=304、console error 0、broken image 0、overflowなし。右側小任務カードは幅341px・高さ803〜840pxで縦長の黄候補</li><li>次の一手: 最新f058545公開版の検収材料を付けた`outputs/m4-human-acceptance-pack-2026-07-10.md`を人間が実操作し、「もう一度遊びたい／条件付き続行／方式転換」と理由・条件、右側小任務欄の評価を記入する。個人VPSはf058545へ復帰済み。M5判定後に01_PLANを閉じるか次wave条件を昇格する。デプロイrunbookの現行状態は同期済み</li><li>ブロッカー: M3/M4のブロッカーなし。未完了はM5人間判定と検収パックの人間記入のみ</li></ul></div>
+<div class="sec"><ul><li>フェーズ: LUNA単騎のコア判定付き個人公開(UI再編・個人VPS公開: 2026-07-10)</li><li>現マイルストーン: local/live QA・UI再編wave4・個人VPS公開・M4方式3案比較とLUNA直列レビュー完了・人間判定待ち</li><li>直前に完了したこと: 修正SHA `f058545e6597b5c966184b9198320a3627677f5b` を92ファイルのhash一致で個人VPSへ配置し、専用vhost、`nginx -t`、reload、rendered index smoke、live 1280x720一周、旧release rollback→新release復帰を完了。今回の現行live再確認でもTheater主操作top=304、console error 0、broken image 0、overflowなし。右側小任務カードは幅341px・高さ803〜840pxで縦長の黄候補</li><li>次の一手: `goal-driven-template/hub/humanops/open/2026-07-10_m5-acceptance.md`の手順で人間が最新f058545公開版を実操作し、「もう一度遊びたい／条件付き続行／方式転換」と理由・条件、右側小任務欄の評価を記入する。個人VPSはf058545へ復帰済み。M5判定後に01_PLANを閉じるか次wave条件を昇格する。デプロイrunbookの現行状態は同期済み</li><li>ブロッカー: M3/M4のブロッカーなし。未完了はM5人間判定と検収パックの人間記入。humanops openに人間専任起票済み</li></ul></div>
 
-<h2 id="ho">人間操作TODO — 0件</h2>
-<div class="sec"><p>未処理の人間操作はありません。</p></div>
+<h2 id="ho">人間操作TODO — 1件</h2>
+<div class="sec"><details open><summary><b>その他</b> (1件)</summary><ul><li><a href="#ho0">[M5検収判定: Takawasi Gameを実操作して3択を記入]</a> <span class="due">[なし。人間判定が入るまでM5を完了扱いにしない]</span></li></ul></details>
+<div class="card" id="ho0"><h4>[M5検収判定: Takawasi Gameを実操作して3択を記入]</h4>
+<p class="meta">なぜ必要: [フェーズ1の最後の未完了項目。現行方式を「もう一度遊びたい／条件付き続行／方式転換」で人間が効果判定する必要がある。エージェントはこの判定を代行しない]</p><a class="go" href="https://game.takawasi-social.com/" target="_blank">手続きを開く →</a>
+<details><summary>詳細(手順・事前情報・完了確認)</summary><pre># [M5検収判定: Takawasi Gameを実操作して3択を記入]
+- 種別: [その他]
+- なぜ必要: [フェーズ1の最後の未完了項目。現行方式を「もう一度遊びたい／条件付き続行／方式転換」で人間が効果判定する必要がある。エージェントはこの判定を代行しない]
+- 一次リンク: <a href="https://game.takawasi-social.com/" target="_blank">https://game.takawasi-social.com/</a>
+- 手順: [1. desktop 1280x720で一次リンクを開く。2. 検収パックの起動即デモに従い、Theater→Camp→Deployment→Battle→After Action→次ターンを操作する。3. Battleは主戦場を手動操作し、小作戦の自動解決へ置き換えない。4. 右側小任務欄が判断を助けたか、情報過多か、要約が必要かを確認する。5. `outputs/m4-human-acceptance-pack-2026-07-10.md`の3択・理由・条件・再戦したくなった判断・説明不足の判断・右欄評価を記入する]
+- 事前情報: [検収パック: `outputs/m4-human-acceptance-pack-2026-07-10.md`。現行release: f058545。必要な接続情報・password・token・API key・private keyは不要]
+- 完了確認: [検収パックの`[未判定]`、`[人間が記入]`、`[該当時に記入]`が判定内容へ置換されていることをエージェントがread-only確認する]
+- 期限/緊急度: [なし。人間判定が入るまでM5を完了扱いにしない]
+</pre></details>
+<p class="src">起票: 2026-07-10_m5-acceptance.md <a href="#top">↑戻る</a></p></div></div>
 
 <h2 id="user">ユーザー資料の状態</h2>
 <div class="sec"><h4>投入(未処理: 0件)</h4><p>未処理の投入なし。資料は user/drop/ に置くだけで次のループが拾います。</p>
