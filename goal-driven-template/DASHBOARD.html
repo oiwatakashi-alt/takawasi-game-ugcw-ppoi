@@ -17,12 +17,12 @@ pre{white-space:pre-wrap;background:#f6f6f6;padding:.8rem;border-radius:6px;font
 nav a{margin-right:1rem}
 </style></head><body id="top">
 <h1>プロジェクトダッシュボード</h1>
-<p class="meta">生成: 2026-07-10 14:49 / 投入は user/drop/ へ。確認はこの1枚。</p>
+<p class="meta">生成: 2026-07-10 15:57 / 投入は user/drop/ へ。確認はこの1枚。</p>
 <nav><a href="#state">現在地</a><a href="#ho">人間操作TODO (0件)</a><a href="#user">ユーザー資料
 (投入0・昇格0・再検討0)</a></nav>
 
 <h2 id="state">現在地(04_STATEより)</h2>
-<div class="sec"><ul><li>フェーズ: 条件付き続行・Scenario Pack整形とB契約準備(2026-07-10)</li><li>現マイルストーン: UGCW比較リサーチ（戦闘画面・戦術システム・軍アニメーション）／実装停止</li><li>直前に完了したこと: ユーザーが`条件付き続行`を判定。コンテンツ量は一旦十分、再戦価値は整形後に再評価する条件で、M5検収パックを確定しhumanopsをdoneへ移す。Scenario Pack schema/validator、作成ファクトリ、`border-emergency-001`、作成手順書を追加し`npm run build`を通過。UGCW公式ガイド/公式ページ/公式ストアと現状スクリーンショット・戦闘コードを比較する調査へ切り替えた</li><li>次の一手: `WEBリサーチ/13_ugcw_vs_takawasi_battle_animation_gap_research.md`を基準に、battle viewportの整形契約、B契約、短い動的録画の順で再開する。画像生成はP0/P1の後に局所アセットへ限定する。個人VPSは比較後のlocal QAまで触らない</li><li>ブロッカー: M5判定は解消。ユーザー指示によりBattle/戦術/軍アニメーションの実装を一旦停止。現状は戦術ロジックに対して画面の情報階層と動きの視覚化が不足している。content量産・VPS公開は停止</li></ul></div>
+<div class="sec"><ul><li>フェーズ: 条件付き続行・Scenario Pack整形とB契約準備(2026-07-10)</li><li>現マイルストーン: 方式B検証契約のBattle save/reload・effect log接続</li><li>直前に完了したこと: ユーザーが`条件付き続行`を判定。コンテンツ量は一旦十分、再戦価値は整形後に再評価する条件で、M5検収パックを確定しhumanopsをdoneへ移す。Scenario Pack schema/validator、作成ファクトリ、`border-emergency-001`、作成手順書を追加し`npm run build`を通過。UGCW比較で固定したP0/P1順に従い、Battle active save/reload、終了BattleのAfter Action復元、seed付きeffect logを接続しlocal QAを通した</li><li>次の一手: `docs/battle/BATTLE_SIMULATION_CONTRACT.md`を基準に、命令入力列を含む小さなreplay fixture/同一入力結果一致を固定し、battle viewportのsummary/detail整形と初回説明へ進む。画像生成はP0/P1の後に局所アセットへ限定する。個人VPSはlocal QA一周の再走後まで触らない</li><li>ブロッカー: 技術的ブロッカーなし。B契約は初期ゲートまで緑だが、完全な入力replay・同一入力結果fixture・viewport整形・初回説明は未達。content量産・VPS公開は停止</li></ul></div>
 
 <h2 id="ho">人間操作TODO — 0件</h2>
 <div class="sec"><p>未処理の人間操作はありません。</p></div>

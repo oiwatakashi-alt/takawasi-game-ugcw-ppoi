@@ -39,6 +39,7 @@ import {
 } from "./frontlineDefaults";
 import { alignStandingOrderToFrontlineSegments } from "./standingOrderDrafts";
 import { createTerrainZonesForBattle } from "./terrainEffects";
+import { initializeBattleAudit } from "./audit";
 
 const deploymentPositions: BattlePosition[] = [
   { x: 28, y: 25 },
@@ -930,7 +931,7 @@ export const createBattleState = (
     .filter((unit) => plannedRearGuardUnitIds.has(unit.unitId))
     .map((unit) => withdrawalRearGuardPlanAssessmentForUnit(unit, scenario));
 
-  return {
+  const initialState: BattleState = {
     scenario,
     elapsedSeconds: 0,
     speed: 1,
@@ -1016,4 +1017,5 @@ export const createBattleState = (
       },
     },
   };
+  return initializeBattleAudit(initialState);
 };

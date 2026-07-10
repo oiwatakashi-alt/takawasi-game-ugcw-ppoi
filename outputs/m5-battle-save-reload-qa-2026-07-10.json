@@ -1,0 +1,33 @@
+{
+  "date": "2026-07-10",
+  "scope": "local desktop Battle save/reload and finished Battle recovery",
+  "url": "http://127.0.0.1:5174/",
+  "steps": [
+    "第2戦略ターンのTheaterから幕舎、出撃配置、主戦場Battleへ進む",
+    "Battleを1倍で約3秒進め、防衛時間23秒付近でreload",
+    "reload後もBattle画面を復元し、防衛時間31秒、敵波3、戦線状態を確認",
+    "撤退実行から戦果報告へ進み、reload後もAfter Actionと主要操作を復元"
+  ],
+  "observed": {
+    "battleRecoveredAfterReload": true,
+    "battleProgressBeforeReloadSeconds": 23,
+    "battleProgressAfterReloadSeconds": 31,
+    "finishedBattleRecoveredAfterReload": true,
+    "afterActionContinueButtonRecovered": true,
+    "afterActionResultApplied": true,
+    "nextStrategicTurn": 3,
+    "activeBattleClearedAfterApply": true,
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "mainBattleSkipped": false
+  },
+  "contract": {
+    "saveVersion": 9,
+    "activeBattleEnvelope": true,
+    "seedAndEffectLog": true,
+    "fullInputReplay": false,
+    "sameInputResultFixture": false
+  },
+  "note": "Battle状態の保存復元とeffect log入口は緑。完全な入力replayと同一入力結果fixtureは未達として次ターンへ残す。"
+}

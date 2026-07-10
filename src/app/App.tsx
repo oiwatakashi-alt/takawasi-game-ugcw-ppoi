@@ -26,6 +26,7 @@ import { autoResolveSideOperation } from "../game/battle/autoResolve";
 import { createBattleScenario } from "../game/battle/createBattleScenario";
 import { createBattleState } from "../game/battle/createBattleState";
 import { createBattleResult } from "../game/battle/results";
+import { ensureBattleAudit, recordBattleTransition } from "../game/battle/audit";
 import type {
   BattlePosition,
   BattleResult,
@@ -56,7 +57,7 @@ import type { StaffIntelligenceDirectiveMode } from "../game/doctrine/types";
 import { buildFortification, repairFortification } from "../game/fortifications/build";
 import type { FortificationType } from "../game/fortifications/types";
 import { assignOfficerToUnit, promoteOfficer, restOfficer, returnOfficerToDuty } from "../game/officers/progression";
-import { clearSave, loadCampaign, saveCampaign } from "../game/save/localStorageProvider";
+import { clearSave, loadSaveEnvelope, saveCampaign } from "../game/save/localStorageProvider";
 
 const tacticalTerrainProfileFromUrl = (): "high_ground_los_drill" | "reverse_slope_los_drill" | undefined => {
   if (typeof window === "undefined") {
@@ -73,15 +74,28 @@ const tacticalTerrainProfileFromUrl = (): "high_ground_los_drill" | "reverse_slo
 };
 
 export function App() {
-  const [campaign, setCampaign] = useState<CampaignState>(() => loadCampaign() ?? createCampaign());
-  const [screen, setScreen] = useState<ScreenId>("campaign-map");
-  const [battle, setBattle] = useState<BattleState | null>(null);
-  const [lastResult, setLastResult] = useState<BattleResult | null>(null);
+  const initialSave = loadSaveEnvelope();
+  const initialCampaign = initialSave?.campaignState ?? createCampaign();
+  const initialBattle = initialSave?.activeBattle ? ensureBattleAudit(initialSave.activeBattle) : null;
+  const initialBattleFinished =
+    initialBattle?.status === "held" || initialBattle?.status === "withdrawn" || initialBattle?.status === "collapsed";
+  const [campaign, setCampaign] = useState<CampaignState>(() => initialCampaign);
+  const [screen, setScreen] = useState<ScreenId>(() =>
+    initialBattle ? (initialBattleFinished ? "after-action" : "battle") : "campaign-map",
+  );
+  const [battle, setBattle] = useState<BattleState | null>(() => initialBattle);
+  const [lastResult, setLastResult] = useState<BattleResult | null>(() =>
+    initialBattle && initialBattleFinished ? createBattleResult(initialBattle, initialCampaign.turnNumber) : null,
+  );
   const activeTacticalTerrainProfile = tacticalTerrainProfileFromUrl();
 
   useEffect(() => {
-    saveCampaign(campaign);
-  }, [campaign]);
+    saveCampaign(campaign, battle);
+  }, [battle, campaign]);
+
+  const updateBattle = useCallback((nextBattle: BattleState) => {
+    setBattle((current) => (current ? recordBattleTransition(current, nextBattle) : ensureBattleAudit(nextBattle)));
+  }, []);
 
   const currentSector = useMemo(
     () => campaign.theater.sectors.find((sector) => sector.id === campaign.theater.playerArmyPositionSectorId),
@@ -129,14 +143,15 @@ export function App() {
 
   const saveStandingOrderTemplate = useCallback((unit: BattleUnit, description?: string, frontlineSketchPoints?: BattlePosition[]) => {
     setCampaign((current) => saveStandingOrderTemplateForUnit(current, unit, description, frontlineSketchPoints));
-    setBattle((current) =>
-      current
-        ? {
-            ...current,
-            log: [`${unit.name}の自律指揮方針を戦役記録へ保存。`, ...current.log].slice(0, 12),
-          }
-        : current,
-    );
+    setBattle((current) => {
+      if (!current) {
+        return current;
+      }
+      return recordBattleTransition(current, {
+        ...current,
+        log: [`${unit.name}の自律指揮方針を戦役記録へ保存。`, ...current.log].slice(0, 12),
+      });
+    });
   }, []);
 
   const saveDeploymentStandingOrderTemplate = useCallback((unitId: string, standingOrder: StandingOrder, description?: string) => {
@@ -525,7 +540,7 @@ export function App() {
         <BattleCommandScreen
           battle={battle}
           standingOrderTemplates={campaign.standingOrderTemplates}
-          onChange={setBattle}
+          onChange={updateBattle}
           onComplete={completeBattle}
           onSaveStandingOrderTemplate={saveStandingOrderTemplate}
         />

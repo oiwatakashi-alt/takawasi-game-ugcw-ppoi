@@ -408,6 +408,19 @@
 - 予算脱落: local一周QAを中断し、ユーザー指定のUGCW比較へ繰り越し
 - 次の一手: battle viewport契約→B save/reload/replay契約→短い動的録画→局所アセットの順で再開
 
+## T36 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 再開: UGCW比較で止めていた実装を再開。Battleのメモリ状態だけ保存だったため、方式B初期ゲートへ範囲を限定
+- 実装: `SaveEnvelope.activeBattle`、save version 9、起動時Battle/After Action復元、`BattleState.audit`のseed/tick/digest/effect log、Battle上端の保存復帰表示を追加
+- 契約文書: `docs/battle/BATTLE_SIMULATION_CONTRACT.md`へ保存・監査・未達境界を固定
+- local QA: 23秒付近でreloadしてBattle復元、31秒まで継続。撤退→After Action後もreloadで戦果報告と主要操作を復元
+- 計測: console error 0、broken image 0、horizontal overflow false。主戦場スキップなし
+- 未達: 完全な命令入力replayと同一入力結果fixtureは未実装。B契約完了とは申告せず次番へ残す
+- 証跡: `outputs/m5-battle-save-reload-qa-2026-07-10.json`
+- 境界: Scenario Pack量産、画像生成、個人VPS、外部AIモデル委譲は実施していない
+- 次の一手: replay fixture/同一入力digestを固定し、その後viewport summary/detailと初回説明へ進む
+
 ## T25 2026-07-10 監査 LUNA
 
 - 配車: `== 配車: 監査番(根拠: 規則3(フェーズ予算超過)) ==`

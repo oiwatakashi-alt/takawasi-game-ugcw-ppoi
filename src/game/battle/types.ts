@@ -655,6 +655,7 @@ export interface BattleState {
   wavesSpawned: number;
   log: string[];
   objectiveState: BattleObjectiveState;
+  audit?: import("./audit").BattleAudit;
 }
 
 export interface BattleResult {

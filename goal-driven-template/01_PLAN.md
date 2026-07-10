@@ -141,6 +141,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
   - [x] [型: リサーチ] [実行者: LUNA直営] UGCW公式画面/システムと現状の戦闘画面・戦術ロジック・軍アニメーション表現を比較し、実装停止中の整形順を固定 — 受入: `WEBリサーチ/13_ugcw_vs_takawasi_battle_animation_gap_research.md`、公式ガイド/公式ページ/公式ストアの出典、1280x720のP0/P1/P2優先順位
   - [x] [型: 整備] [実行者: LUNA直営] 型付きScenario Pack、作成ファクトリ、schema validator、作成手順書を追加 — 受入: `src/content/scenarioTypes.ts`、`src/content/templates/scenarioPackTemplate.ts`、`docs/content/SCENARIO_AUTHORING.md`、`docs/content/SCENARIO_PACK_TEMPLATE.md`、`npm run build` pass
   - [x] [型: 実装] [実行者: LUNA直営] 初期Scenario Pack `border-emergency-001`をテンプレートから作成し、主戦場/小作戦/戦果持越しの境界を検証 — 受入: `src/content/baseGame/scenarioPacks.ts`、主戦場`isMandatory=true`/`canAutoResolve=false`、小作戦のみauto-resolve、`createCampaign`起動時validator
+  - [x] [型: 実装] [実行者: LUNA直営] 方式B検証契約の初期ゲートとしてBattle active save/reloadとseed付きeffect logを接続 — 受入: 進行中Battleのreload復元、終了BattleのAfter Action復元、console error 0、broken image 0。証跡: `docs/battle/BATTLE_SIMULATION_CONTRACT.md` / `outputs/m5-battle-save-reload-qa-2026-07-10.json`
   - [ ] [型: 実装] [実行者: LUNA直営] 方式Bの検証契約をBattle/save/replayへ接続 — 受入: Battle save/reload、seed/replayまたはevent/effect log、同一入力の結果一致、既存A UIと主戦場境界の維持
   - [ ] [型: 実装] [実行者: LUNA直営] 右側補助面のsummary→detail整形と初回説明導線を再編 — 受入: 1280x720で主操作/主戦場可視、右欄の判断順が説明可能、console error 0、broken image 0、overflowなし
   - [ ] [型: リサーチ] [実行者: LUNA直営] Scenario PackからTheater→Camp→Deployment→Battle→After Action→次ターンをlocal desktopで再走 — 受入: 操作ログ/再現手順/後続影響、console error 0、broken image 0、右欄観点の再撮影

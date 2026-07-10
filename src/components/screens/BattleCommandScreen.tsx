@@ -5443,6 +5443,7 @@ export function BattleCommandScreen({
           <span>発見 {spottedEnemyCount}/{battle.enemyUnits.length}</span>
           <span>隘路 {chokeSummary}</span>
           {battle.commandPost && <span>司令部 {battle.commandPost.label}</span>}
+          {battle.audit && <span>保存復帰可 / 監査 {battle.audit.events.length}件</span>}
         </div>
         <div className="button-row">
           {[0, 1, 2, 3].map((speed) => (

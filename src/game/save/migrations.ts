@@ -7,7 +7,7 @@ import { createInitialResources } from "../logistics/types";
 import { createEnemyCompositionIntel, normalizeEnemyCompositionIntel } from "../theater/enemyIntel";
 import type { Sector, StrategicOperation } from "../theater/types";
 
-export const CURRENT_SAVE_VERSION = 8;
+export const CURRENT_SAVE_VERSION = 9;
 
 const normalizeOperationEnemyIntel = (
   operation: StrategicOperation,
@@ -149,6 +149,14 @@ export const migrateSave = (save: SaveEnvelope): SaveEnvelope => {
     };
   }
   if (save.saveVersion < 8) {
+    return {
+      ...save,
+      saveVersion: CURRENT_SAVE_VERSION,
+      campaignState: normalizeCurrentCampaign(save.campaignState),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+  if (save.saveVersion < 9) {
     return {
       ...save,
       saveVersion: CURRENT_SAVE_VERSION,
