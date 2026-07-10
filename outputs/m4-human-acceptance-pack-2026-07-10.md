@@ -16,7 +16,7 @@
 ## 証跡
 
 - local UI: `outputs/ui-reorg/qa-report-v5.json` / `outputs/ui-reorg/repro-v5.md`
-- VPS deployment/live (current): `outputs/takawasi-vps-deploy-f058545.json` / `outputs/takawasi-vps-live-f058545-*.png`
+- VPS deployment/live (current): `outputs/takawasi-vps-deploy-f058545.json` / `outputs/takawasi-vps-live-qa-f058545-theater.png` / `outputs/takawasi-vps-live-f058545-*.png`
 - VPS deployment/live (historical): `outputs/takawasi-vps-deploy-1ce85dd.json` / `outputs/takawasi-vps-live-*.png`
 - UI review lens: `outputs/ui-reorg/screenshot-review-lens-v1.md`
 - 比較: `outputs/m4-comparison-2026-07-10.md`
