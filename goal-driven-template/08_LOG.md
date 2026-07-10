@@ -253,3 +253,13 @@
 - 判定への影響: Battle save/reloadは条件付き続行の候補条件へ追加。現ターンではsave schema/gameplayを変更せず、方式を勝手に選ばない
 - 範囲境界: local browser QAのみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
 - 次の一手: 人間が検収パックの3択と条件を記入するまで、M5を完了扱いにしない
+
+## T20 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: 人間のM5判定入力がまだないため、判定待ち状態を固定し、未承認の方式選択・追加実装を行わず引き継ぐ
+- 結果: `outputs/m4-human-acceptance-pack-2026-07-10.md`は未判定のまま。方式A/B/C、ゲーム仕様、save schema、VPS公開物に変更なし
+- 証跡: 直前T19のcampaign reload保持・Battle中reload非保持のprobeを判定材料として維持
+- 判定: M5未完了。人間が「もう一度遊びたい／条件付き続行／方式転換」と理由・条件を記入するまでgoal completeを申告しない
+- 範囲境界: local evidence/state管理のみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
+- 次の一手: 人間の検収パック記入後、その選択に応じて01_PLANのM5を閉じるか、条件を次waveへ昇格する
