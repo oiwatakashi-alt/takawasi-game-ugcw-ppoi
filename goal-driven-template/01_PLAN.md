@@ -113,7 +113,7 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 
 ### フェーズ1: LUNA単騎のコア判定付き個人公開
 - 目的: LUNA単騎で現在の一周可能なゲームを個人stagingへ公開し、「既に多く作ったから」ではなく実操作・制作適合性・市場性・もう一度遊びたいかで続行/転換判定できる状態へ移す。北極星への接続: 製品版を完成させる方式と展開面を、会社資産に依存しない同じ個人環境で検査する
-- 予算: 目安24ターン(2026-07-10監査で、ユーザー許可後のTheater主操作修正、個人VPS再公開、live一周QA、rollback、M5検収接続までを同一フェーズ内で完了する実績へ再較正。超過したら監査番が強制発火)
+- 予算: 目安27ターン(2026-07-10監査で、ユーザー許可後のTheater主操作修正、個人VPS再公開、live一周QA、rollback、M5検収接続、humanops起票、M5証跡参照修復までを同一フェーズ内で完了する実績へ再較正。超過したら監査番が強制発火)
 - マイルストーン:
   - [x] [型: 整備] [実行者: LUNA直営] v2.7.1、LUNA project default、会社用委譲指示の撤去、個人GitHub origin、secret-free個人VPS runbookを接続し、個人repoへpush — 受入: `.codex/config.toml`、4入口MD、personal origin疎通、`docs/deployment/PERSONAL_VPS_STATIC.md`、push済みcommit `05e8fc1`、goal計器全緑
   - [x] [型: リサーチ] [実行者: LUNA直営] 現行コアループをlocal desktopで一周し、操作ログまたは短い録画・各判断が後続画面をどう変えたか・動的欠陥を `outputs/` に保存 — 受入: Theater→Camp→Deployment→Battle→After Action→次ターンの再現手順と動的証跡、console error 0、broken image 0。証跡: `outputs/takawasi-local-loop-qa-report.json` / `outputs/takawasi-local-loop-repro.md`
@@ -208,3 +208,4 @@ Webを既定にしない。候補: Web / ネイティブGUI / TUI / 既存ツー
 - 2026-07-10 / 監査 / フェーズ消費13/12と自動テスト増分0を黄色として確認。ユーザーの総ターン上限なし、M3公開とM4三窓レビューが同一フェーズの完了条件なので、目安を18へ再較正して継続。削除候補は旧blocked artifact、直前T15のqa-report-v5は原本とsourceを突合して不一致なし
 - 2026-07-10 / M4軸生成 / 現行A・simulation-core先行B・scenario/content data先行Cを、実装量を除外して比較。LUNAがmacro→micro→marketを直列実行し、各指摘を採否台帳へ消費。暫定助言はBを背骨候補、Aの触感/境界保持、CはB後の量産層
 - 2026-07-10 / 監査 / フェーズ消費19/18を、ユーザー許可後のTheater主操作修正・f058545個人VPS再公開・1280x720 live QA・rollback・M5検収接続までの実績と照合し、目安を24へ再較正。M5人間判定は未完了、候補置き場4件と発見リスト4件は昇格させない
+- 2026-07-10 / 監査 / フェーズ消費25/24を、humanops M5起票と三窓/現行PNG参照修復までの実績と照合し、目安を27へ再較正。M5人間判定は未完了、候補置き場4件と発見リスト4件は昇格させない
