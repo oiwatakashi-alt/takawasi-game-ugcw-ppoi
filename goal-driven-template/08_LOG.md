@@ -263,3 +263,14 @@
 - 判定: M5未完了。人間が「もう一度遊びたい／条件付き続行／方式転換」と理由・条件を記入するまでgoal completeを申告しない
 - 範囲境界: local evidence/state管理のみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
 - 次の一手: 人間の検収パック記入後、その選択に応じて01_PLANのM5を閉じるか、条件を次waveへ昇格する
+
+## T21 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: ユーザー指摘の「右側情報欄が妙に長い」を、次のスクリーンショット起点UI再編で再現可能に判定する観点へ整理する
+- 結果: 指定解像度だけでなく、主作業面/補助面の機能面積、縦長情報の要約・詳細分離、主判断のファーストビュー可視性を採点軸へ追加。overflowなしだけでは合格にしない
+- 発見: 今回のlocal再走で画像pixel寸法1280x720とDOM CSS viewport3878x2181が一致しないケースを確認。指定viewport、実CSSviewport、画像寸法を別々に記録する
+- 証跡: `outputs/ui-reorg/screenshot-review-lens-v1.md`
+- 判定への影響: 次waveのスクショレビュー観点を強化した。UIコード、gameplay、save schema、方式A/B/C、VPS公開物は変更していない。M5人間判定は未完了のまま
+- 範囲境界: local screenshot review documentationのみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用
+- 次の一手: 人間が検収パックの3択を記入するまでM5を完了扱いにせず、記入後の選択に応じて次waveのUI/方式作業を決める
