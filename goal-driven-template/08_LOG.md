@@ -71,3 +71,15 @@
 - 報告消費: T3のpush前検証をGit反映判断に使用し、既存個人repoを新規作成せず正本化
 - 発見: なし
 - 次の一手: 別セッションのLUNAでM2 local desktop一周動的証跡を取得し、通過後にM3個人VPS stagingへ進む
+
+## T5 2026-07-10 監査 LUNA
+- 配車: `== 配車: 監査番(根拠: 規則2(計器に赤あり)) ==`
+- 赤処理: `05e8fc1` のMISSION変更をユーザー指示、変更記録、個人GitHub/VPS境界へ突合し承認済みと判定
+- 抜取監査: `outputs/takawasi-battle-spoils-equipment-wear-qa-report.json` とAfter Action/戦果適用ソースが一致。未検証の主張なし
+- 北極星照合: 戦略・戦術・軍団育成・防御陣地の履歴持越しを検証するM2へ直結
+- 09_LEARNINGS: 未振り分け行なし。既存のテンプレ候補はその状態を維持
+- 削除候補: なし（MISSIONの固定境界は退役候補にしない）
+- 検証: `git diff --check`、監査記録の差分確認。次番へ移行可能
+- 報告消費: なし（ワーカー委譲なし、LUNA直営）
+- ループ改善報告: MISSION赤は承認突合で処理し、製品作業と混線させず記録層へ着地させた
+- 次の一手: M2 local desktopでTheater→Camp→Deployment→Battle→After Action→次ターンを実操作し、outputs/へ動的証跡を保存
