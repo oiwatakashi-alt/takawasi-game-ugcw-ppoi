@@ -216,3 +216,16 @@
 - 証跡: `outputs/takawasi-vps-readonly-2026-07-10.json`
 - 範囲境界: 個人GitHubと個人VPSのみ。会社GitHub、AWS、Medixus、秘密情報、外部AIモデル委譲は不使用
 - 次の一手: 認証状態が復旧したら同じSHAでrelease upload/current/nginx -t/live QA/rollbackを再開。復旧しない間はM3 remote mutationを停止
+
+## T17 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 認証: 接続情報由来のSSH候補からread-only認証経路を確認。接続先、ユーザー、鍵、パスワード等の値はrepo/log/回答へ出していない
+- remote release: SHA `1ce85dd67b6a01da35288f0a61d3a9511370a00b` をclean releaseへ再投入。macOS tarのAppleDouble `._*`混入を検出して清掃・再投入し、実ファイル92件、localとのパス完全一致、`index.html`ハッシュ一致を確認
+- nginx/current: 専用`game.takawasi-social.com` vhost作成、TLS既存設定をread-only確認、`nginx -t`成功、atomic `current` symlink切替、nginx reload、service activeを確認
+- rendered smoke: HTTPS 200、Takawasiブランド/HTML/JSを確認。ブラウザでTheater→Camp→Deployment→Battle→After Action→第2戦略ターンCampをlive再走
+- live QA: desktop 1280x720、initial/camp/deployment/battle/after-action/next-turnのスクリーンショットを`outputs/takawasi-vps-live-*.png`へ保存。console error 0、broken image 0、horizontal overflow false
+- rollback: コード/package同一のSHA `16b153d0ef5d952f390388bb140196b7673cdb62`を候補release化し、candidateへ切替→nginx -t/reload→live smoke→対象SHAへ復帰→live smokeを通過。現行は対象SHAへ復帰済み
+- 証跡: `outputs/takawasi-vps-deploy-1ce85dd.json`、`outputs/takawasi-vps-live-qa-1ce85dd.png`、`outputs/takawasi-vps-live-after-action-1ce85dd.png`、`outputs/takawasi-vps-live-next-turn-1ce85dd.png`
+- 範囲境界: 個人GitHub/個人VPSのみ。AWS、会社GitHub、Medixus、秘密情報、外部AIモデル委譲、gameplay/save schema/backendは不使用
+- 次の一手: M4の方式3案比較とLUNA直列マクロ→ミクロ→市場レビューへ移る

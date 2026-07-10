@@ -1,0 +1,53 @@
+{
+  "releaseSha": "1ce85dd67b6a01da35288f0a61d3a9511370a00b",
+  "deployment": {
+    "remoteRelease": "passed",
+    "remoteFileCount": 92,
+    "localFileCount": 92,
+    "exactRelativePaths": true,
+    "indexSha256Match": true,
+    "currentTargetMatchesRelease": true,
+    "vhost": "game.takawasi-social.com",
+    "nginxTest": "passed",
+    "nginxReload": "passed",
+    "nginxActive": true
+  },
+  "liveSmoke": {
+    "httpsStatus": 200,
+    "finalUrlIsHttps": true,
+    "takawasiGameContent": true,
+    "renderedTheaterContent": true
+  },
+  "liveDesktopQA": {
+    "viewport": "1280x720",
+    "flow": ["Theater", "Camp", "Deployment", "Battle", "After Action", "第2戦略ターンCamp"],
+    "consoleErrors": 0,
+    "brokenImages": 0,
+    "horizontalOverflow": false,
+    "bodyOverflow": false,
+    "screenshots": [
+      "outputs/takawasi-vps-live-qa-1ce85dd.png",
+      "outputs/takawasi-vps-live-camp-1ce85dd.png",
+      "outputs/takawasi-vps-live-deployment-1ce85dd.png",
+      "outputs/takawasi-vps-live-battle-1ce85dd.png",
+      "outputs/takawasi-vps-live-after-action-1ce85dd.png",
+      "outputs/takawasi-vps-live-next-turn-1ce85dd.png"
+    ]
+  },
+  "rollback": {
+    "candidateSha": "16b153d0ef5d952f390388bb140196b7673cdb62",
+    "codeAndPackageIdentical": true,
+    "candidateReleaseFileCount": 92,
+    "candidateSwitch": true,
+    "candidateLiveSmoke": true,
+    "restoredTarget": true,
+    "restoredLiveSmoke": true
+  },
+  "correction": {
+    "initialUploadCountRed": 186,
+    "cause": "macOS tar AppleDouble ._* metadata entries",
+    "finalUploadCountGreen": 92,
+    "finalPathSetExact": true
+  },
+  "secrets": "No connection values, passwords, tokens, API keys, or private keys recorded."
+}
