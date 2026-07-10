@@ -287,3 +287,15 @@
 - 常駐入口: `goal-driven-template/00_MISSION.md`、`goal-driven-template/02_GOAL.md`、`goal-driven-template/03_DISPATCH.md`、`goal-driven-template/04_STATE.md`を突合し、現フェーズの個人境界とUI観点に不一致なし
 - 範囲境界: 監査と個人VPS実行準備のみ。会社資産、AWS、Medixus、外部AIモデル委譲は不使用。接続情報・秘密値はログへ出さない
 - 次の一手: `check.sh`が緑になった次番で、ユーザー許可どおり個人VPSへ再公開し、live desktopでプレイ可能性を確認する
+
+## T23 2026-07-10 実行 LUNA
+
+- 配車: `== 配車: 実行番(根拠: 規則5(強制規則非該当→現マイルストーンの実行)) ==`
+- 目的: d3cb6e9のlive 1280x720 QAで検出したTheater主操作のファーストビュー外れを、ユーザー指定の機能面積観点で修復する
+- 検出: `幕舎で準備する`のDOM top=810。horizontal overflowなしでも、長い主戦場情報の末尾に主操作があり、最初のviewportで遊び始められなかった
+- 修復: `src/components/screens/TheaterCommandScreen.tsx`で主操作を主戦場タイトル直後へ移動し、`theater-primary-action`で上端の操作面として表示。callback/gameplay/save schemaは変更なし
+- local QA: patch後のlocal browserで主操作top=300・visible、broken image 0、horizontal overflow falseを確認。ただしactual CSS viewportは3878x2181だったため、1280x720の厳密な再現は新SHAのlive probeで別記録する
+- 判定: d3cb6e9のVPS公開はrendered smoke合格だがUI受入未完了。修正SHAを再build→SHA release→live desktop QAするまで公開完了扱いにしない
+- 証跡: `src/components/screens/TheaterCommandScreen.tsx` / `src/styles/app.css`
+- 範囲境界: Theater UI配置のみ。個人VPS、個人GitHub、会社資産、AWS、Medixus、外部AIモデル委譲は不使用(次段で個人VPS再公開)
+- 次の一手: clean worktreeをcommitし、修正SHAを個人GitHub mainと個人VPSへ反映して全導線を再走する

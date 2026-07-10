@@ -178,6 +178,16 @@ main {
   object-fit: contain;
 }
 
+.theater-primary-action {
+  display: flex;
+  justify-content: flex-end;
+  margin: -2px 0 12px;
+}
+
+.theater-primary-action .primary-button {
+  min-width: 180px;
+}
+
 .band-stack {
   display: grid;
   gap: 8px;

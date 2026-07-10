@@ -193,6 +193,11 @@ export function TheaterCommandScreen({ campaign, onOpenCamp, onAutoResolve, onAs
           <span>主戦場</span>
           <strong>{activeStrategicTurn.mandatoryBattle.title}</strong>
         </div>
+        <div className="theater-primary-action">
+          <button className="primary-button" type="button" onClick={onOpenCamp}>
+            幕舎で準備する
+          </button>
+        </div>
         <p>{activeStrategicTurn.threatForecast}</p>
         <p>
           現在位置: <strong>{currentSector?.name}</strong> / 地形{" "}
@@ -220,9 +225,6 @@ export function TheaterCommandScreen({ campaign, onOpenCamp, onAutoResolve, onAs
             <span key={effect}>{effect}</span>
           ))}
         </div>
-        <button className="primary-button" type="button" onClick={onOpenCamp}>
-          幕舎で準備する
-        </button>
       </div>
 
       <div className="panel side-ops">
