@@ -20,7 +20,7 @@
 - VPS deployment/live (historical): `outputs/takawasi-vps-deploy-1ce85dd.json` / `outputs/takawasi-vps-live-*.png`
 - UI review lens: `outputs/ui-reorg/screenshot-review-lens-v1.md`
 - 比較: `outputs/m4-comparison-2026-07-10.md`
-- 三窓: `hub/reports/from-codex/m4-macro-review-2026-07-10.md`、`m4-micro-review-2026-07-10.md`、`m4-market-review-2026-07-10.md`
+- 三窓: `goal-driven-template/hub/reports/from-codex/m4-macro-review-2026-07-10.md`、`goal-driven-template/hub/reports/from-codex/m4-micro-review-2026-07-10.md`、`goal-driven-template/hub/reports/from-codex/m4-market-review-2026-07-10.md`
 - 採否台帳: `outputs/m4-review-ledger-2026-07-10.md`
 - 保存境界probe: `outputs/m4-save-reload-probe-2026-07-10.json` / `outputs/m4-save-reload-campaign-2026-07-10.png`
 
